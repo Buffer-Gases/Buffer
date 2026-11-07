@@ -1029,6 +1029,7 @@ body:`${tw('<tr><th>Sample</th><th>Good for</th><th>Not good for</th></tr><tr><t
 <li>Pre-heparinised syringe, needle at 30–45° bevel up, let the pulse fill the syringe.</li>
 <li>Pressure for 5 minutes (longer if anticoagulated).</li>
 <li>The modified Allen test is widely taught but predicts ischaemia poorly; many centres no longer rely on it. Avoid arteries with poor collateral supply and know the patient's anticoagulation.</li></ul>
+<p>The next four lessons in this module are a technique clinic: the radial puncture step by step, the Allen test, venous and earlobe draws, and bubbles and delay.</p>
 <p>On room air or note the FiO₂ and device. A gas without FiO₂ cannot be interpreted for oxygenation.</p>`,
 keys:[['Oxygenation needs','Arterial sample + FiO₂'],['Pressure after ABG','≥ 5 min'],['Capillary','Fine for pH/PCO₂, not PO₂']],
 hook:'An ABG without the FiO₂ is half a gas.',
@@ -1727,6 +1728,86 @@ hook:'Children run the same chemistry faster: they get ketotic, alkalotic and oe
 q:[['Six-week-old with projectile vomiting: pH 7.52, HCO₃⁻ 34, Cl 88, K 3.0. Before theatre?',['Operate now','Correct fluids, chloride and potassium first','Give acetazolamide','Give bicarbonate'],1,'Alkalosis increases the risk of postoperative apnoea.'],
 ['Child in DKA treatment develops headache and bradycardia. Next?',['More insulin','Treat cerebral oedema now (mannitol or hypertonic saline)','Bicarbonate','Stop fluids and wait'],1,'Cerebral oedema is the leading cause of death in paediatric DKA.']]});
 
+/* ---------- 4.1: technique clinic (sampling) ---------- */
+lesson({id:'tc-radial',m:'samp',t:'Technique clinic: the radial puncture, step by step',
+sum:'Eight steps, each with the reason behind it, the usual error and how to rescue it. Most failed or misleading gases come from steps 2, 5 and 6.',
+body:`<p>Treat this as a checklist you rehearse before your hands are shaking. Each step has a <b>why</b> so that you can adapt when the patient does not look like the textbook.</p>
+${tw('<tr><th>#</th><th>Do</th><th>Why</th><th>Common error → rescue</th></tr><tr><td>1</td><td>Check indication, anticoagulation, the other wrist and the FiO₂ or device</td><td>An unreadable gas (no FiO₂) is wasted pain</td><td>Forgetting FiO₂ → write it on the syringe now</td></tr><tr><td>2</td><td>Wrist extended about 30° over a rolled towel, hand relaxed</td><td>Brings the artery close to the skin and steadies it</td><td>Over-extension flattens the pulse → ease back until it is strongest</td></tr><tr><td>3</td><td>Palpate with two fingers 1–2 cm above the crease, mark the line of the artery</td><td>The artery runs straight; you want to enter along it</td><td>Palpating with the thumb (it has its own pulse) → use index and middle</td></tr><tr><td>4</td><td>Clean the skin; consider 0.25–0.5 mL of 1% lidocaine</td><td>Local anaesthetic reduces pain without making the stick harder</td><td>Skipping it in a conscious patient → offer it</td></tr><tr><td>5</td><td>Needle at 30–45°, bevel up, advance slowly towards the pulse</td><td>Bevel up gives a clean entry; a slow advance lets you feel the wall</td><td>Going too steep and through the back wall → withdraw slowly until the flash appears</td></tr><tr><td>6</td><td>Let the pulse fill the syringe (1–2 mL); do not pull the plunger</td><td>Pulsatile self-filling confirms an artery; pulling draws venous blood and air</td><td>Dark, non-pulsatile blood → vein; stop and repeat</td></tr><tr><td>7</td><td>Needle out, pressure for at least 5 minutes (longer on anticoagulants), then expel air, cap and roll the syringe</td><td>Prevents haematoma; air and delay corrupt the gas</td><td>Releasing pressure early to check → hold, do not peek</td></tr><tr><td>8</td><td>Label with name, time, FiO₂, temperature and site; analyse within 30 minutes</td><td>The gas is only as good as the context attached to it</td><td>Leaving the sample on a desk → run it now or repeat it</td></tr>')}
+<h3>When not to puncture the radial artery</h3>
+<ul><li>Infection, burn or skin lesion over the site, or no palpable pulse.</li>
+<li>A limb with a dialysis fistula or vascular graft.</li>
+<li>Severe peripheral vascular disease or an ischaemic hand. Pick another site.</li>
+<li>Bleeding disorders and anticoagulation are not absolute bars. Choose a compressible site, use the smallest needle and press for longer.</li></ul>
+<h3>If you miss</h3>
+<p>Pull back to just under the skin and redirect without leaving the artery's line. After two misses, change wrist or ask a colleague. Repeated probing hurts and causes haematoma.</p>`,
+keys:[['Angle','30–45°, bevel up'],['Syringe','Fills by the pulse, no pulling'],['Pressure','≥ 5 min (longer if anticoagulated)'],['Label','FiO₂, time, temperature, site']],
+hook:'Pulse fills the syringe, pressure for five minutes, FiO₂ on the label.',
+q:[['Dark blood fills the syringe slowly and only when you pull the plunger. What does that suggest?',['A clean arterial sample','Venous blood, not arterial','A very high PaCO₂','A syringe with too much heparin'],1,'An arterial sample is bright, pulsatile and self-filling. Pulling and dark colour point to a vein.'],
+['After the needle is withdrawn, what is the right next action?',['Press firmly for 5 minutes or more','Press for 30 seconds, then look','Apply a light dressing and go','Ask the patient to flex the wrist for a while'],0,'Short pressure is the commonest cause of haematoma.'],
+['Which patient needs a different site rather than a radial attempt?',['An anxious patient on a monitor','A limb with a dialysis fistula','A patient breathing room air','A patient with a high fever'],1,'Never puncture a fistula or graft limb.']]});
+
+lesson({id:'tc-allen',m:'samp',t:'Technique clinic: the Allen test and collateral flow',
+sum:'How to do the modified Allen test, how to read it, and why it is a quick check rather than a guarantee.',
+body:`<h3>The modified Allen test</h3>
+<ol><li>Patient clenches the fist for about 30 seconds while you press on both the radial and ulnar arteries.</li>
+<li>Open the hand. It should be pale.</li>
+<li>Release the <b>ulnar</b> artery only and time the return of colour to the whole palm and thumb.</li></ol>
+${tw('<tr><th>Colour returns in</th><th>Reading</th></tr><tr><td>Under about 5–7 seconds</td><td>Ulnar supply is adequate</td></tr><tr><td>8–14 seconds</td><td>Equivocal</td></tr><tr><td>Over about 15 seconds</td><td>Ulnar supply poor: avoid that radial artery</td></tr>')}
+<h3>What the evidence says</h3>
+<ul><li>The test is subjective: results vary by examiner, skin tone, room temperature and how hard the patient clenches.</li>
+<li>It has not been shown to predict hand ischaemia after radial puncture, and ischaemic complications are very rare either way. Some guidelines still recommend it, others do not.</li>
+<li>More objective options exist: a pulse oximeter or Doppler on the thumb while the radial artery is compressed (the Barbeau test).</li></ul>
+<h3>How to use it</h3>
+<p>Use it as a quick screen that takes under a minute, not as permission or as a veto. A clearly abnormal result is a reason to choose the other wrist, or another site. A normal one does not remove the need for the usual care: one attempt at a time, pressure afterwards, and a look at the hand if the patient complains of pain or numbness.</p>
+<h3>Red flags after puncture</h3>
+<p>Persistent pain, a cold, pale or numb hand, or a growing swelling at the wrist need review at once. They can mean haematoma, spasm or arterial occlusion.</p>`,
+keys:[['Release','Ulnar artery only'],['Abnormal','Colour back in over ~15 s'],['Evidence','Poor predictor of ischaemia']],
+hook:'Allen test: a quick screen, not a promise.',
+q:[['In the modified Allen test, which artery is released first?',['The radial artery','The ulnar artery','The brachial artery above it','Both arteries together at once'],1,'You are testing whether the ulnar artery can supply the whole hand.'],
+['How should the Allen test be used?',['A quick screen that helps pick the site','Proof that ischaemia can never happen','A full substitute for pressure afterwards','A test that is used only in small children'],0,'It is subjective and a weak predictor, so it informs the choice and never replaces care.'],
+['After a radial gas the hand becomes cold, pale and numb. What now?',['Reassure and watch the hand','Urgent review for arterial compromise','Give another dose of heparin now','Repeat the puncture on the same wrist'],1,'Treat it as possible occlusion until proven otherwise.']]});
+
+lesson({id:'tc-venous',m:'samp',t:'Technique clinic: getting a good venous or capillary gas',
+sum:'When a vein will do, how to draw it without distorting the numbers, and when an earlobe sample is worth it.',
+body:`<h3>Choose the sample for the question</h3>
+${tw('<tr><th>You want to know</th><th>Sample</th></tr><tr><td>Is the patient acidotic? Lactate, K⁺, glucose</td><td>Peripheral venous is enough</td></tr><tr><td>Is the patient hypercapnic?</td><td>Venous screens it out (normal PCO₂ is reassuring); abnormal or doubtful → arterial</td></tr><tr><td>Is oxygenation the problem?</td><td>Arterial with FiO₂ (or pulse oximetry first)</td></tr><tr><td>Repeated gases in a stable COPD or child</td><td>Arterialised capillary (earlobe), warmed and free-flowing</td></tr>')}
+<h3>Drawing a venous gas well</h3>
+<ul><li>Use a heparinised gas syringe. A tourniquet for more than a minute and a clenched fist push up lactate and potassium and lower pH, so release it before or soon after puncture.</li>
+<li>Avoid the arm with an infusion running. Fluids dilute the sample.</li>
+<li>Sample at the time of cannulation when you can, free-flowing, without pulling hard.</li>
+<li>Expel air, cap, label as <b>venous</b>, and note the site. A venous sample labelled arterial is a classic trap.</li></ul>
+<h3>Remember the offsets</h3>
+<p>Compared with arterial: pH about 0.03 lower, PCO₂ about 5 mmHg higher, HCO₃⁻ about 1 mmol/L higher. Use the Labs → venous to arterial tool and keep the scatter in mind. A venous value is a screen, not a substitute, when the number sits near a decision line.</p>
+<h3>Earlobe (arterialised capillary)</h3>
+<ul><li>Warm the lobe or apply vasodilator cream for about 10 minutes so that blood is arterialised.</li>
+<li>Free flow into a capillary tube. Squeezing mixes in tissue fluid and distorts the values.</li>
+<li>Reliable for pH and PCO₂; treat PO₂ with caution.</li></ul>`,
+keys:[['Tourniquet','Under 1 min, release early'],['Venous vs arterial','pH −0.03 · PCO₂ +5 · HCO₃⁻ +1'],['Earlobe','Warm, free-flowing, PO₂ unreliable']],
+hook:'A vein answers acid-base; only an artery answers oxygen.',
+q:[['Which question can a peripheral venous gas answer reliably?',['The PaO₂ in a shocked patient','pH and lactate levels','The A–a gradient of the patient','The shunt fraction in the lungs'],1,'Venous pH and lactate track arterial values closely.'],
+['What does a long tourniquet and fist clenching do to a venous sample?',['Lowers the lactate by dilution','Raises lactate and K⁺, lowers pH','Raises the pH and the glucose','Changes nothing that you can measure'],1,'Local stasis and muscle work change the sample.'],
+['An earlobe sample is squeezed hard to get enough blood. What is the effect?',['No effect on any value','Tissue fluid distorts the values','PO₂ rises falsely and only that','Only the glucose changes'],1,'Free flow is essential for capillary gases.']]});
+
+lesson({id:'tc-bubbles',m:'samp',t:'Technique clinic: bubbles, heparin and delay, with drills',
+sum:'What to do in the first minute after the draw, and the quick checks that tell you the sample cannot be trusted.',
+body:`<h3>The first minute</h3>
+<ol><li><b>Expel the air at once</b>: hold the syringe upright, tap, push the bubbles out and cap it.</li>
+<li><b>Mix by rolling</b> the syringe between the palms and inverting a few times. Do not shake it.</li>
+<li><b>Label</b> and send, or run it yourself.</li></ol>
+<h3>Why a bubble matters</h3>
+<p>Room air has a PO₂ of about 150 mmHg and almost no CO₂. A bubble in the syringe drags the sample's PO₂ towards 150 and its PCO₂ downwards. A patient with a PaO₂ of 60 looks better; one on high-flow oxygen with a PaO₂ of 400 looks worse. The longer it sits and the bigger the bubble, the larger the error.</p>
+<h3>Heparin and delay</h3>
+<ul><li>Use dry or balanced heparin and fill the syringe. Leaving a lot of liquid heparin dilutes the sample: PCO₂ and HCO₃⁻ fall and calcium binds.</li>
+<li>Cells keep working in the syringe: PO₂ falls, PCO₂ and lactate rise, pH and glucose fall. Plastic at room temperature is fine for about 30 minutes. Longer than that, run a fresh sample.</li></ul>
+<h3>Four drills</h3>
+${tw('<tr><th>You see</th><th>Think</th><th>Do</th></tr><tr><td>PaO₂ 36, SO₂ 68%, SpO₂ 97%</td><td>Venous blood in an arterial syringe</td><td>Repeat from an artery</td></tr><tr><td>PaO₂ 140 on room air, PCO₂ 12 in a well patient</td><td>Air bubble</td><td>Repeat, expel air at once</td></tr><tr><td>Lactate 9 in a bright, well patient; sample 2 hours old</td><td>Delay</td><td>Repeat and run it within 30 minutes</td></tr><tr><td>K⁺ 7.4, no ECG changes, difficult draw</td><td>Haemolysis</td><td>Repeat before treating</td></tr>')}
+<p>The rule behind all four: when the numbers and the patient disagree, believe the patient and repeat the sample.</p>`,
+keys:[['Air','PO₂ → ~150, PCO₂ ↓'],['Delay','PO₂ ↓, PCO₂ ↑, lactate ↑'],['Window','~30 min in plastic at room temperature']],
+hook:'Bubbles out, roll never shake, run it inside half an hour.',
+q:[['A well patient on room air has a "PaO₂ 142, PCO₂ 12". Most likely?',['Excellent gas exchange','An air bubble in the syringe','Simple hyperventilation in a calm patient','Methaemoglobinaemia that is present'],1,'A PO₂ near 150 with a very low PCO₂ is the bubble signature.'],
+['A sample sits for two hours. What happens?',['Lactate falls steadily as cells rest','PO₂ rises over time in the syringe','Lactate and PCO₂ up, PO₂ and pH down','The pH climbs slowly with glucose'],2,'Cells keep metabolising in the syringe.'],
+['Why roll the syringe instead of shaking it?',['To warm the sample up slowly','Shaking can haemolyse and add air','Rolling removes the lactate first','Rolling raises the pH slightly at once'],1,'Gentle mixing keeps cells intact and prevents bubbles.']]});
+
 /* ================= CORE: STATE, UNITS, INTERPRETER, GENERATOR ================= */
 const KPA=7.50062;
 const DEF={done:{},qs:{},kinds:{},reflex:{lvl:1,hist:[]},days:[],read:0,units:'mmHg',patm:760,agref:12,usek:false,conf:[],exams:[]};
@@ -2262,7 +2343,7 @@ W.sid={t:'Stewart: SIDa, SIDe and the strong ion gap',build(el){const u=uid();
  el.querySelectorAll('input').forEach(i=>i.addEventListener('input',run));run();}};
 
 /* ================= UI CORE ================= */
-const APP_VERSION='4.1.0';
+const APP_VERSION='4.1.1';
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 /* lessons in module order (later files append lessons to earlier modules) */
 (function(){const mi={};MODS.forEach((m,i)=>mi[m.id]=i);const o=L.slice().sort((a,b)=>mi[a.m]-mi[b.m]);L.length=0;o.forEach(x=>L.push(x));})();
