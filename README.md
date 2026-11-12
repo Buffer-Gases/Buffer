@@ -1,4 +1,4 @@
-# Buffer: Blood Gas Trainer (PWA) · v4.1.1 · 07/11/2026
+# Buffer: Blood Gas Trainer (PWA) · v4.2.0 · 07/11/2026
 
 ABG and VBG from the proton to the bedside. Part of the Citrus app family. It uses the Orange Pixel look and runs offline once installed.
 

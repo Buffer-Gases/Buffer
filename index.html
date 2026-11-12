@@ -515,6 +515,18 @@ ul.tight,ol.tight{margin:6px 0 0;padding-left:20px;display:grid;gap:6px;font-siz
 .btn.small,.sbar .btn,.sbar .iconbtn,nav.tabs button,.chip.btn,.llist button{min-height:44px}
 .sbar #sExit,.sbar .iconbtn{min-width:44px}
 .brand{min-height:44px;display:inline-flex;align-items:center}
+
+/* 4.2: Quiet mode + clinical skin */
+body.quiet #hdr-xp,body.quiet .lvlpill,body.quiet .gamey{display:none!important}
+html[data-skin="clinical"]{--px:"Atkinson Hyperlegible",system-ui,-apple-system,sans-serif}
+html[data-skin="clinical"] *{-webkit-font-smoothing:antialiased!important}
+html[data-skin="clinical"] *{border-radius:10px!important}
+html[data-skin="clinical"] .round,html[data-skin="clinical"] .web-n circle{border-radius:50%!important}
+html[data-skin="clinical"] .card,html[data-skin="clinical"] .btn,html[data-skin="clinical"] .chip,html[data-skin="clinical"] .iconbtn,html[data-skin="clinical"] .tile,html[data-skin="clinical"] .opt{clip-path:none!important;box-shadow:none!important;border-width:1px}
+html[data-skin="clinical"] .card.raised{box-shadow:0 2px 10px rgba(0,0,0,.18)!important}
+html[data-skin="clinical"] h1,html[data-skin="clinical"] h2,html[data-skin="clinical"] h3{font-weight:700;letter-spacing:-.005em}
+html[data-skin="clinical"] .btn.primary{box-shadow:none;font-weight:700}
+.sheet{max-height:86vh;overflow:auto}
 </style>
 
 <header class="top"><div class="wrap hrow">
@@ -1808,12 +1820,427 @@ q:[['A well patient on room air has a "PaO₂ 142, PCO₂ 12". Most likely?',['E
 ['A sample sits for two hours. What happens?',['Lactate falls steadily as cells rest','PO₂ rises over time in the syringe','Lactate and PCO₂ up, PO₂ and pH down','The pH climbs slowly with glucose'],2,'Cells keep metabolising in the syringe.'],
 ['Why roll the syringe instead of shaking it?',['To warm the sample up slowly','Shaking can haemolyse and add air','Rolling removes the lactate first','Rolling raises the pH slightly at once'],1,'Gentle mixing keeps cells intact and prevents bubbles.']]});
 
+/* ================= SOURCES: every lesson cites its evidence (4.2) ================= */
+const SRC={
+ aarc13:['AARC 2013','Davis MD, Walsh BK, Sittig SE, Restrepo RD. AARC Clinical Practice Guideline: blood gas analysis and hemoximetry, 2013 revision and update. Respir Care 2013;58:1694–1703.'],
+ albert67:['Albert 1967','Albert MS, Dell RB, Winters RW. Quantitative displacement of acid-base equilibrium in metabolic acidosis. Ann Intern Med 1967;66:312–322.'],
+ amato15:['Amato 2015','Amato MBP, et al. Driving pressure and survival in the acute respiratory distress syndrome. N Engl J Med 2015;372:747–755.'],
+ aronson11:['Aronson & Giebisch 2011','Aronson PS, Giebisch G. Effects of pH on potassium: new explanations for old observations. J Am Soc Nephrol 2011;22:1981–1989.'],
+ ashwood83:['Ashwood 1983','Ashwood ER, Kost G, Kenny M. Temperature correction of blood-gas and pH measurements. Clin Chem 1983;29:1877–1885.'],
+ ashbernal04:['Ash-Bernal 2004','Ash-Bernal R, Wise R, Wright SM. Acquired methemoglobinemia: a retrospective series of 138 cases at 2 teaching hospitals. Medicine 2004;83:265–273.'],
+ barbeau04:['Barbeau 2004','Barbeau GR, et al. Evaluation of the ulnopalmar arterial arches with pulse oximetry and plethysmography: comparison with the Allen test in 1010 patients. Am Heart J 2004;147:489–493.'],
+ batlle88:['Batlle 1988','Batlle DC, Hizon M, Cohen E, Gutterman C, Gupta R. The use of the urinary anion gap in the diagnosis of hyperchloremic metabolic acidosis. N Engl J Med 1988;318:594–599.'],
+ berend14:['Berend 2014','Berend K, de Vries APJ, Gans ROB. Physiological approach to assessment of acid-base disturbances. N Engl J Med 2014;371:1434–1445.'],
+ berlin12:['Berlin 2012','ARDS Definition Task Force. Acute respiratory distress syndrome: the Berlin definition. JAMA 2012;307:2526–2533.'],
+ boles07:['Boles 2007','Boles JM, et al. Weaning from mechanical ventilation. Eur Respir J 2007;29:1033–1056.'],
+ bosch09:['Bosch 2009','Bosch X, Poch E, Grau JM. Rhabdomyolysis and acute kidney injury. N Engl J Med 2009;361:62–72.'],
+ brackett65:['Brackett 1965','Brackett NC Jr, Cohen JJ, Schwartz WB. Carbon dioxide titration curve of normal man. N Engl J Med 1965;272:6–12.'],
+ brzez09:['Brzezinski 2009','Brzezinski M, Luisetti T, London MJ. Radial artery cannulation: a comprehensive review of recent anatomic and physiologic investigations. Anesth Analg 2009;109:1763–1781.'],
+ byrne14:['Byrne 2014','Byrne AL, et al. Peripheral venous and arterial blood gas analysis in adults: are they comparable? Respirology 2014;19:168–175.'],
+ combes18:['EOLIA 2018','Combes A, et al. Extracorporeal membrane oxygenation for severe acute respiratory distress syndrome. N Engl J Med 2018;378:1965–1975.'],
+ davidson16:['BTS/ICS 2016','Davidson AC, et al. BTS/ICS guideline for the ventilatory management of acute hypercapnic respiratory failure in adults. Thorax 2016;71(Suppl 2):ii1–ii35.'],
+ epstein01:['Epstein 2001','Epstein SK, Singh N. Respiratory acidosis. Respir Care 2001;46:366–383.'],
+ evans21:['SSC 2021','Evans L, et al. Surviving Sepsis Campaign: international guidelines for management of sepsis and septic shock 2021. Crit Care Med 2021;49:e1063–e1143.'],
+ fan17:['ATS/ESICM/SCCM 2017','Fan E, et al. An official ATS/ESICM/SCCM clinical practice guideline: mechanical ventilation in adult patients with ARDS. Am J Respir Crit Care Med 2017;195:1253–1263.'],
+ fenves06:['Fenves 2006','Fenves AZ, et al. Increased anion gap metabolic acidosis as a result of 5-oxoproline (pyroglutamic acid): a role for acetaminophen. Clin J Am Soc Nephrol 2006;1:441–447.'],
+ figge98:['Figge 1998','Figge J, Jabor A, Kazda A, Fencl V. Anion gap and hypoalbuminemia. Crit Care Med 1998;26:1807–1810.'],
+ foster01:['Foster 2001','Foster GT, Vaziri ND, Sassoon CS. Respiratory alkalosis. Respir Care 2001;46:384–391.'],
+ galla00:['Galla 2000','Galla JH. Metabolic alkalosis. J Am Soc Nephrol 2000;11:369–375.'],
+ glaser01:['Glaser 2001','Glaser N, et al. Risk factors for cerebral edema in children with diabetic ketoacidosis. N Engl J Med 2001;344:264–269.'],
+ guerin13:['PROSEVA 2013','Guérin C, et al. Prone positioning in severe acute respiratory distress syndrome. N Engl J Med 2013;368:2159–2168.'],
+ halt20:['HALT-IT 2020','HALT-IT Trial Collaborators. Effects of a high-dose 24-h infusion of tranexamic acid on death and thromboembolic events in patients with acute gastrointestinal bleeding (HALT-IT). Lancet 2020;395:1927–1936.'],
+ hegewald11:['Hegewald 2011','Hegewald MJ, Crapo RO. Respiratory physiology in pregnancy. Clin Chest Med 2011;32:1–13.'],
+ hernandez19:['ANDROMEDA-SHOCK 2019','Hernández G, et al. Effect of a resuscitation strategy targeting peripheral perfusion status vs serum lactate levels. JAMA 2019;321:654–664.'],
+ hess79:['Hess 1979','Hess CE, Nichols AB, Hunt WB, Suratt PM. Pseudohypoxemia secondary to leukemia and thrombocytosis. N Engl J Med 1979;301:361–363.'],
+ hickling90:['Hickling 1990','Hickling KG, Henderson SJ, Jackson R. Low mortality associated with low volume pressure limited ventilation with permissive hypercapnia in severe ARDS. Intensive Care Med 1990;16:372–377.'],
+ jaber18:['BICAR-ICU 2018','Jaber S, et al. Sodium bicarbonate therapy for patients with severe metabolic acidaemia in the ICU (BICAR-ICU). Lancet 2018;392:31–40.'],
+ jbds23:['JBDS 2023','Joint British Diabetes Societies. The management of diabetic ketoacidosis in adults (JBDS 02), 2023 update.'],
+ kellum00:['Kellum 2000','Kellum JA. Determinants of blood pH in health and disease. Crit Care 2000;4:6–14.'],
+ kraut07:['Kraut & Madias 2007','Kraut JA, Madias NE. Serum anion gap: its uses and limitations in clinical medicine. Clin J Am Soc Nephrol 2007;2:162–174.'],
+ kraut10:['Kraut & Madias 2010','Kraut JA, Madias NE. Metabolic acidosis: pathophysiology, diagnosis and management. Nat Rev Nephrol 2010;6:274–285.'],
+ kraut14:['Kraut & Madias 2014','Kraut JA, Madias NE. Lactic acidosis. N Engl J Med 2014;371:2309–2319.'],
+ kraut18:['Kraut & Mullins 2018','Kraut JA, Mullins ME. Toxic alcohols. N Engl J Med 2018;378:270–280.'],
+ kuppermann18:['PECARN FLUID 2018','Kuppermann N, et al. Clinical trial of fluid infusion rates for pediatric diabetic ketoacidosis. N Engl J Med 2018;378:2275–2287.'],
+ luks19:['WMS 2019','Luks AM, et al. Wilderness Medical Society clinical practice guidelines for the prevention and treatment of acute altitude illness: 2019 update. Wilderness Environ Med 2019;30(4S):S3–S18.'],
+ mellem66:['Mellemgaard 1966','Mellemgaard K. The alveolar-arterial oxygen difference: its size and components in normal man. Acta Physiol Scand 1966;67:10–20.'],
+ narins80:['Narins & Emmett 1980','Narins RG, Emmett M. Simple and mixed acid-base disorders: a practical approach. Medicine 1980;59:161–187.'],
+ nunn:['Nunn','Lumb AB. Nunn and Lumb\'s Applied Respiratory Physiology. Elsevier (current edition).'],
+ odriscoll17:['BTS 2017','O\'Driscoll BR, et al. BTS guideline for oxygen use in adults in healthcare and emergency settings. Thorax 2017;72(Suppl 1):ii1–ii90.'],
+ pitkin94:['Pitkin 1994','Pitkin AD, Roberts CM, Wedzicha JA. Arterialised earlobe blood gas analysis: an underused technique. Thorax 1994;49:364–366.'],
+ purssell01:['Purssell 2001','Purssell RA, et al. Derivation and validation of a formula to calculate the contribution of ethanol to the osmolal gap. Ann Emerg Med 2001;38:653–659.'],
+ rose:['Rose & Post','Rose BD, Post TW. Clinical physiology of acid-base and electrolyte disorders. McGraw-Hill (current edition).'],
+ semler18:['SMART 2018','Semler MW, et al. Balanced crystalloids versus saline in critically ill adults. N Engl J Med 2018;378:829–839.'],
+ sev66:['Severinghaus 1966','Severinghaus JW. Blood gas calculator. J Appl Physiol 1966;21:1108–1116.'],
+ siggaard74:['Siggaard-Andersen 1974','Siggaard-Andersen O. The acid-base status of the blood. 4th ed. Copenhagen: Munksgaard; 1974.'],
+ sjoding20:['Sjoding 2020','Sjoding MW, et al. Racial bias in pulse oximetry measurement. N Engl J Med 2020;383:2477–2478.'],
+ soriano02:['Soriano 2002','Soriano JR. Renal tubular acidosis: the clinical entity. J Am Soc Nephrol 2002;13:2160–2170.'],
+ stewart83:['Stewart 1983','Stewart PA. Modern quantitative acid-base chemistry. Can J Physiol Pharmacol 1983;61:1444–1461.'],
+ toff07:['Toffaletti 2007','Toffaletti J, Zijlstra WG. Misconceptions in reporting oxygen saturation. Anesth Analg 2007;105(6 Suppl):S5–S9.'],
+ vann11:['Vann 2011','Vann RD, Butler FK, Mitchell SJ, Moon RE. Decompression illness. Lancet 2011;377:153–164.'],
+ vincent13:['Vincent & De Backer 2013','Vincent JL, De Backer D. Circulatory shock. N Engl J Med 2013;369:1726–1734.'],
+ weaver09:['Weaver 2009','Weaver LK. Carbon monoxide poisoning. N Engl J Med 2009;360:1217–1225.'],
+ west:['West','West JB, Luks AM. West\'s Respiratory Physiology: The Essentials. Wolters Kluwer (current edition).'],
+ wrenn90:['Wrenn 1990','Wrenn K. The delta (Δ) gap: an approach to mixed acid-base disorders. Ann Emerg Med 1990;19:1310–1313.'],
+ apls:['APLS','Advanced Life Support Group. Advanced Paediatric Life Support: the practical approach to emergencies. Wiley (current edition).'],
+ pitt:['Rose','']
+};
+delete SRC.pitt;
+/* lesson -> sources: module defaults plus per-lesson additions */
+const MSRC={start:['berend14'],chem:['siggaard74','rose'],phys:['west','nunn'],micro:['kraut14','rose'],gas:['west','nunn'],kid:['rose','soriano02'],samp:['aarc13'],num:['siggaard74','aarc13'],vbg:['byrne14'],dis:['berend14','narins80'],clin:['berend14','kraut10'],auto:['berend14']};
+const LSRC={
+ stewart:['stewart83','kellum00'],stewartx:['stewart83','figge98'],hh:['sev66'],otherbuf:['siggaard74'],
+ temp:['ashwood83'],alv:['mellem66'],
+ lactate:['kraut14'],ketones:['kraut10','jbds23'],toxalc:['kraut18','fenves06','purssell01'],rbc:['sev66'],microbes:['hess79'],
+ odc:['sev66'],hypox:['odriscoll17'],ratios:['berlin12'],respfail:['epstein01','davidson16'],ventchg:['epstein01'],co2vent:['epstein01'],
+ renal:['soriano02'],rta:['soriano02','batlle88'],alkmaint:['galla00'],comp:['brackett65','albert67','narins80'],kacid:['aronson11'],uosm:['batlle88','purssell01'],
+ sites:['aarc13','brzez09','pitkin94'],preanal:['aarc13','hess79'],analyser:['toff07','aarc13'],oxim:['sjoding20','toff07','weaver09'],traps:['aarc13','toff07'],
+ 'tc-radial':['aarc13','brzez09'],'tc-allen':['barbeau04','brzez09'],'tc-venous':['byrne14','pitkin94','aarc13'],'tc-bubbles':['aarc13'],
+ nlac:['kraut14'],nlytes:['aronson11'],ncoox:['weaver09','ashbernal04'],nderived:['figge98','kraut07'],nall:['kraut07','wrenn90'],
+ vbg:['byrne14'],
+ read6:['berend14','narins80'],hagma:['kraut07','kraut10','figge98'],nagma:['kraut10','batlle88'],malk:['galla00'],racid:['epstein01','brackett65'],ralk:['foster01','brackett65'],mixed:['wrenn90','narins80'],oxread:['odriscoll17','berlin12'],
+ dka:['jbds23','kuppermann18','glaser01'],sepsis:['evans21','semler18','kraut14'],asa:['kraut10'],toxalc2:['kraut18','purssell01'],copd:['davidson16','odriscoll17','epstein01'],asthma:['epstein01','foster01'],pe:['foster01'],vomit:['galla00'],diarr:['kraut10','batlle88'],renalfail:['kraut10'],arrest:['kraut14'],opioid:['epstein01'],heat:['foster01'],co:['weaver09'],methb:['ashbernal04'],preg:['hegewald11'],rhabdo:['bosch09'],etoh:['kraut18','kraut14'],drugacid:['kraut10','fenves06'],gib:['kraut14','halt20'],kids:['apls','kuppermann18','glaser01']
+};
+function lessonSources(l){const ids=[...new Set([...(MSRC[l.m]||[]),...(LSRC[l.id]||[])])].filter(i=>SRC[i]);return ids.map(i=>SRC[i]);}
+
+/* ================= 4.2: more questions per lesson (batch 1: start, chemistry, physics, cells) ================= */
+const XQ={};
+XQ.learn=[
+['Why does testing yourself build memory better than rereading?',['Recall strengthens the memory trace','It feels easier than reading it','It covers more pages in an hour','It replaces the need for sleep'],0,'Effortful retrieval is itself the learning event; rereading mostly builds familiarity.'],
+['Buffer sets a reflex target of 90% correct in under 8 seconds. What is that training?',['Pattern recognition with no sums','Slow derivation from first principles','Memorising every single formula','Typing speed on the keypad'],0,'Speed with accuracy is the mark that a pattern has become automatic.']];
+XQ.ph=[
+['Using the 80 rule, what is [H⁺] at pH 7.52?',['28 nmol/L','32 nmol/L','52 nmol/L','24 nmol/L'],0,'[H⁺] ≈ 80 − the two digits after the decimal point: 80 − 52 = 28.'],
+['Which pH corresponds to a [H⁺] of about 100 nmol/L?',['7.00','7.20','7.10','6.80'],0,'pH 7 means 10⁻⁷ mol/L, which is 100 nmol/L.'],
+['Why does a small pH change matter clinically?',['It is logarithmic: [H⁺] changes a lot','The pH electrode is imprecise','Enzymes ignore any small change','The kidneys correct it at once'],0,'Every 0.3 pH units doubles or halves [H⁺].']];
+XQ.buffer=[
+['At pH equal to the pKa, a buffer pair contains…',['Equal acid and base forms','Only the base form present','Ten times more of the acid form','No dissolved gas at all'],0,'Henderson–Hasselbalch gives log(1) = 0 when the two forms are equal.'],
+['Adding strong acid to a bicarbonate solution mainly produces…',['CO₂ and water','More bicarbonate','Sodium hydroxide','Free chloride gas'],0,'H⁺ + HCO₃⁻ gives carbonic acid, which becomes CO₂ and water that the lungs remove.'],
+['In chronic acidosis, which tissue gradually gives up buffer base?',['Bone','Skin','Lens of the eye','Adipose tissue'],0,'Bone carbonate and phosphate buffer a prolonged acid load, at a cost to bone mineral.']];
+XQ.ca=[
+['Which structure uses carbonic anhydrase to reclaim filtered bicarbonate?',['Proximal tubule','Loop of Henle thin limb','Glomerular capsule','Collecting duct only'],0,'Most filtered bicarbonate is reabsorbed in the proximal tubule via carbonic anhydrase.'],
+['In what form is most CO₂ carried in the blood?',['Bicarbonate','Dissolved CO₂','Carbamino compounds','Carbonic acid'],0,'Roughly 70% or more travels as bicarbonate; the rest is carbamino-Hb and dissolved gas.'],
+['Acetazolamide causes a normal-gap acidosis because it…',['Blocks proximal HCO₃⁻ reabsorption','Raises acid production in cells','Blocks chloride excretion','Stops ammonia formation'],0,'Bicarbonate is lost in the urine and chloride replaces it, so the gap stays normal.']];
+XQ.hh=[
+['HCO₃⁻ 24 and PCO₂ doubles to 80 with no renal change. What is the pH?',['About 7.10','About 7.25','About 7.00','Still 7.40'],0,'The ratio falls from 20:1 to 10:1, which is log 1 lower: 6.1 + 1.0 = 7.10.'],
+['Both HCO₃⁻ and PCO₂ double. The pH…',['Stays the same','Falls','Rises','Cannot be known'],0,'The ratio is unchanged, which is exactly how full compensation keeps pH near normal.'],
+['From which values can the third be calculated on a gas analyser?',['Any two of pH, PCO₂, HCO₃⁻','Only pH and HCO₃⁻ together','Only PCO₂ and PO₂ together','None, all three are measured'],0,'Henderson–Hasselbalch links all three; the analyser measures pH and PCO₂ and calculates bicarbonate.']];
+XQ.otherbuf=[
+['Which non-bicarbonate buffer is quantitatively largest in whole blood?',['Haemoglobin','Plasma phosphate','Plasma albumin','Urinary ammonia'],0,'Haemoglobin, with its many histidine groups, is the major non-bicarbonate blood buffer.'],
+['The isohydric principle says that…',['All buffer pairs share one [H⁺]','Only bicarbonate counts at all','Proteins buffer first, then phosphate','Buffers act in strict sequence'],0,'Changing one pair changes the others through the shared [H⁺], so measuring one tells you the state of all.'],
+['Phosphate is a good urinary buffer because its pKa is near…',['6.8','2.1','10.3','7.4 exactly'],0,'A pKa of about 6.8 sits in the range of urine pH, so it takes up secreted H⁺ well.']];
+XQ.stewart=[
+['Which three variables are independent in the Stewart approach?',['PCO₂, SID and A_tot','pH, HCO₃⁻ and PCO₂','Na⁺, K⁺ and Cl⁻ only','Albumin, glucose and urea'],0,'In Stewart, pH and HCO₃⁻ are dependent on PCO₂, strong ion difference and total weak acid.'],
+['Why does water loss cause a contraction alkalosis in the Stewart view?',['It concentrates the SID','It lowers PCO₂','It raises albumin charge','It adds bicarbonate'],0,'Less free water concentrates strong ions, raising the SID.'],
+['In the Stewart model, bicarbonate is…',['A dependent variable','An independent variable','Irrelevant','Always fixed at 24'],0,'It changes as a consequence of the three independent variables rather than driving them.']];
+XQ.stewartx=[
+['A strong ion gap of 12.8 points to…',['Unmeasured anions','Hypoalbuminaemia','Free water excess','Hypercapnia'],0,'A positive SIG means unmeasured strong anions such as ketones or toxins.'],
+['Na − Cl is 28 mmol/L where normal is about 36. This suggests…',['Chloride excess versus sodium','An excess of sodium instead','A high albumin level','A laboratory error only'],0,'A narrow Na − Cl gap means chloride is high relative to sodium, a hyperchloraemic component.'],
+['AG 16, albumin 20 g/L. What is the albumin-corrected gap?',['21','16','12','25'],0,'Corrected AG = 16 + 0.25 × (40 − 20) = 21.']];
+XQ.dalton=[
+['Humidified room air at sea level and 37 °C: what is the inspired PO₂?',['About 150 mmHg','About 160 mmHg','About 100 mmHg','About 213 mmHg'],0,'0.21 × (760 − 47) ≈ 150 mmHg.'],
+['At about 5,500 m barometric pressure is roughly half of sea level. The inspired PO₂ is about…',['70 mmHg','100 mmHg','150 mmHg','35 mmHg'],0,'0.21 × (380 − 47) ≈ 70 mmHg.'],
+['In a gas mixture, the partial pressure of one gas equals…',['Its fraction × total pressure','Its fraction ÷ total pressure','Its mass × temperature','The total pressure minus 47'],0,'Dalton\'s law: each gas contributes its fraction of the total pressure.']];
+XQ.henry=[
+['Why can hyperbaric oxygen raise tissue oxygen even with fully saturated haemoglobin?',['Dissolved O₂ rises with PO₂','Haemoglobin binds more than four O₂','The curve shifts to the left','The red cells multiply quickly'],0,'Henry\'s law: dissolved O₂ is proportional to PO₂, so very high pressures dissolve useful amounts.'],
+['At a PCO₂ of 40 mmHg, how much CO₂ is dissolved?',['1.2 mmol/L','24 mmol/L','0.12 mmol/L','12 mmol/L'],0,'0.03 × 40 = 1.2 mmol/L.'],
+['If a sealed blood sample is warmed, its PO₂ and PCO₂…',['Rise, because solubility falls','Fall, because solubility rises','Stay exactly constant','Cancel each other out'],0,'Gas solubility falls with temperature, so partial pressures rise.']];
+XQ.alv=[
+['On FiO₂ 1.0 at sea level with PaCO₂ 40, what is the alveolar PO₂?',['About 663 mmHg','About 713 mmHg','About 760 mmHg','About 600 mmHg'],0,'713 − 40 ÷ 0.8 = 663 mmHg.'],
+['Which cause of hypoxaemia has a normal A–a gradient?',['Hypoventilation','Shunt','V/Q mismatch','Diffusion limitation'],0,'In pure hypoventilation PAO₂ falls with PaO₂, so the difference stays normal.'],
+['A respiratory quotient of 0.8 means…',['CO₂ produced is 80% of O₂ consumed','O₂ consumed is 80% of CO₂ produced','80% of inspired O₂ is absorbed','Alveolar gas is 80% nitrogen'],0,'It is the ratio of CO₂ output to O₂ uptake, set by the fuel being burned.']];
+XQ.temp=[
+['A patient at 30 °C has a sample run at 37 °C. Their true in-body pH is…',['Higher than reported','Lower than reported','About the same','Impossible to estimate'],0,'Cooling raises pH by about 0.015 per °C, so the 37 °C value reads too acidic.'],
+['Compared with the 37 °C report, a hypothermic patient\'s in-body PO₂ is…',['Lower','Higher','Identical','Zero'],0,'Gases are more soluble in cold blood, so partial pressures are lower.'],
+['Why does PCO₂ fall as blood cools?',['CO₂ becomes more soluble','CO₂ production rises','Bicarbonate is consumed','The electrode drifts'],0,'More CO₂ stays dissolved, so the partial pressure is lower.']];
+XQ.acidsrc=[
+['Which of these is a volatile acid load?',['CO₂ from metabolism','Sulphuric acid from protein','Lactic acid','Phosphoric acid'],0,'CO₂ is excreted by the lungs; the others are fixed acids for the kidney.'],
+['About how much fixed acid does a 70 kg adult generate each day?',['About 70 mmol','About 15,000 mmol','About 7 mmol','About 700 mmol'],0,'Roughly 1 mmol/kg/day.'],
+['Put the responses in order of speed, fastest first.',['Buffers, lungs, kidneys','Kidneys, lungs, buffers','Lungs, kidneys, buffers','Buffers, kidneys, lungs'],0,'Buffering takes seconds, ventilation minutes, renal compensation days.']];
+XQ.lactate=[
+['Type A lactic acidosis is caused by…',['Poor tissue oxygen delivery','Adverse drug effects','Liver failure on its own','Very high glucose levels'],0,'Hypoperfusion or hypoxia pushes cells toward anaerobic glycolysis.'],
+['Which organs clear most lactate?',['Liver and kidney','Lung and spleen','Brain and heart only','Skin and bone'],0,'The liver (Cori cycle) and kidney remove most of it.'],
+['Thiamine deficiency can raise lactate because…',['Pyruvate dehydrogenase needs it','Thiamine itself buffers lactate','It lowers oxygen delivery','It blocks the liver\'s output'],0,'Without it pyruvate cannot enter the Krebs cycle and is converted to lactate.']];
+XQ.ketones=[
+['Which ketone body is most abundant in DKA?',['β-hydroxybutyrate','Acetoacetate','Acetone','Pyruvate and lactate'],0,'BHB outnumbers acetoacetate roughly three to one or more in DKA.'],
+['Prolonged fasting typically causes…',['At most a mild fall in HCO₃⁻','A severe acidosis with pH < 7.0','A raised osmolar gap always','A respiratory acidosis'],0,'Starvation ketosis seldom lowers bicarbonate far because ketone production is modest.'],
+['In alcoholic ketoacidosis the glucose is typically…',['Low or normal','Very high','Always above 20','Not measured'],0,'It follows binge drinking and poor intake, not insulin deficiency.']];
+XQ.microbes=[
+['D-lactic acidosis in short bowel syndrome arises when…',['Gut bacteria ferment spare sugar','The liver makes too much L-lactate','Insulin is lacking for the cells','The kidneys retain too much acid'],0,'Bacteria produce D-lactate, which standard assays miss.'],
+['Which gas pattern is typical early in sepsis?',['Respiratory alkalosis','Respiratory acidosis','Metabolic alkalosis','A completely normal gas'],0,'Hyperventilation from the systemic inflammatory response comes first.'],
+['How do you limit leukocyte larceny?',['Analyse at once, check against SpO₂','Leave it for an hour first','Add more heparin to the syringe','Shake the syringe hard'],0,'Cells keep consuming O₂ in the syringe, so speed and a saturation cross-check matter.']];
+XQ.rbc=[
+['Working muscle (high CO₂, low pH, warm) shifts the dissociation curve…',['Right','Left','Not at all','Upward only'],0,'The Bohr effect releases O₂ where it is needed.'],
+['In the chloride shift, bicarbonate leaves the red cell in exchange for…',['Chloride','Sodium','Potassium','Protons'],0,'Band 3 swaps HCO₃⁻ out for Cl⁻ in to keep the cell electrically neutral.'],
+['Chronic hypoxia raises 2,3-BPG, which shifts the curve…',['Right','Left','Not at all','Down'],0,'Lower O₂ affinity releases oxygen to tissues more easily.']];
+XQ.toxalc=[
+['Fomepizole works by…',['Blocking alcohol dehydrogenase','Binding oxalate in the gut','Raising the blood pH','Chelating iron in the blood'],0,'It stops methanol and ethylene glycol being turned into toxic metabolites.'],
+['Ethylene glycol typically damages the…',['Kidney (calcium oxalate)','Optic nerve and retina','Liver cells alone','Pancreas and spleen'],0,'Oxalate crystals deposit in the tubules; look for crystals and AKI.'],
+['Visual disturbance with a severe high-AG acidosis suggests…',['Methanol','Isopropanol','Ethanol','Salicylate'],0,'Formic acid injures the optic nerve.']];
+
+/* ================= 4.2: more questions per lesson (batch 2: oxygen, kidney, sample, printout) ================= */
+XQ.o2content=[
+['Hb 15 g/dL, SaO₂ 98%, PaO₂ 100 mmHg. What is the oxygen content?',['About 20 mL/dL','About 15 mL/dL','About 28 mL/dL','About 10 mL/dL'],0,'1.34 × 15 × 0.98 + 0.003 × 100 ≈ 20 mL/dL.'],
+['Anaemia mainly lowers which component of oxygen delivery?',['Arterial oxygen content','The measured PaO₂','The percentage saturation','Alveolar PO₂ itself'],0,'PaO₂ and SaO₂ can be normal while the haemoglobin available to carry oxygen is low.'],
+['In septic shock, ScvO₂ is 85% and lactate 6. The best reading is…',['Poor extraction, not low delivery','Oxygen delivery is far too low','The haemoglobin is too high','Tissue oxygenation is normal'],0,'A high venous saturation with raised lactate suggests tissues cannot use the oxygen supplied.']];
+XQ.odc=[
+['Stored red cells and alkalosis shift the curve…',['To the left','To the right','Downwards','Not at all'],0,'Both raise oxygen affinity, so haemoglobin holds on to oxygen.'],
+['P50 is the PO₂ at which haemoglobin is…',['50% saturated','50% desaturated and dead','75% saturated','100% saturated'],0,'It is the usual index of affinity, about 27 mmHg at pH 7.40.'],
+['A right shift means haemoglobin…',['Releases oxygen more easily','Holds oxygen more tightly','Binds more CO','Loses its iron'],0,'Affinity falls, so tissues receive more oxygen at a given PO₂.']];
+XQ.hypox=[
+['Which hypoxaemia corrects well with 100% oxygen?',['Mild V/Q mismatch','Large right-to-left shunt','Cyanide poisoning','Severe anaemia'],0,'Low V/Q units still ventilate, so more FiO₂ raises their PAO₂; a shunt bypasses ventilation altogether.'],
+['Which mechanism shows up first on exertion?',['Diffusion limitation','Hypoventilation','Low inspired O₂ only','Shunt only'],0,'Faster capillary transit leaves less time for equilibration.'],
+['A climber at 5,000 m has a low PaO₂ and a normal A–a gradient. The mechanism is…',['Low inspired PO₂','Pulmonary shunt','Diffusion block','Dead space'],0,'The lungs work normally but the inspired oxygen pressure is low.']];
+XQ.ratios=[
+['PaO₂ 75 mmHg on FiO₂ 0.5. What is the P/F ratio?',['150','75','300','38'],0,'75 ÷ 0.5 = 150.'],
+['The Berlin definition requires onset within…',['One week of a known insult','24 hours of admission','One month of the insult','Six hours of intubation'],0,'New or worsening respiratory symptoms within 1 week of a known clinical insult.'],
+['Why use the S/F ratio?',['It needs no arterial sample','It is more accurate than P/F','It ignores FiO₂','It measures shunt exactly'],0,'SpO₂ stands in for PaO₂ when no ABG is available, within limits.']];
+XQ.co2vent=[
+['Doubling alveolar ventilation with constant CO₂ production changes PaCO₂ from 40 to about…',['20 mmHg','80 mmHg','40 mmHg','10 mmHg'],0,'PaCO₂ is inversely proportional to alveolar ventilation.'],
+['Raised dead space raises PaCO₂ because…',['Less of each breath is exchanged','CO₂ production rises in cells','Bicarbonate falls in the blood','The alveolar membrane thickens'],0,'Alveolar ventilation falls even if minute ventilation is unchanged.'],
+['A fever develops in a paralysed patient on fixed ventilator settings. PaCO₂…',['Rises','Falls','Stays the same','Cannot be predicted'],0,'Temperature raises VCO₂, and the same ventilation cannot keep up.']];
+XQ.respfail=[
+['Type 2 respiratory failure is defined by PaCO₂ above…',['45 mmHg (6 kPa)','60 mmHg (8 kPa)','35 mmHg (4.7 kPa)','55 mmHg (7.3 kPa)'],0,'Along with hypoxaemia, a PaCO₂ above the normal range defines type 2.'],
+['Which condition typically causes type 2 failure?',['Opioid overdose','Pulmonary embolism','Mild pneumonia','Early fibrosis'],0,'Reduced drive lowers alveolar ventilation, so CO₂ rises.'],
+['An asthmatic\'s PaCO₂ rises from 30 to 48 mmHg during an attack. This suggests…',['Impending exhaustion','Improvement','A sampling error','Compensation'],0,'A normal or rising PaCO₂ during asthma is a warning sign, because hyperventilation is expected.']];
+XQ.ventchg=[
+['Ventilator rate 10, PaCO₂ 60, target 40. What new rate is expected?',['About 15','About 7','About 20','About 25'],0,'New rate = 10 × 60 ÷ 40 = 15 breaths per minute.'],
+['PCO₂ falls acutely from 40 to 20 mmHg. HCO₃⁻ falls by about…',['4 mmol/L','8 mmol/L','1 mmol/L','10 mmol/L'],0,'Acute respiratory alkalosis lowers HCO₃⁻ by about 2 per 10 mmHg.']];
+XQ.renal=[
+['Which cells in the collecting duct secrete H⁺ and generate new bicarbonate?',['α-intercalated cells','Principal cells','Podocytes','Macula densa cells'],0,'H⁺-ATPase in α-intercalated cells secretes acid.'],
+['Titratable acid in urine is mainly…',['Phosphate','Creatinine','Urea','Sodium'],0,'Filtered phosphate takes up secreted H⁺, close to its pKa of 6.8.'],
+['Hypokalaemia in the kidney tends to…',['Promote alkalosis','Promote acidosis','Do nothing','Lower aldosterone'],0,'It raises ammoniagenesis and H⁺ secretion, which sustains an alkalosis.']];
+XQ.rta=[
+['In distal (type 1) RTA the urine pH usually stays…',['Above 5.5 despite acidosis','Below 5.0 whatever the load','Fixed at exactly 7.4','Acid and highly variable'],0,'The distal nephron cannot acidify the urine.'],
+['Proximal (type 2) RTA often accompanies…',['Fanconi syndrome','Hyperkalaemia','Severe hypertension','Hypercalcaemia'],0,'Glucosuria, phosphaturia and aminoaciduria point to a global proximal defect.'],
+['A negative urine anion gap means…',['Plenty of urinary NH₄⁺','No ammonium at all','Urine pH is high','Renal tubular failure'],0,'Unmeasured NH₄⁺ cations make the measured gap negative; the kidney is responding properly.']];
+XQ.alkmaint=[
+['Urine chloride 8 mmol/L in a metabolic alkalosis suggests…',['Prior vomiting or diuretics','Hyperaldosteronism today','Bartter syndrome today','Milk-alkali syndrome today'],0,'Low urine chloride means the kidney is conserving it, so the alkalosis is chloride-responsive.'],
+['Which is a chloride-resistant cause?',['Hyperaldosteronism','Recent vomiting spells','Nasogastric suction loss','Past diuretic use ended'],0,'Mineralocorticoid excess keeps the urine chloride high and does not respond to saline.'],
+['A patient taking furosemide has urine Cl 60. This means…',['The drug is still acting','Hyperaldosteronism proved','Vomiting is likely','Saline will not help'],0,'Urine chloride is unreliable while diuretics are active; recheck when they have worn off.']];
+XQ.comp=[
+['Metabolic alkalosis with HCO₃⁻ 40. Expected PCO₂?',['48 ± 5','28 ± 2','60 ± 5','40 ± 5'],0,'0.7 × 40 + 20 = 48.'],
+['Acute respiratory alkalosis with PCO₂ 20. Expected HCO₃⁻?',['20','16','24','12'],0,'Acute: HCO₃⁻ falls 2 per 10 mmHg PCO₂ drop, so 24 − 4 = 20.']];
+XQ.kacid=[
+['A mineral (hyperchloraemic) acidosis shifts potassium…',['Out of cells','Into cells','Not at all','Into urine only'],0,'H⁺ enters cells and K⁺ leaves to keep electroneutrality.'],
+['Why does insulin lower plasma potassium?',['It drives K⁺ into cells','It increases urine loss','It binds potassium','It raises pH only'],0,'Insulin stimulates the Na⁺/K⁺-ATPase, which moves potassium inside.'],
+['Severe alkalosis increases the risk of…',['Tetany and arrhythmia','Hyperkalaemia and relapse','Bradypnoea and apnoea','Severe anaemia'],0,'Lower ionised calcium and potassium shift raise excitability.']];
+XQ.uosm=[
+['The urine osmolal gap estimates…',['Urinary ammonium','Urinary creatinine','Plasma osmolality','Urine volume'],0,'The unmeasured osmoles in a metabolic acidosis are mostly NH₄⁺ with its anion.'],
+['A urine osmolal gap below 150 in metabolic acidosis suggests…',['Impaired renal acidification','Good ammonium excretion','Gut bicarbonate loss','Toxic alcohol'],0,'The kidney is not excreting enough ammonium.'],
+['Urea and glucose are in the gap formula because…',['They add osmoles that are not NH₄⁺','They are the main urinary anions','They block ammonium excretion','They cannot be measured in urine'],0,'They contribute to osmolality, so they must be subtracted to isolate ammonium.']];
+XQ.sites=[
+['Which sample is used to estimate ScvO₂?',['Central venous','Peripheral venous','Capillary earlobe','Arterial radial'],0,'It comes from a central line with its tip near the right atrium.'],
+['An earlobe gas needs…',['Warming or vasodilator cream','A tight tourniquet on','Local anaesthetic alone','Venous drainage first'],0,'Arterialisation requires vasodilatation so that capillary blood resembles arterial.'],
+['A venous gas is drawn above a running glucose infusion. What happens?',['Glucose reads falsely high','Nothing changes at all','Potassium reads very high','Haemoglobin rises sharply'],0,'The sample is diluted and contaminated with the infusate.']];
+XQ.preanal=[
+['Too much liquid heparin lowers…',['PCO₂ and HCO₃⁻','PO₂ only','Haemoglobin only','Sodium only'],0,'Dilution lowers measured PCO₂ and calculated bicarbonate.'],
+['A haemolysed sample falsely raises…',['Potassium','Sodium','Chloride','Glucose'],0,'Red cells contain much more potassium than plasma.'],
+['A bubble in a high-FiO₂ sample with PaO₂ 300 will…',['Lower the PO₂ toward 150','Raise the PO₂ above 300','Leave the PO₂ unchanged','Raise the PCO₂ sharply'],0,'Equilibrating with room air pulls PO₂ toward about 150.']];
+XQ.analyser=[
+['Which electrode measures PO₂?',['Clark electrode','Severinghaus electrode','Glass electrode','Ion-selective electrode'],0,'Oxygen is reduced at a platinum cathode and the current is proportional to PO₂.'],
+['Co-oximetry measures…',['Hb species by light','pH by glass voltage','PCO₂ by a membrane','Sodium by an electrode'],0,'Multiple wavelengths separate O₂Hb, HHb, COHb and MetHb.'],
+['Which method causes pseudohyponatraemia in hyperlipidaemia?',['Indirect ISE','Direct ISE','Flame photometry only','Co-oximetry'],0,'Diluted-sample methods read sodium per total plasma volume, and lipids occupy some of it.']];
+XQ.oxim=[
+['In darker skin, pulse oximetry may…',['Overestimate saturation','Underestimate saturation','Always be exact','Read as zero'],0,'Occult hypoxaemia is more frequent, so a normal SpO₂ may hide a low SaO₂.'],
+['Methaemoglobinaemia drives SpO₂ toward…',['About 85%','About 100%','About 50%','About 0%'],0,'The two-wavelength ratio settles near 85% regardless of the true saturation.'],
+['SpO₂ 98% but co-oximeter SaO₂ 80% with COHb 18%. The difference is the…',['Saturation gap','P/F ratio','Anion gap','A–a gradient'],0,'A gap above about 5% suggests dyshaemoglobin.']];
+XQ.traps=[
+['Hypoalbuminaemia makes the anion gap…',['Smaller','Larger','Unchanged','Negative'],0,'Albumin is the main unmeasured anion, so less of it narrows the gap.'],
+['An unmeasured cation such as lithium would make the gap…',['Smaller','Larger','Unchanged','Cannot tell'],0,'Extra unmeasured cations reduce the calculated gap.'],
+['Which sample gives a true sodium in hyperlipidaemia?',['A blood gas analyser (direct ISE)','The main laboratory (indirect ISE)','A urine sample','Any sample'],0,'Direct ion-selective electrodes are unaffected by lipid or protein volume.']];
+XQ.nph=[
+['pH 7.50, PaCO₂ 28. The primary process is…',['Respiratory alkalosis','Metabolic alkalosis','Respiratory acidosis','Mixed acidosis'],0,'High pH with low CO₂ fits a respiratory alkalosis.'],
+['PaCO₂ falls acutely from 40 to 20 mmHg. Expected pH?',['About 7.56','About 7.48','About 7.60','About 7.70'],0,'Acute change is about 0.08 per 10 mmHg, so +0.16.'],
+['Which value mainly signals the respiratory component?',['PaCO₂','Base excess','Standard bicarbonate','Anion gap'],0,'PaCO₂ reflects alveolar ventilation.']];
+XQ.npo2=[
+['A PaO₂ of 60 mmHg corresponds to a saturation of about…',['90%','75%','97%','50%'],0,'This is the steep-to-flat transition of the dissociation curve.'],
+['A Venturi mask delivers…',['A fixed FiO₂ at set flow','A variable FiO₂ by effort','Humidified room air only','Pure oxygen every time'],0,'Entrainment of air at a fixed ratio holds the FiO₂ constant.'],
+['PaO₂ in healthy older people is lower mainly because…',['V/Q mismatch grows with age','They breathe far less often','Their haemoglobin changes','Altitude is higher for them'],0,'Age-related lung changes widen the A–a gradient.']];
+XQ.nhco3=[
+['The analyser\'s HCO₃⁻ is calculated from…',['pH and PCO₂','PO₂ and SaO₂','Na⁺ and Cl⁻ levels','Haemoglobin levels'],0,'Henderson–Hasselbalch gives bicarbonate from the two measured values.'],
+['Laboratory total CO₂ reads slightly higher than gas HCO₃⁻ because it includes…',['Dissolved CO₂ and H₂CO₃','Chloride as well','Albumin as well','Urea as well'],0,'Total CO₂ counts all forms, not only bicarbonate.'],
+['In a metabolic acidosis, HCO₃⁻ 12 with PCO₂ 26 means…',['Appropriate compensation','Mixed acidosis','Respiratory alkalosis','Metabolic alkalosis'],0,'Winter\'s: 1.5 × 12 + 8 = 26, so compensation is appropriate.']];
+XQ.nbe=[
+['A large negative base excess means…',['A metabolic acidosis','A respiratory acidosis','A metabolic alkalosis','A completely normal gas'],0,'Base excess measures the non-respiratory component of acid–base status.'],
+['Base excess is designed to be independent of…',['PCO₂','pH','Temperature','Haemoglobin'],0,'It standardises to PCO₂ 40 mmHg to remove the respiratory part.'],
+['By 0.3 × kg × |BE|, a 70 kg patient with BE −10 has a deficit of about…',['210 mmol','70 mmol','700 mmol','21 mmol'],0,'0.3 × 70 × 10 = 210. It is an estimate, not a dose.']];
+XQ.nlac=[
+['Why recheck lactate after about 2 hours?',['To see if it is clearing','To confirm the first value','Because it expires','To measure glucose'],0,'The trend in response to treatment matters more than a single value.'],
+['Adrenaline can raise lactate through…',['β₂-driven aerobic glycolysis','Tissue hypoxia only','Acute liver failure','Loss of lactate in urine'],0,'Beta stimulation speeds glycolysis faster than the Krebs cycle uses pyruvate.'],
+['A long tourniquet makes a venous lactate…',['Falsely higher','Falsely lower','Unchanged','Negative'],0,'Local stasis and muscle work produce lactate in the limb.']];
+XQ.nlytes=[
+['K⁺ 7.1 on a gas with a normal ECG after a difficult draw. First step?',['Repeat the sample','Give calcium immediately','Start dialysis','Ignore the value'],0,'Haemolysis is a common cause of a falsely high potassium.'],
+['Normal Na⁺ − Cl⁻ is about…',['36–38 mmol/L','28–30 mmol/L','45–50 mmol/L','20 mmol/L'],0,'A lower value suggests excess chloride.'],
+['Hyperventilation changes ionised calcium by…',['Lowering it','Raising it','Not at all','Doubling it'],0,'Alkalosis increases protein binding of calcium.']];
+XQ.ncoox=[
+['COHb half-life on room air is about…',['4–6 hours','30 minutes','24 hours','1 hour'],0,'It falls to about 60–90 minutes on 100% oxygen.'],
+['Methylene blue should be avoided in…',['G6PD deficiency','Asthma','Diabetes','Pregnancy only'],0,'It can cause haemolysis, and it may not work, in G6PD deficiency.'],
+['A heavy smoker\'s COHb may reach about…',['Up to 10%','30%','50%','Over 60%'],0,'Smoking raises the baseline, which matters when judging a mild CO exposure.']];
+XQ.nderived=[
+['A normal osmolar gap is below…',['10 mOsm/kg','30 mOsm/kg','50 mOsm/kg','2 mOsm/kg'],0,'A larger gap suggests unmeasured osmoles such as toxic alcohols.'],
+['A normal anion gap (without potassium) is about…',['8–12 mmol/L','20–25 mmol/L','2–4 mmol/L','30 mmol/L'],0,'Values vary by assay; check the local range.'],
+['A delta ratio of about 1.5 suggests…',['A pure HAGMA','HAGMA with NAGMA','HAGMA with alkalosis','No acidosis'],0,'Between 1 and 2 fits an isolated high anion gap acidosis.']];
+XQ.nall=[
+['Normal PaO₂ on room air is…',['80–100 mmHg','40–50 mmHg','120–150 mmHg','60–70 mmHg'],0,'Lower values are seen with age.'],
+['Normal HCO₃⁻ is…',['22–26 mmol/L','12–16 mmol/L','30–34 mmol/L','8–10 mmol/L'],0,'Typically about 24.'],
+['Normal arterial lactate is below…',['2 mmol/L','5 mmol/L','10 mmol/L','0.5 mmol/L'],0,'Above 4 is usually treated as high.']];
+XQ.vbg=[
+['A venous pH of 7.30 suggests an arterial pH of about…',['7.33','7.27','7.40','7.20'],0,'Venous pH is about 0.03 lower than arterial.'],
+['Which VBG value should not be used to judge oxygenation?',['PO₂','pH','Bicarbonate','Lactate'],0,'Venous PO₂ reflects tissue extraction, not lung function.']];
+
+/* ================= 4.2: more questions per lesson (batch 3: disorders, clinical, technique) ================= */
+XQ.read6=[
+['What is the first step of the six-step read?',['Check that the numbers fit together','Calculate the anion gap','Decide the compensation','Look at the PaO₂'],0,'A gas that does not obey Henderson–Hasselbalch is a bad sample, not a diagnosis.'],
+['pH 7.50, PCO₂ 30, HCO₃⁻ 23. What is the interpretation?',['Acute respiratory alkalosis','Metabolic alkalosis','Chronic respiratory alkalosis','Normal gas'],0,'Alkalaemia with a low PCO₂, and bicarbonate only 1–2 below normal, fits an acute change.'],
+['Why does the direction of the pH point to the primary disorder?',['Compensation does not overshoot','pH is measured first','Bicarbonate is calculated','PCO₂ is unreliable'],0,'A compensating process pushes pH back toward normal, never beyond it.']];
+XQ.hagma=[
+['AG 26, HCO₃⁻ 10. What is the delta ratio?',['1.0','0.5','2.0','3.0'],0,'(26 − 12) ÷ (24 − 10) = 14 ÷ 14 = 1.0, a pure HAGMA.'],
+['Which of these causes a normal anion gap acidosis?',['Diarrhoea','Lactic acidosis','Ketoacidosis','Methanol'],0,'Gut bicarbonate loss is replaced by chloride, so the gap stays normal.'],
+['Severe metformin-associated lactic acidosis with lactate above 20 may need…',['Haemodialysis','Insulin only','Diuretics','Oral bicarbonate only'],0,'EXTRIP recommends dialysis for lactate above 20 mmol/L or pH ≤ 7.0.']];
+XQ.nagma=[
+['Which cause of NAGMA is associated with a raised potassium?',['Type 4 RTA','Diarrhoea','Type 2 RTA','Acetazolamide'],0,'Hypoaldosteronism retains potassium and impairs ammonium excretion.'],
+['Large-volume 0.9% saline typically causes…',['Hyperchloraemic NAGMA','HAGMA','Metabolic alkalosis','Respiratory acidosis'],0,'Chloride load lowers the SID and bicarbonate.'],
+['Which surgery classically causes NAGMA?',['Ureterosigmoidostomy','Appendicectomy','Cholecystectomy','Hip replacement'],0,'Chloride is absorbed from urine in the bowel in exchange for bicarbonate.']];
+XQ.malk=[
+['Metabolic alkalosis with HCO₃⁻ 36. Expected PCO₂?',['About 45 ± 5','About 30 ± 5','About 60 ± 5','About 36 ± 5'],0,'0.7 × 36 + 20 ≈ 45.'],
+['In a metabolic alkalosis the PCO₂ is far above the expected value. What does that mean?',['A second respiratory acidosis','Perfect compensation','A sampling error only','Respiratory alkalosis'],0,'Compensation cannot overshoot; an excess suggests a separate respiratory problem.'],
+['Which drug class commonly causes a metabolic alkalosis?',['Loop diuretics','Beta blockers','Statins','Antihistamines'],0,'They lose chloride and volume, and the kidney retains bicarbonate.']];
+XQ.racid=[
+['PCO₂ rises acutely from 40 to 80 mmHg. Expected HCO₃⁻?',['About 28','About 40','About 24','About 32'],0,'Acute: +1 per 10 mmHg, so 24 + 4.'],
+['Chronic respiratory acidosis with PCO₂ 80. Expected HCO₃⁻?',['About 40','About 28','About 32','About 24'],0,'Chronic: +4 per 10 mmHg, so 24 + 16.'],
+['In COPD hypercapnia, what shows it is acute-on-chronic?',['A pH below normal','A raised bicarbonate','A low PaO₂','A high haemoglobin'],0,'Compensated chronic retention has a near-normal pH; acidaemia means a recent rise.']];
+XQ.ralk=[
+['Chronic respiratory alkalosis with PCO₂ 20. Expected HCO₃⁻?',['About 14','About 20','About 10','About 18'],0,'Chronic: −5 per 10 mmHg, so 24 − 10.'],
+['Which of these causes a respiratory alkalosis?',['Salicylate toxicity','Opioid overdose','Severe COPD','Myasthenia gravis'],0,'Salicylates stimulate the respiratory centre directly.'],
+['Hypoxia at altitude produces…',['Respiratory alkalosis','Respiratory acidosis','Metabolic acidosis','No gas change'],0,'Low PaO₂ drives ventilation, which lowers PCO₂.']];
+XQ.mixed=[
+['pH 7.35, PCO₂ 60, HCO₃⁻ 32. What is the interpretation?',['Compensated chronic respiratory acidosis','Mixed acidosis','Metabolic alkalosis only','Acute respiratory acidosis'],0,'Chronic: 24 + 4 × 2 = 32, so the bicarbonate is just what is expected.'],
+['HAGMA with NAGMA together gives a delta ratio…',['Below 0.8','Above 2','Exactly 1','Equal to 5'],0,'Bicarbonate falls more than the gap rises.'],
+['PCO₂ and HCO₃⁻ moving in opposite directions, from normal, means…',['A mixed disorder','Perfect compensation','A lab error','Chronic disease'],0,'Compensation moves them together; opposite movement means two primary processes.']];
+XQ.oxread=[
+['Co-oximeter SaO₂ 80% with PaO₂ 95 mmHg. What is the cause?',['Dyshaemoglobinaemia','Shunt','Hypoventilation','Low inspired oxygen'],0,'A normal PaO₂ with low measured saturation means haemoglobin is not carrying oxygen.'],
+['PaO₂ 60 on FiO₂ 0.6 with PEEP 8 and bilateral infiltrates. What is the P/F ratio and severity?',['100, severe','300, mild','200, moderate','400, normal'],0,'60 ÷ 0.6 = 100, which is at the severe threshold.'],
+['Hypoxaemia with a normal PaCO₂ and a raised A–a gradient points to…',['A lung problem','Pure hypoventilation','Low altitude','Anaemia'],0,'The gradient shows the lung is failing to transfer oxygen.']];
+XQ.dka=[
+['Which values define DKA resolution?',['BHB below 0.6 and pH 7.3 or higher','Glucose below 10 only','HCO₃⁻ 18 and glucose 11','Ketonuria clearing'],0,'Resolution is based on ketones and acidosis, not glucose alone.'],
+['Chloride rises and the anion gap falls during DKA treatment. Why?',['Hyperchloraemic NAGMA from ketoanion loss and saline','New lactic acidosis','Insulin overdose','Respiratory failure'],0,'Ketoanions are excreted and replaced by chloride.'],
+['In DKA, a venous sample is adequate because…',['pH and bicarbonate agree closely','PO₂ matters most','Lactate cannot be measured','Arterial puncture is unsafe'],0,'The offset from arterial is small and consistent.']];
+XQ.sepsis=[
+['Sepsis-3 septic shock needs vasopressors to keep MAP ≥ 65 and a lactate above…',['2 mmol/L','4 mmol/L','6 mmol/L','1 mmol/L'],0,'The definition combines vasopressor need and lactate above 2 despite fluid.'],
+['Compared with saline, balanced crystalloids cause less…',['Hyperchloraemic acidosis','Hypokalaemia','Hypocalcaemia','Alkalosis'],0,'Their chloride content is lower, so the SID falls less.'],
+['Why is a raised lactate in sepsis not always tissue hypoxia?',['Adrenergic aerobic glycolysis and poor clearance','Lactate is always from gut bacteria','It reflects glucose only','It is lab artefact'],0,'Beta-adrenergic stress and impaired hepatic clearance also contribute.']];
+XQ.asa=[
+['Alkalinising the urine helps in salicylate overdose because…',['Ionised salicylate is trapped and excreted','It stops absorption','It raises the CO₂','It lowers the dose'],0,'Ion trapping increases renal elimination.'],
+['Which is an indication for dialysis in salicylate poisoning?',['Altered mental status','A normal pH','Mild tinnitus','A normal level'],0,'Altered mental status, acidaemia or very high levels indicate severe toxicity.'],
+['Why is intubating a salicylate patient dangerous?',['Loss of ventilation lets pH fall and salicylate enter the brain','It lowers the dose','It raises urine pH','It cools the patient'],0,'Acidaemia increases CNS penetration; the high minute ventilation must be preserved.']];
+XQ.toxalc2=[
+['Measured osm 340, calculated 290. What is the osmolar gap?',['50','30','10','630'],0,'340 − 290 = 50, well above the normal range.'],
+['Why can the osmolar gap be normal late after ingestion?',['The parent alcohol has been metabolised to acids','Toxic alcohols are not osmotically active','The test fails after 12 hours','Ethanol cancels it'],0,'By then the acid metabolites cause an anion gap rather than an osmolar gap.'],
+['Drinking ethanol raises the osmolar gap because…',['It is an unmeasured osmole','It is an acid','It lowers sodium','It is cleared by dialysis'],0,'Ethanol adds osmolality that the calculated value does not include.']];
+XQ.copd=[
+['What is the target saturation for a patient at risk of hypercapnia?',['88–92%','94–98%','100%','80–85%'],0,'This avoids both hypoxaemia and oxygen-induced CO₂ retention.'],
+['After 1 hour on NIV the pH is 7.25 with PCO₂ 75, worse than before. What next?',['Escalate: ICU review and invasive ventilation','Continue unchanged','Stop oxygen','Give sedatives'],0,'Failure to improve on NIV needs escalation.'],
+['A compensated chronic CO₂ retainer typically has HCO₃⁻ around…',['30–35 mmol/L','12–15 mmol/L','24 mmol/L','45–50 mmol/L'],0,'Renal retention of bicarbonate offsets chronic hypercapnia.']];
+XQ.asthma=[
+['The typical gas early in an asthma attack is…',['Respiratory alkalosis','Respiratory acidosis','Metabolic alkalosis','Normal'],0,'Hypoxia and anxiety drive hyperventilation.'],
+['High-dose salbutamol commonly causes…',['Hypokalaemia','Hyperkalaemia','Hypernatraemia','Hypocalcaemia'],0,'Beta stimulation drives potassium into cells.'],
+['What marks near-fatal asthma?',['A raised PaCO₂','A high peak flow','Mild wheeze','A low lactate'],0,'CO₂ retention or need for ventilation defines it.']];
+XQ.pe=[
+['In massive PE, ETCO₂ is far below PaCO₂ because…',['Dead space is increased','CO₂ production rises','The sensor is faulty','Ventilation is too high'],0,'Perfusion is lost to ventilated alveoli, so exhaled CO₂ is diluted.'],
+['Hypoxaemia in PE mainly results from…',['V/Q mismatch','Hypoventilation','Low inspired oxygen','Anaemia'],0,'Unperfused lung does not contribute; perfused areas receive more flow.'],
+['The A–a gradient is raised in PE because…',['Gas exchange is impaired','CO₂ rises','Ventilation falls','Haemoglobin falls'],0,'PaO₂ falls more than PAO₂.']];
+XQ.vomit=[
+['Vomiting causes alkalosis by loss of…',['Gastric acid (H⁺ and Cl⁻)','Bicarbonate','Sodium only','Water only'],0,'Each H⁺ lost leaves behind a new bicarbonate.'],
+['Why is hypokalaemia common with vomiting?',['Renal potassium loss under aldosterone','Gastric potassium loss alone','Insulin release','Shift into red cells'],0,'Volume depletion and alkalosis increase urinary potassium excretion.'],
+['What is the first-line fluid for a hypovolaemic patient with vomiting alkalosis?',['0.9% saline with potassium','Dextrose 5%','Sodium bicarbonate','Furosemide'],0,'It restores chloride and volume so the kidney can excrete bicarbonate.']];
+XQ.diarr=[
+['Diarrhoea causes acidosis because the stool loses…',['Bicarbonate-rich fluid','Chloride only','Albumin','Lactate'],0,'Pancreatic and small bowel secretions are alkaline.'],
+['Why is potassium low in diarrhoea?',['Faecal loss and secondary hyperaldosteronism','Insulin','Excess intake','Haemolysis'],0,'Volume depletion drives renal potassium wasting too.'],
+['Severe dehydration from diarrhoea adds…',['A lactic (HAGMA) component','Metabolic alkalosis','Respiratory acidosis','Hypernatraemia only'],0,'Poor perfusion produces lactate on top of the NAGMA.']];
+XQ.renalfail=[
+['Chronic kidney disease causes acidosis because the kidney fails to…',['Excrete ammonium and acid','Make urea','Retain sodium','Concentrate urine'],0,'Nephron loss reduces ammoniagenesis and net acid excretion.'],
+['In uraemic acidosis the anion gap rises when GFR falls below about…',['15–20 mL/min','60 mL/min','45 mL/min','90 mL/min'],0,'Retained anions accumulate in advanced disease.'],
+['Chronic metabolic acidosis in CKD harms…',['Bone and muscle','Hearing only','Skin only','The lens only'],0,'Buffering by bone and protein catabolism worsen both.']];
+XQ.arrest=[
+['The typical gas in cardiac arrest is…',['Mixed respiratory and metabolic acidosis','Respiratory alkalosis','Metabolic alkalosis','Normal'],0,'No ventilation retains CO₂ and anaerobic metabolism makes lactate.'],
+['During CPR, which sample better reflects tissue acid–base status?',['Central venous','Arterial','Capillary','Any, they match'],0,'Low flow lets venous CO₂ rise while arterial values can look near normal.'],
+['Why avoid hyperoxia after ROSC?',['It may add to reperfusion injury','It lowers CO₂','It causes bradycardia','It lowers lactate'],0,'Targeting a normal saturation avoids the harms of excess oxygen.']];
+XQ.opioid=[
+['Oxygen in an opioid overdose may…',['Improve SpO₂ while hypoventilation worsens','Reverse the respiratory depression','Lower PaCO₂','Make naloxone unnecessary'],0,'Saturation can look good while CO₂ keeps rising.'],
+['Acute PaCO₂ of 90 mmHg. Expected pH is about…',['7.00','7.20','7.30','7.40'],0,'Acute rule: pH falls about 0.08 per 10 mmHg rise, so 5 × 0.08 = 0.4 below 7.40.'],
+['Why monitor after naloxone?',['The opioid may outlast the antidote','Naloxone causes alkalosis','Naloxone raises PCO₂','It lowers lactate'],0,'Re-sedation is possible with long-acting opioids.']];
+XQ.heat=[
+['Heat stroke is defined by a core temperature above…',['40 °C with CNS dysfunction','38 °C','39 °C only','37.5 °C with sweating'],0,'The combination marks a medical emergency.'],
+['The early gas in heat illness is typically…',['Respiratory alkalosis','Respiratory acidosis','Metabolic alkalosis','Normal'],0,'Hyperventilation comes first; lactic acidosis follows.'],
+['The priority in heat stroke is…',['Rapid cooling','Antipyretics','Bicarbonate','Observation'],0,'Rapid active cooling is the main treatment.']];
+XQ.co=[
+['Why is PaO₂ normal in CO poisoning?',['Dissolved oxygen is unaffected','Oxygen is never inhaled','CO raises PaO₂','CO makes the curve shift right'],0,'CO binds haemoglobin, not plasma oxygen.'],
+['COHb half-life on 100% oxygen is about…',['60–90 minutes','5 minutes','6 hours','24 hours'],0,'It is about 4–6 hours on room air.'],
+['Which finding supports considering hyperbaric oxygen?',['Loss of consciousness','A mild headache','Normal COHb','Normal ECG'],0,'Neurological deficits or loss of consciousness raise concern for severe poisoning.']];
+XQ.methb=[
+['Blood that stays dark brown in air suggests…',['Methaemoglobin','Carboxyhaemoglobin','Anaemia','Sulphaemoglobin only'],0,'Chocolate-coloured blood does not redden when exposed to oxygen.'],
+['Which drug classically causes methaemoglobinaemia?',['Dapsone','Metformin','Ramipril','Atenolol'],0,'Oxidant drugs such as dapsone and benzocaine are common triggers.'],
+['Oxygen therapy in methaemoglobinaemia…',['Does not raise SpO₂ much','Normalises SpO₂','Is harmful','Replaces methylene blue'],0,'Methaemoglobin cannot carry oxygen, so the reading stays near 85%.']];
+XQ.preg=[
+['Why is PaCO₂ lower in pregnancy?',['Progesterone increases ventilation','Higher haemoglobin','Lower metabolic rate','Reduced lung volume'],0,'Resting ventilation rises by about a third.'],
+['Why aim for maternal SpO₂ of 95% or more?',['To maintain fetal oxygen delivery','To lower CO₂','To raise bicarbonate','To avoid alkalosis'],0,'The fetus depends on maternal oxygenation.'],
+['DKA in pregnancy may occur at…',['Lower glucose levels','Higher glucose only','Normal pH','Normal ketones'],0,'Euglycaemic or near-euglycaemic DKA is more likely.']];
+XQ.glance=[
+['What is the second look in the glance?',['PCO₂ against the pH direction','The PaO₂','The anion gap','The lactate'],0,'It tells you whether the primary process is respiratory or metabolic.'],
+['pH 7.55, PCO₂ 25. What does the shortcut say?',['Consistent with acute respiratory alkalosis','Metabolic alkalosis','Chronic respiratory alkalosis','Mixed acidosis'],0,'About 0.08 per 10 mmHg below 40 gives roughly 7.52.'],
+['The four-look glance needs extra numbers for…',['The anion gap','The pH','The PCO₂','The saturation'],0,'It needs sodium, chloride and bicarbonate.']];
+XQ.rhabdo=[
+['A dipstick positive for blood with no red cells suggests…',['Myoglobinuria','Haematuria','UTI','Glucosuria'],0,'Myoglobin reacts on the strip without intact cells.'],
+['The cornerstone of rhabdomyolysis treatment is…',['Early IV fluids','Diuretics','Bicarbonate infusion','Rest'],0,'Fluids maintain urine flow and protect the kidney.'],
+['Early hypocalcaemia in rhabdomyolysis results from…',['Calcium deposition in damaged muscle','Dietary lack','Alkalosis','Haemolysis'],0,'Calcium moves into injured muscle and binds phosphate.']];
+XQ.etoh=[
+['In alcoholic ketoacidosis, glucose-containing fluid is given after…',['Thiamine','Potassium','Bicarbonate','Insulin'],0,'Glucose first can precipitate Wernicke encephalopathy.'],
+['Why may urine dipstick understate AKA?',['BHB predominates and the strip detects acetoacetate','Ketones are not excreted','pH is high','Ethanol blocks the test'],0,'Blood BHB is the better measure.'],
+['Why can pH look normal in AKA despite a large gap?',['A co-existing metabolic alkalosis from vomiting','Respiratory compensation is perfect','The gap is false','Bicarbonate is high'],0,'Vomiting adds a metabolic alkalosis.']];
+XQ.drugacid=[
+['Linezolid can cause…',['Lactic acidosis','Alkalosis','Hypoglycaemia','Hypernatraemia'],0,'Mitochondrial toxicity limits oxidative metabolism.'],
+['Metformin accumulates in…',['Renal failure','Heart failure only','Liver disease only','Anaemia'],0,'It is cleared by the kidney.'],
+['Glue sniffing (toluene) classically causes…',['NAGMA with hypokalaemia','HAGMA','Metabolic alkalosis','Hypercalcaemia'],0,'Hippurate excretion and a distal tubule defect combine.']];
+XQ.gib=[
+['In acute GI bleeding, early haemoglobin may be…',['Normal','Very low at once','High','Unmeasurable'],0,'Haemodilution takes time.'],
+['Which gas finding best reflects hypoperfusion in a bleed?',['Raised lactate or base deficit','High PaO₂','High pH','Low potassium'],0,'They mark tissue hypoxia early.'],
+['Tranexamic acid in GI bleeding is…',['Not routinely recommended','Recommended for all','Given only as a gel','Given as a tablet only'],0,'The HALT-IT trial found no benefit and more thromboembolic events.']];
+XQ.kids=[
+['Normal infant HCO₃⁻ is about…',['20–22 mmol/L','28–30 mmol/L','12 mmol/L','35 mmol/L'],0,'It is lower than the adult range.'],
+['A typical gas in severe bronchiolitis is…',['Respiratory acidosis','Respiratory alkalosis','Metabolic alkalosis','Normal'],0,'Airway obstruction and fatigue retain CO₂.'],
+['A heel-prick capillary gas is adequate for…',['pH and PCO₂','PO₂','Oxygen saturation','Co-oximetry'],0,'Arterialised capillary values track pH and CO₂ well but not oxygen.']];
+XQ['tc-radial']=[
+['Where should the radial artery be palpated?',['1–2 cm above the wrist crease','At the elbow','At the base of the thumb','Over the ulna'],0,'It runs straight, close to the surface, just proximal to the crease.'],
+['What is lidocaine for before a radial puncture?',['Reducing pain','Lowering PaO₂','Stopping clotting','Raising pressure'],0,'A small local anaesthetic wheal makes the stick easier for the patient.']];
+XQ['tc-allen']=[
+['The Barbeau test uses…',['A pulse oximeter on the thumb','A tourniquet','Ultrasound only','X-ray'],0,'The signal is watched while the radial artery is compressed.'],
+['A normal Allen return time is under about…',['5–7 seconds','1 second','20 seconds','30 seconds'],0,'Over about 15 seconds is abnormal.']];
+XQ['tc-venous']=[
+['Venous PCO₂ is on average how much above arterial?',['About 5 mmHg','About 20 mmHg','About 0 mmHg','About 1 mmHg'],0,'The difference varies, which is why venous PCO₂ is only a screen.'],
+['Releasing the tourniquet early helps because…',['It limits stasis effects on lactate, K⁺ and pH','It raises PO₂','It lowers the pressure','It stops clotting'],0,'Stasis and muscle work distort the sample.']];
+XQ['tc-bubbles']=[
+['A bubble changes the PO₂ most when the sample PO₂ is…',['Far from 150 mmHg','Close to 150 mmHg','Exactly 100 mmHg','Low only'],0,'The bubble pulls the sample toward air.'],
+['How long can a plastic syringe sit at room temperature?',['About 30 minutes','2 hours','6 hours','24 hours'],0,'Beyond that, run a fresh sample.']];
+
+/* 4.2: merge the extra questions into lessons; answer positions are shuffled with a fixed seed so they are stable between sessions */
+(function(){
+ function rnd(seed){let h=2166136261;for(let i=0;i<seed.length;i++){h^=seed.charCodeAt(i);h=Math.imul(h,16777619);}return()=>{h^=h<<13;h^=h>>>17;h^=h<<5;return((h>>>0)%100000)/100000;};}
+ const byId={};L.forEach(l=>{byId[l.id]=l;});
+ Object.keys(XQ).forEach(id=>{
+  const l=byId[id];if(!l)return;
+  XQ[id].forEach((q,n)=>{
+   const r=rnd(id+':'+n),opts=q[1].map((t,i)=>[t,i===q[2]]);
+   for(let i=opts.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[opts[i],opts[j]]=[opts[j],opts[i]];}
+   l.q.push([q[0],opts.map(o=>o[0]),opts.findIndex(o=>o[1]),q[3]]);
+  });
+ });
+})();
+
 /* ================= CORE: STATE, UNITS, INTERPRETER, GENERATOR ================= */
 const KPA=7.50062;
 const DEF={done:{},qs:{},kinds:{},reflex:{lvl:1,hist:[]},days:[],read:0,units:'mmHg',patm:760,agref:12,usek:false,conf:[],exams:[]};
 let S=JSON.parse(JSON.stringify(DEF));
 /* persistent state: one key, schema-versioned; unknown or damaged fields fall back to defaults */
-const DEF2={v:3,goal:15,sessLen:10,lvl:4,hints:'auto',dayN:{},steps:{},ret:{n:0,c:0},gym:{n:0,c:0},mist:[],sess:[],ui:{},xp:0,why:{},teach:{},scen:{},badges:{},flash:{},est:{n:0,c:0},serial:{},theme:'auto',google:{clientId:'',syncState:true,publish:true},lastRound:'',roundsDone:0,round:null,savedAt:'',epoch:0};
+const DEF2={v:4,goal:15,sessLen:10,lvl:4,hints:'auto',dayN:{},steps:{},ret:{n:0,c:0},gym:{n:0,c:0},mist:[],sess:[],ui:{},xp:0,why:{},teach:{},scen:{},badges:{},flash:{},est:{n:0,c:0},serial:{},theme:'dark',quiet:true,skin:'pixel',google:{clientId:'',syncState:true,publish:true},lastRound:'',roundsDone:0,round:null,savedAt:'',epoch:0};
 function migrate(o){const d=JSON.parse(JSON.stringify(DEF)),d2=JSON.parse(JSON.stringify(DEF2));const out=Object.assign(d,d2);
   if(!o||typeof o!=='object')return out;
   for(const k in out){if(!(k in o))continue;const a=out[k],b=o[k];
@@ -1822,7 +2249,8 @@ function migrate(o){const d=JSON.parse(JSON.stringify(DEF)),d2=JSON.parse(JSON.s
     else if(typeof b===typeof a)out[k]=b;}
   if(!Array.isArray(out.reflex.hist))out.reflex.hist=[];
   for(const k in out.kinds){const s=out.kinds[k];if(!s||typeof s!=='object'||!(k in KINDS))delete out.kinds[k];}
-  out.v=3;return out;}
+  if(!(+o.v>=4)){out.quiet=true;if(out.theme==='auto')out.theme='dark';}
+  out.v=4;return out;}
 let SAVE_OK=true;
 function load(){try{const r=localStorage.getItem('buffer.v1');S=migrate(r?JSON.parse(r):null);}catch(e){S=migrate(null);}}
 function save(){try{localStorage.setItem('buffer.v1',JSON.stringify(S));SAVE_OK=true;}catch(e){if(SAVE_OK&&typeof toast==='function')toast('Progress could not be saved in this browser.','bad');SAVE_OK=false;}}
@@ -2343,7 +2771,7 @@ W.sid={t:'Stewart: SIDa, SIDe and the strong ion gap',build(el){const u=uid();
  el.querySelectorAll('input').forEach(i=>i.addEventListener('input',run));run();}};
 
 /* ================= UI CORE ================= */
-const APP_VERSION='4.1.1';
+const APP_VERSION='4.2.0';
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 /* lessons in module order (later files append lessons to earlier modules) */
 (function(){const mi={};MODS.forEach((m,i)=>mi[m.id]=i);const o=L.slice().sort((a,b)=>mi[a.m]-mi[b.m]);L.length=0;o.forEach(x=>L.push(x));})();
@@ -2378,7 +2806,7 @@ const ICON={
  due:'<rect x="4" y="5" width="16" height="15"/><path d="M4 10h16M9 3v4M15 3v4"/>'
 };
 const ic=(n,attrs)=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" shape-rendering="crispEdges" aria-hidden="true"'+(attrs||'')+'>'+(ICON[n]||'')+'</svg>';
-function toast(msg,tone){const h=$('toasts');if(!h)return;while(h.children.length>=2)h.firstChild.remove();const t=document.createElement('div');t.className='toast'+(tone?' '+tone:'');t.textContent=msg;h.appendChild(t);setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .3s';setTimeout(()=>t.remove(),320);},2600);}
+function toast(msg,tone){const h=$('toasts');if(!h)return;while(h.children.length>=2)h.firstChild.remove();const t=document.createElement('div');t.className='toast'+(tone?' '+tone:'');t.textContent=(S.quiet!==false&&typeof msg==='string')?msg.replace(/\s*[·,]?\s*\+\d+ XP/g,'').replace(/^Level up: .*$/,'Mastery updated'):msg;h.appendChild(t);setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .3s';setTimeout(()=>t.remove(),320);},2600);}
 async function copyText(txt,btn){try{await navigator.clipboard.writeText(txt);if(btn){const o=btn.innerHTML;btn.innerHTML=ic('check')+'Copied';setTimeout(()=>btn.innerHTML=o,1400);}return true;}catch(e){return false;}}
 function ddmmyyyy(d){d=d||new Date();return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear();}
 function todayN(){return (S.dayN||{})[today()]||0;}
@@ -2405,7 +2833,7 @@ function levelPill(){const xp=S.xp||0,li=levelOf(xp),cur=LEVELS[li][0],nxt=LEVEL
  return '<div class="lvlpill" data-hint="Level|XP from answers (+2 per right step, +10 per perfect gas), lessons, gym, estimates, teach-backs, shifts and bosses. Levels run Student → Siggaard-Andersen."><span class="num">'+(li+1)+'</span><div><b>'+LEVELS[li][1]+'</b><div class="xpbar"><i style="width:'+pc+'%"></i></div><small>'+xp+' XP'+(nxt?' · '+(nxt-xp)+' to '+LEVELS[li+1][1]:' · top level')+'</small></div></div>';}
 
 /* ---------- theme ---------- */
-function applyTheme(){const t=S.theme||'auto';const r=document.documentElement;if(t==='auto')r.removeAttribute('data-theme');else r.setAttribute('data-theme',t);const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=getComputedStyle(r).getPropertyValue('--bg').trim()||'#F3EBDD';}
+function applyTheme(){const t=S.theme||'dark';const r=document.documentElement;r.setAttribute('data-skin',S.skin==='clinical'?'clinical':'pixel');document.body.classList.toggle('quiet',S.quiet!==false);if(t==='auto')r.removeAttribute('data-theme');else r.setAttribute('data-theme',t);const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=getComputedStyle(r).getPropertyValue('--bg').trim()||'#F3EBDD';}
 
 /* ---------- printout (each value holds to explain) ---------- */
 const REF={pH:[7.35,7.45],pco2:[35,45],po2:[80,100],hco3:[22,26],be:[-2,2],lac:[0,2],na:[135,145],k:[3.5,5],cl:[98,106],glu:[3.9,7.8],alb:[35,50],cohb:[0,3],methb:[0,1.5]};
@@ -2521,6 +2949,7 @@ function renderLesson(l){const el=$('v-lesson');const m=MBYID[l.m];const prev=L[
   ((tb||nodes.length)?'<div class="card" style="display:flex;flex-direction:column;gap:8px"><span class="eyebrow">Connect it</span>'+(nodes.length?'<div class="btnrow">'+nodes.slice(0,4).map(n=>'<button class="btn small" data-node="'+n[0]+'">'+ic('web')+esc(n[1])+'</button>').join('')+'</div>':'')+(tb?'<button class="btn small" id="lTeach">'+ic('teach')+'Teach it back</button>':'')+'</div>':'')+'</aside></div>'+
  '<div id="lW" style="display:flex;flex-direction:column;gap:14px"></div>'+
  '<div class="card"><span class="eyebrow">Check yourself</span><h2 style="margin:4px 0 16px">Retrieve it before you move on</h2><div class="qs" id="lQ"></div></div>'+
+ (function(){const ss=lessonSources(l);return ss.length?'<details class="card srcs"><summary><span class="eyebrow">Sources · '+ss.length+'</span></summary><ol class="note" style="margin:10px 0 0;padding-left:20px;display:grid;gap:6px">'+ss.map(s=>'<li>'+esc(s[1])+'</li>').join('')+'</ol></details>':'';})()+
  '<div class="pager"><button class="btn" id="lPrev">'+(prev?'← '+esc(prev.t):'← Learn')+'</button><button class="btn primary" id="lNext">'+(next?'Next: '+esc(next.t)+' →':'Finish: start practising →')+'</button></div>';
  if(l.ex){const c=Object.assign({},l.ex);if(c.hco3==null)c.hco3=r1(hFrom(c.pH,c.pco2));$('lEx').innerHTML=slip(c,{lv:4,urea:!!c.osm});$('lExGo').onclick=()=>{loadInterp(l.ex);openTool('interp');};}
  if($('lTeach'))$('lTeach').onclick=()=>{TB_PICK=tb.c;TB=null;go('teach');};
@@ -2534,6 +2963,11 @@ function renderLesson(l){const el=$('v-lesson');const m=MBYID[l.m];const prev=L[
  $('lPrev').onclick=()=>prev?openLesson(prev.id):go('learn');
  $('lNext').onclick=()=>{if(!S.done[l.id]){S.done[l.id]=1;addXP(15);save();}next?openLesson(next.id):go('practice');};
  window.scrollTo(0,0);}
+
+/* Quiet mode: game words become plain words */
+(function(){const MAP=[[/Final boss/g,'Final check'],[/Boss fight/g,'Module check'],[/Boss beaten again/g,'Check passed again'],[/Boss beaten\. Badge earned\./g,'Check passed.'],[/Boss ·/g,'Check ·'],[/Module boss/g,'Module check'],[/boss badges?/g,'module checks'],[/Native reader\. Badge earned\./g,'Final check passed.'],[/ · \+\d+ XP/g,''],[/Earn XP from every[^.]*\./g,'Every answer builds mastery.']];
+let t=0;function walk(){t=0;if(S.quiet===false)return;const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let n;while(n=w.nextNode()){const p=n.parentNode;if(p&&/SCRIPT|STYLE/.test(p.nodeName))continue;let v=n.nodeValue,o=v;for(const [a,b] of MAP)v=v.replace(a,b);if(v!==o)n.nodeValue=v;}}
+window.addEventListener('DOMContentLoaded',()=>{new MutationObserver(()=>{if(!t)t=setTimeout(walk,120);}).observe(document.body,{childList:true,subtree:true,characterData:true});});})();
 
 /* ================= PRACTICE ================= */
 const MODES={
@@ -2809,10 +3243,28 @@ function roundPlan(){const legs=[];const due=dueKinds().length;
  const sc=SCENARIOS.find(x=>!(S.scen||{})[x.id])||SCENARIOS[dayNum()%SCENARIOS.length];legs.push({t:'scen',label:'Shift: '+sc.title,min:5,id:sc.id});
  legs.push({t:'teach',label:'Teach one idea back',min:3});
  return legs;}
-function startRound(){ROUND={legs:roundPlan(),i:0,t0:Date.now(),xp0:S.xp||0,day:today()};S.round=ROUND;save();roundGo();}
+function weakLeg(){const w=weakestStep();return w?{t:'weak',label:'Weakest step: '+STEPNAME[w.c]+' ('+Math.round(w.a*100)+'%)',min:5,c:w.c}:null;}
+function roundCatalog(){const L0=roundPlan(),wl=weakLeg(),o=[];if(wl)o.push(wl);L0.forEach(g=>o.push(g));return o;}
+const LEG_PRI=['weak','due','steps','gym','est','concept','scen','teach','five','case','noise','trend','hand'];
+function roundCap(){let m=15;try{if(typeof G!=='undefined'&&G.plan&&+G.plan.minutes)m=+G.plan.minutes;if(typeof slotFor==='function'){const c=SLOT_MIN[slotFor(today())];if(c!=null&&c<m)m=c;}}catch(e){}return m;}
+function presetLegs(cat,cap){const out=[];let t=0;[...cat].sort((a,b)=>LEG_PRI.indexOf(a.t)-LEG_PRI.indexOf(b.t)).forEach(g=>{if(t+g.min<=cap||!out.length){out.push(g);t+=g.min;}});return cat.filter(g=>out.includes(g));}
+function startRound(){openRoundBuilder();}
+function openRoundBuilder(){const cat=roundCatalog();let sel=new Set(presetLegs(cat,roundCap()).map(g=>g.t+(g.id||'')));const old=document.querySelector('.sheet-scrim');if(old)old.remove();
+ const sc=document.createElement('div');sc.className='sheet-scrim';
+ function draw(){const tot=cat.filter(g=>sel.has(g.t+(g.id||''))).reduce((s,g)=>s+g.min,0);
+  sc.innerHTML='<div class="sheet" role="dialog" aria-label="Build today\'s Round"><div class="sheet-grab"></div><b>Build today\'s Round</b><p class="note" style="margin:6px 0 10px">Tick the legs you want. Your weakest step comes first. '+(typeof G!=='undefined'&&G.plan?'Citrus planned '+esc(String(G.plan.minutes||''))+' min.':'')+'</p>'+
+  '<div class="btnrow" style="margin-bottom:10px"><button class="btn small" data-p="10">Quick 10</button><button class="btn small" data-p="25">Standard 25</button><button class="btn small" data-p="99">Everything</button></div>'+
+  cat.map((g,i)=>'<label class="srow"><div><b>'+esc(g.label)+'</b><span>about '+g.min+' min</span></div><input type="checkbox" data-i="'+i+'"'+(sel.has(g.t+(g.id||''))?' checked':'')+' aria-label="'+esc(g.label)+'"></label>').join('')+
+  '<div class="btnrow" style="margin-top:12px"><button class="btn primary" id="rbBuild"'+(tot?'':' disabled')+'>Start · '+tot+' min</button><button class="btn" id="rbCancel">Cancel</button></div></div>';
+  sc.querySelectorAll('[data-i]').forEach(c=>c.onchange=()=>{const g=cat[+c.dataset.i],k=g.t+(g.id||'');c.checked?sel.add(k):sel.delete(k);draw();});
+  sc.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{sel=new Set(presetLegs(cat,+b.dataset.p).map(g=>g.t+(g.id||'')));draw();});
+  $('rbCancel').onclick=()=>sc.remove();
+  $('rbBuild').onclick=()=>{const legs=cat.filter(g=>sel.has(g.t+(g.id||'')));sc.remove();if(!legs.length)return;ROUND={legs,i:0,t0:Date.now(),xp0:S.xp||0,day:today()};S.round=ROUND;save();roundGo();};}
+ sc.addEventListener('click',e=>{if(e.target===sc)sc.remove();});document.body.appendChild(sc);draw();requestAnimationFrame(()=>sc.classList.add('on'));}
 function roundGo(){if(!ROUND)return;const g=ROUND.legs[ROUND.i];if(!g){roundFinish();return;}
  switch(g.t){case 'due':startSession('due',{round:true,n:Math.min(4,Math.max(1,dueKinds().length))});break;
   case 'concept':WEBSEL=g.c;go('web');break;
+  case 'weak':if(g.c==='comp')startSession('gym',{round:true,n:5});else startSession('steps',{round:true,n:4});break;
   case 'gym':startSession('gym',{round:true,n:5});break;
   case 'est':ES=null;ES_N=0;go('est');break;
   case 'steps':startSession('steps',{round:true,n:5});break;
@@ -3090,7 +3542,7 @@ RENDER.progress=function(){const el=$('v-progress');const st=S.steps||{};const r
  '<div class="grid2"><div class="card"><span class="eyebrow" style="display:block;margin-bottom:12px">Accuracy by step · last 20 attempts</span>'+(rows.length?'<div class="slips">'+rows.map(k=>{const a=stepAcc(k),p=Math.round(a*100);return '<div class="sb" data-hint="'+STEPNAME[k]+'|'+p+'% over your recent attempts ('+st[k].n+' in total). Hints for this step '+(hintMode(k)==='open'?'stay open':'are now behind a tap')+'."><span>'+STEPNAME[k]+'</span><div class="bar"><i style="width:'+p+'%;background:'+(p>=85?'var(--good)':p>=65?'var(--warn)':'var(--bad)')+'"></i></div><b>'+p+'%</b><small>'+st[k].n+'</small></div>';}).join('')+'</div>':'<div class="empty"><b>No data yet</b><span>A step-by-step session shows exactly which step trips you up.</span></div>')+'</div>'+
  '<div class="card" style="display:flex;flex-direction:column;gap:12px"><span class="eyebrow">Why you miss · error autopsy</span>'+(wt?'<div class="slips">'+WHY.map(w=>{const n=why[w[0]]||0,p=Math.round(n/wt*100);return '<div class="sb"><span>'+w[1]+'</span><div class="bar"><i style="width:'+p+'%"></i></div><b>'+p+'%</b><small>'+n+'</small></div>';}).join('')+'</div><p class="note"><b>Advice:</b> '+WHYADV[WHY.slice().sort((a,b)=>(why[b[0]]||0)-(why[a[0]]||0))[0][0]]+'</p>':'<p class="note">After a miss in a session, tap why it happened (misread, slip, rule, mix-up). The pattern shows here with advice.</p>')+
  '<span class="eyebrow">Calibration · how often you are right</span><div class="stats">'+cal.map(c=>'<div><b>'+(c[2]==null?'—':c[2]+'%')+'</b><small>when "'+c[0]+'" ('+c[1]+')</small></div>').join('')+'</div><p class="note">Well calibrated means "sure" is right more than 90% of the time and "guess" much less.</p></div></div>'+
- '<div class="card"><span class="eyebrow" style="display:block;margin-bottom:10px">Badges</span><div class="badges">'+B.map(b=>'<div class="badge-tile'+(S.badges[b[0]]?' won':'')+'"><b>'+esc(b[1])+'</b><small>'+(S.badges[b[0]]?'Won '+S.badges[b[0]]:esc(b[2]))+'</small></div>').join('')+'</div></div>'+
+ '<div class="card gamey"><span class="eyebrow" style="display:block;margin-bottom:10px">Badges</span><div class="badges">'+B.map(b=>'<div class="badge-tile'+(S.badges[b[0]]?' won':'')+'"><b>'+esc(b[1])+'</b><small>'+(S.badges[b[0]]?'Won '+S.badges[b[0]]:esc(b[2]))+'</small></div>').join('')+'</div></div>'+
  '<div class="grid2"><div class="card" style="display:flex;flex-direction:column;gap:10px"><span class="eyebrow">Training numbers</span><div class="stats"><div><b>'+(reflexStatus()?'L'+reflexStatus():'—')+'</b><small>reflex automatic</small></div><div><b>'+(S.gym&&S.gym.n?Math.round(S.gym.c/S.gym.n*100)+'%':'—')+'</b><small>gym</small></div><div><b>'+(S.est&&S.est.n?Math.round(S.est.c/S.est.n*100)+'%':'—')+'</b><small>gas sense</small></div><div><b>'+(S.ret&&S.ret.n?Math.round(S.ret.c/S.ret.n*100)+'%':'—')+'</b><small>delayed recall</small></div><div><b>'+Object.keys(S.scen||{}).length+'/'+SCENARIOS.length+'</b><small>shifts</small></div></div>'+((S.sess||[]).length?'<div class="spark">'+S.sess.slice(-30).map(s=>{const a=s.n?s.ok/s.n:0;return '<i class="'+(a>=0.8?'k':a<0.5?'x':'')+'" style="height:'+Math.max(10,a*100)+'%" data-hint="'+esc((MODES[s.m]||{t:s.m}).t)+'|'+s.ok+'/'+s.n+' on '+String(s.d).split('-').reverse().join('/')+'"></i>';}).join('')+'</div><p class="note">Accuracy of your last '+Math.min(30,S.sess.length)+' sessions.</p>':'')+'</div>'+
  '<div class="card" style="display:flex;flex-direction:column;gap:10px"><span class="eyebrow">Teach-backs</span>'+(tdue.length?'<div class="caselist">'+tdue.map(([t,r])=>'<div><span class="d'+(r.last>=75?'':' x')+'"></span><span>'+esc(WEB_NODES.find(n=>n[0]===t.c)[1])+'</span><small>'+r.last+'% · '+(r.due<=Date.now()?'due':'due '+ddmmyyyy(new Date(r.due)))+'</small></div>').join('')+'</div>':'<p class="note">None yet. Each explanation comes back on its own schedule.</p>')+'<div class="btnrow"><button class="btn small" data-go="teach">Teach one now</button><button class="btn small" data-go="settings">Settings & backup</button></div></div></div>';
  save();};
@@ -3244,7 +3696,9 @@ function selRow(id,title,sub,opts,val){return '<div class="srow"><div><b>'+title
 RENDER.settings=function(){const el=$('v-settings');const lc=cardsFromLessons();
  el.innerHTML='<div class="view-head"><div class="ph"><span class="eyebrow">Buffer '+APP_VERSION+'</span><h1>Settings</h1></div></div><div class="grid2">'+
  '<div class="card set"><span class="eyebrow">Look</span><div>'+
-  '<div class="srow"><div><b>Theme</b><span>Pith (light) or peel (dark). Auto follows your device.</span></div><div class="seg" role="group" aria-label="Theme">'+[['auto','Auto'],['light','Light'],['dark','Dark']].map(t=>'<button data-theme="'+t[0]+'" aria-pressed="'+((S.theme||'auto')===t[0])+'">'+t[1]+'</button>').join('')+'</div></div></div>'+
+  '<div class="srow"><div><b>Quiet mode</b><span>Hides XP, levels and badges and uses plain names for the module tests. Mastery stays.</span></div><input type="checkbox" id="sQuiet"'+(S.quiet!==false?' checked':'')+' aria-label="Quiet mode"></div>'+
+  '<div class="srow"><div><b>Look</b><span>Orange Pixel, or a calmer clinical skin for long sessions.</span></div><div class="seg" role="group" aria-label="Look">'+[['pixel','Pixel'],['clinical','Clinical']].map(t=>'<button data-skin="'+t[0]+'" aria-pressed="'+((S.skin||'pixel')===t[0])+'">'+t[1]+'</button>').join('')+'</div></div>'+
+  '<div class="srow"><div><b>Theme</b><span>Pith (light) or peel (dark). Auto follows your device.</span></div><div class="seg" role="group" aria-label="Theme">'+[['auto','Auto'],['light','Light'],['dark','Dark']].map(t=>'<button data-theme="'+t[0]+'" aria-pressed="'+((S.theme||'dark')===t[0])+'">'+t[1]+'</button>').join('')+'</div></div></div>'+
   '<span class="eyebrow" style="margin-top:14px;display:block">Reading gases</span><div>'+
   selRow('sUnits','Pressure units','Used everywhere in the app.',[['mmHg','mmHg'],['kPa','kPa']],S.units)+
   selRow('sAlt','Altitude','Changes the alveolar gas equation and expected PaO₂.',[[760,'Sea level (760 mmHg)'],[707,'Riyadh ≈ 610 m (707 mmHg)'],[580,'Abha ≈ 2,270 m (580 mmHg)']],S.patm)+
@@ -3259,6 +3713,8 @@ RENDER.settings=function(){const el=$('v-settings');const lc=cardsFromLessons();
  '<div class="card set"><span class="eyebrow">Yuzu</span><p class="note">Turn Buffer into flashcards. Lesson cards cover every check question and key number; ids are stable, so re-importing refreshes cards without losing history. Practice gases are fresh cases weighted to the patterns you miss.</p><div class="btnrow"><button class="btn" id="yzL">'+ic('copy')+'Lesson pack ('+lc.length+')</button><button class="btn" id="yzG">30 practice gases</button></div><p class="note" id="yzMsg"></p><textarea class="copy" id="yzTa" hidden aria-label="Pack text"></textarea></div>'+
  '<div class="card set"><span class="eyebrow">Your data</span><p class="note">Progress lives in this browser'+(typeof hubCan==='function'&&hubCan()?' (and on your Drive once connected)':'')+'. Copy a backup to keep it safe or move it to another device, then paste it back here.</p><div class="btnrow"><button class="btn" id="bkOut">'+ic('copy')+'Copy backup</button><button class="btn" id="bkInBtn">Restore from backup</button></div><div id="bkIn" hidden style="display:grid;gap:8px"><textarea class="inp" id="bkTxt" placeholder="Paste a Buffer backup here"></textarea><div class="btnrow"><button class="btn" id="bkApply">Restore</button><span class="note" id="bkMsg"></span></div></div><div class="srow" style="border-top:2px solid var(--line);margin-top:10px"><div><b>Reset progress</b><span>Erases lessons, stats, XP and mistakes on this device. Settings stay.</span></div><button class="btn danger small" id="resetBtn">Reset</button></div></div>'+
  '</div><div><span class="eyebrow" style="display:block;margin-bottom:10px">Free references</span><div class="res">'+RES.map(r=>'<a class="card" href="'+r[1]+'" target="_blank" rel="noopener"><small>'+r[3]+'</small><h3>'+r[0]+'</h3><p>'+r[2]+'</p></a>').join('')+'</div></div><p class="note">Buffer is a learning tool. Interpretations follow the Boston rules and are checked by an automated test suite, but they do not replace clinical judgement.</p>';
+ if($('sQuiet'))$('sQuiet').onchange=e=>{S.quiet=e.target.checked;save();applyTheme();renderHeader();};
+ el.querySelectorAll('[data-skin]').forEach(b=>b.onclick=()=>{S.skin=b.dataset.skin;save();applyTheme();el.querySelectorAll('[data-skin]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));});
  el.querySelectorAll('[data-theme]').forEach(b=>b.onclick=()=>{S.theme=b.dataset.theme;save();applyTheme();el.querySelectorAll('[data-theme]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));});
  $('sUnits').onchange=e=>{S.units=e.target.value;save();toast('Units: '+S.units);};
  $('sAlt').onchange=e=>{S.patm=+e.target.value;save();toast('Altitude updated');};
@@ -3271,7 +3727,7 @@ RENDER.settings=function(){const el=$('v-settings');const lc=cardsFromLessons();
  $('bkOut').onclick=async e=>{const txt=JSON.stringify({buffer_backup:1,saved:ddmmyyyy(),state:Object.assign({},S,{google:undefined})});const ok=await copyText(txt,e.currentTarget);if(!ok){$('bkIn').hidden=false;$('bkTxt').value=txt;$('bkTxt').select();toast('Clipboard blocked. Copy the text in the box.');}else toast('Backup copied ('+Math.round(txt.length/1024)+' KB)','good');};
  $('bkInBtn').onclick=()=>{$('bkIn').hidden=!$('bkIn').hidden;};
  $('bkApply').onclick=()=>{try{const j=JSON.parse($('bkTxt').value);const st=j&&j.state?j.state:j;if(!st||typeof st!=='object'||!('kinds' in st||'done' in st))throw new Error('Not a Buffer backup.');const g=S.google;S=migrate(st);S.google=g;save();$('bkMsg').textContent='Restored.';toast('Backup restored','good');renderHeader();}catch(err){$('bkMsg').textContent='That text is not a Buffer backup. Paste the whole thing, including the braces.';}};
- let armed=false;$('resetBtn').onclick=e=>{if(!armed){armed=true;e.currentTarget.textContent='Tap again to erase';setTimeout(()=>{armed=false;const b=$('resetBtn');if(b)b.textContent='Reset';},4000);return;}const keep={units:S.units,patm:S.patm,agref:S.agref,usek:S.usek,hints:S.hints,goal:S.goal,sessLen:S.sessLen,lvl:S.lvl,theme:S.theme,google:S.google,epoch:(+S.epoch||0)+1};S=Object.assign(migrate(null),keep);ROUND=null;save();toast('Progress reset');armed=false;e.currentTarget.textContent='Reset';renderHeader();};
+ let armed=false;$('resetBtn').onclick=e=>{if(!armed){armed=true;e.currentTarget.textContent='Tap again to erase';setTimeout(()=>{armed=false;const b=$('resetBtn');if(b)b.textContent='Reset';},4000);return;}const keep={units:S.units,patm:S.patm,agref:S.agref,usek:S.usek,hints:S.hints,goal:S.goal,sessLen:S.sessLen,lvl:S.lvl,theme:S.theme,google:S.google,quiet:S.quiet,skin:S.skin,epoch:(+S.epoch||0)+1};S=Object.assign(migrate(null),keep);ROUND=null;save();toast('Progress reset');armed=false;e.currentTarget.textContent='Reset';renderHeader();};
  if(typeof renderGoogle==='function')renderGoogle();};
 
 /* ================= BOOT ================= */
@@ -3292,7 +3748,7 @@ function boot(){load();applyTheme();
  addEventListener('popstate',()=>{if(VIEW==='session'){SUBNAV=false;const b=$('sExit');if(b)b.click();else go(ROUND?'today':'practice',true);if(VIEW==='session'){try{history.pushState({sub:1},'',location.href);}catch(e){}SUBNAV=true;}}else if(SUBV.includes(VIEW)){SUBNAV=false;}});
  /* a second tab of Buffer: adopt the newer save, never overwrite it */
  addEventListener('storage',e=>{if(e.key!=='buffer.v1'||!e.newValue)return;try{const n=JSON.parse(e.newValue);if(!n||(n.savedAt||'')<=(S.savedAt||''))return;const g=S.google;S=migrate(n);S.google=g;S.savedAt=n.savedAt;renderHeader();if(typeof renderRoundBar==='function')renderRoundBar();if(VIEW!=='session'&&RENDER[VIEW]&&!SUBV.includes(VIEW))safe(()=>RENDER[VIEW](),VIEW);}catch(err){}});
- if(window.matchMedia)try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{if((S.theme||'auto')==='auto')applyTheme();});}catch(e){}
+ if(window.matchMedia)try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{if((S.theme||'dark')==='auto')applyTheme();});}catch(e){}
  document.addEventListener('visibilitychange',()=>{if(document.hidden)save();});}
 
 /* ================= CITRUS HUB + GOOGLE DRIVE (hub-contract.md, 4.1) ================= */
@@ -3507,6 +3963,5 @@ document.addEventListener('pointerup',()=>{if(!card)return;const c=card,d=dx;car
 
 boot();hubBoot();
 </script>
-
 <script>if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));</script>
 </body></html>
