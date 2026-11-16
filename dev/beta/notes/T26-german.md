@@ -1,0 +1,158 @@
+# T26 · German glossary (Glossar) — beta notes
+
+**Tester:** T26, German ICU physician and FSP teacher. **Build:** frozen buffer-4.9.0.html. **Source read:** ui9.js (GLOSS, glossParts, sayDE, RENDER.gloss, glYz/glCp, Learn tile, deepLink do=glossary), shell.html (.gloss/.gl CSS), ui3.js pack() for comparison.
+
+## Summary
+- Covered all 76 terms one by one (German word, article, plural, spelling, capitalisation, ward register, English meaning), all 20 example sentences, the 4 "present a gas" phrases; search, topic chips (incl. persistence), tap-to-hear (stubbed and no-speech paths), Copy list, Yuzu pack (decoded and checked field by field, 76 unique ids), Learn tile, deep link `?do=glossary` (works), layout at 390 and 1280 px, pixel and clinical skins, dark and light. No console errors from the glossary.
+- **Verdict:** the German is clean. Every article and plural that is given is correct (incl. Überdosen, Nabelschnüre, Neugeborenen), spelling and capitalisation are right, and no example sentence is ungrammatical. The weaknesses are (1) the Yuzu export splits adjective phrases into wrong forms and puts brackets into words, (2) the register leans textbook or lay (Lungenentzündung, Herzstillstand, Basenüberschuss, Entwöhnung) where wards say Pneumonie, Kreislaufstillstand, BE, Weaning, (3) the actual blood gas parameters (pH-Wert, pCO₂, pO₂, BE) and the German-specific Partial-/Globalinsuffizienz are missing, and (4) the "present a gas" section is too thin to build an FSP-style Übergabe.
+- **Score: 6/10.** It is accurate but not yet the tool a learner needs to *present* a gas in German.
+
+## Major (8)
+- **T26-1** `ui9.js` · glYz click handler / glossParts: The Yuzu pack splits masculine and neuter adjective phrases into article + word, which leaves ungrammatical words. "der septische Schock" becomes article "der" + word "septische Schock", and "der arterielle Zugang" becomes "arterielle Zugang". Without the article, German needs the strong ending (septischer Schock, arterieller Zugang), so a Yuzu card that shows the word alone or quizzes the article teaches a wrong form. Feminine phrases (diabetische Ketoazidose, maschinelle Beatmung) happen to survive because the ending is the same.
+  - Evidence: Copied pack: buf-de-septic-shock {article:"der", word:"septische Schock"}; buf-de-arterial-line {article:"der", word:"arterielle Zugang"}. Script: /tmp/claude-0/-home-claude/80312b5f-0e45-5589-b131-fcf824f33899/scratchpad/beta/shots/ see t26/out2.json.
+  - Fix: Store the headword and article as separate fields in GLOSS (e.g. {en,art,word,pl,cat,ex}). Make the vocab card word the noun only ("Schock", "Zugang") and move the phrase into the example or a "phrase" field. If a phrase must stay, use the strong form without the article ("septischer Schock") and set article to the noun's gender.
+- **T26-2** `ui9.js` · GLOSS → Yuzu card "word": Abbreviations and explanations in parentheses end up inside the Yuzu "word": "Blutgasanalyse (BGA)" and "nichtinvasive Beatmung (NIV)". A typed-answer or spelling card will then expect the brackets, and the abbreviation, which is the form actually spoken on the ward ("Mach mal eine BGA"), gets no card of its own. "Entwöhnung von der Beatmung" is a whole phrase stored as one word.
+  - Evidence: Copied pack: buf-de-blood-gas-analysis word "Blutgasanalyse (BGA)"; buf-de-non-invasive-ventilation word "nichtinvasive Beatmung (NIV)"; buf-de-weaning word "Entwöhnung von der Beatmung".
+  - Fix: Add an "abbr" field (BGA, NIV, LAE, ZVK, BE, ITS…). Keep word = "Blutgasanalyse" and either add "abbr" to the card if the Mephisto vocab format allows extra fields, or put "Abk.: BGA" into the example/meaning. For weaning, use word "Weaning", article "das", and meaning "weaning (also: die Entwöhnung von der Beatmung)".
+- **T26-3** `ui9.js` · GLOSS (Breathing): Respiratory failure has no type I / type II split. German ICUs and the FSP use "respiratorische Partialinsuffizienz" (hypoxaemia only, type 1) and "respiratorische Globalinsuffizienz" (hypoxaemia plus hypercapnia, type 2) all the time, and "hypoxämisch / hyperkapnisch". These are exactly the words needed to present a gas, and they are not obvious from the English.
+  - Evidence: GLOSS has only ["respiratory failure","die respiratorische Insuffizienz"]. Standard German usage, e.g. DGP/S3 guideline "Nichtinvasive Beatmung als Therapie der akuten respiratorischen Insuffizienz" (AWMF 020-004) uses hypoxämische / hyperkapnische ARI; Partial-/Globalinsuffizienz is standard textbook and ward usage.
+  - Fix: Add: ["type 1 respiratory failure (hypoxaemic)","die respiratorische Partialinsuffizienz","","Breathing","Unter Raumluft besteht eine respiratorische Partialinsuffizienz."], ["type 2 respiratory failure (hypercapnic)","die respiratorische Globalinsuffizienz","","Breathing","Es besteht eine hyperkapnische respiratorische Globalinsuffizienz."], plus "die Hypoxämie" and "die Hyperkapnie" (Pl. none).
+- **T26-4** `ui9.js` · GLOSS (Gas): The core BGA values are missing as German words: der pH-Wert, der pCO₂ (Kohlendioxidpartialdruck), der pO₂ (Sauerstoffpartialdruck), der BE / die Basenabweichung, das Standardbikarbonat, die SaO₂. Searching "pco2" or "CO₂" returns "No match". These are the words a doctor says first when presenting a gas.
+  - Evidence: Search tests: q "pco2" → [], q "CO₂" → [] (t26/out2.json). Only generic "partial pressure → der Partialdruck" exists.
+  - Fix: Add entries: ["pH","der pH-Wert","die pH-Werte","Gas","Der pH-Wert liegt bei 7,21."], ["PaCO₂","der pCO₂ (Kohlendioxidpartialdruck)","","Gas","Der pCO₂ ist auf 68 mmHg erhöht."], ["PaO₂","der pO₂ (Sauerstoffpartialdruck)","","Gas","Der pO₂ beträgt 55 mmHg unter 2 l O₂."], ["base excess","der BE (Base Excess) / die Basenabweichung","","Acid–base","Der BE liegt bei minus 12."], ["standard bicarbonate","das Standardbikarbonat","","Acid–base",""]. Also let search ignore subscripts (map ₂→2) so "pco2" finds pCO₂.
+- **T26-5** `ui9.js` · RENDER.gloss "Present a gas in German" card: The "present a gas" section is four isolated sentences, none with numbers, and nothing like the structure examiners expect in the FSP Arzt-Arzt-Gespräch / ward Übergabe: who and why, which sample under how much oxygen, the values with decimal comma, the interpretation, the cause and the plan. A learner cannot build a handover from this.
+  - Evidence: v-gloss bottom card, screenshot /tmp/claude-0/-home-claude/80312b5f-0e45-5589-b131-fcf824f33899/scratchpad/beta/shots/T26-gloss-bottom-390.png. Phrases: „Die arterielle BGA zeigt …“, „Die respiratorische Kompensation ist ausreichend.“, „Das Laktat ist erhöht, …“, „Der Patient hypoventiliert; …“.
+  - Fix: Replace with a model Übergabe plus phrase slots, e.g.: „Herr M., 67 Jahre, mit bekannter COPD, kommt mit zunehmender Dyspnoe. In der arteriellen BGA unter 2 l O₂ über die Nasenbrille: pH 7,28, pCO₂ 68 mmHg, pO₂ 54 mmHg, Bikarbonat 31 mmol/l, BE plus 5. Das entspricht einer akuten respiratorischen Azidose bei chronischer Hyperkapnie, also einer hyperkapnischen respiratorischen Globalinsuffizienz. Wir beginnen eine NIV und kontrollieren die BGA in einer Stunde.“ Then slot phrases: „unter Raumluft / unter x Litern O₂ / unter FiO₂ 0,4“, „Es zeigt sich …“, „Das spricht für …“, „differenzialdiagnostisch kommt … in Betracht“, „metabolisch teilkompensiert / dekompensiert“, „Wir haben … eingeleitet“, „Kontroll-BGA in … Minuten“. Make each phrase tappable with sayDE.
+- **T26-6** `ui9.js` · GLOSS (all categories): The list has no verbs, and only 20 of 76 terms have an example sentence. Ward German for gases runs on verbs: eine BGA abnehmen / ziehen, kontrollieren, puffern, entsättigen, intubieren, beatmen, die Beatmung anpassen, abhusten, Volumen geben, den Perfusor hochdrehen. Without them the learner can name things but not speak.
+  - Evidence: Counted from copied pack: 76 cards, 20 with example, 32 with plural, 0 verbs.
+  - Fix: Add a "Verben" category (type vocab with article "" and plural "") with Partizip II in the plural slot if Mephisto allows it, or as the example: abnehmen (hat abgenommen), puffern, entsättigen, intubieren, extubieren, beatmen, kontrollieren, hyperventilieren, kompensieren, dekompensieren, ansteigen, abfallen. Give every entry an example sentence.
+- **T26-7** `ui9.js` · GLOSS["pneumonia"]: "die Lungenentzündung" is the lay word. Doctors in a handover and in the FSP say "die Pneumonie" (Pl. die Pneumonien). The intro promises "the words you need to present a gas on a German ward"; the FSP expressly tests switching between Fachsprache and patient language.
+  - Evidence: GLOSS row ["pneumonia","die Lungenentzündung","die Lungenentzündungen","Breathing",""].
+  - Fix: Make "die Pneumonie / die Pneumonien" the headword and put "Patient: die Lungenentzündung" in the example. Apply the same doctor/patient pairing elsewhere: Atemnot ↔ die Dyspnoe, Durchfall ↔ die Diarrhö, Vergiftung ↔ die Intoxikation, Erbrechen ↔ das Erbrechen/Emesis, Blutzucker ↔ BZ, Nierenversagen ↔ die akute Nierenschädigung / das akute Nierenversagen (ANV).
+- **T26-8** `ui9.js` · GLOSS["cardiac arrest"]: "der Herzstillstand" is understood but the German Resuscitation Council and every German ICU say "der Kreislaufstillstand" or "der Herz-Kreislauf-Stillstand". The ROSC term is also missing, though Buffer teaches post-arrest gases.
+  - Evidence: GRC/ERC German translations use "Kreislaufstillstand" and "ROSC (Wiedereinsetzen des Spontankreislaufs)"; grc-org.de Leitlinien 2021.
+  - Fix: Change to ["cardiac arrest","der Kreislaufstillstand","die Kreislaufstillstände","ICU","Nach dem Kreislaufstillstand zeigt die BGA eine kombinierte Azidose."] and add ["return of spontaneous circulation (ROSC)","der ROSC (Wiedereinsetzen des Spontankreislaufs)","","ICU","ROSC nach 12 Minuten Reanimation."], ["agonal breathing","die Schnappatmung","","ICU",""].
+
+## Minor (16)
+- **T26-9** `ui9.js` · RENDER.gloss chip onclick: Clicking a topic chip calls RENDER.gloss(), which rebuilds the view and clears the search box and its focus. Typing "Azidose" then tapping "Acid–base" shows all 16 Acid–base terms and an empty search field.
+  - Evidence: Repro: go("gloss"); type "Azidose"; tap "Acid–base" → glQ value "" and 16 cards (t26/out2.json chipq).
+  - Fix: Keep the query in a variable (or S.ui.gq) and refill $("glQ").value before draw(); or toggle chip aria-pressed and call draw() without re-rendering the whole view.
+- **T26-10** `ui9.js` · RENDER.gloss draw() search: Search only looks at the English term and the German headword, is not accent/umlaut-folding, and ignores plurals and examples. "Uberdosis" and "ueberdosis" find nothing; "Proben" finds nothing; a short query like "BE" matches 11 random words (Probe, Befund, Beatmung…) but not base excess.
+  - Evidence: q "Uberdosis" → [], q "BE" → 11 hits without Basenüberschuss (t26/out.json).
+  - Fix: Normalise both sides: toLowerCase, NFD and strip diacritics, also map ä→ae/ö→oe/ü→ue/ß→ss, ₂→2. Search g[2] and g[4] too. Add an abbr field so "BE", "NIV", "BGA" match exactly and rank exact matches first.
+- **T26-11** `ui9.js` · sayDE: Speech silently does nothing when no German voice is installed (common on Linux/Steam Deck Chromium and some Android WebViews, and inside the Claude app view where read-aloud did not work for Mephisto). sayDE only catches exceptions; speak() with lang de-DE and no German voice either falls back to an English voice reading German or produces silence, with no message.
+  - Evidence: Code: sayDE sets u.lang and speaks without checking speechSynthesis.getVoices(). In headless Chromium the catch path toasts "Speech is not available here." (screenshot /tmp/claude-0/-home-claude/80312b5f-0e45-5589-b131-fcf824f33899/scratchpad/beta/shots/T26-gloss-light-390.png), but the no-voice path has no feedback.
+  - Fix: Pick a voice explicitly: const v=speechSynthesis.getVoices().find(v=>/^de(-|_)/i.test(v.lang)); if(v)u.voice=v; else toast("No German voice installed. Add one in your device's text-to-speech settings."). Handle the async voiceschanged event on first use. Reuse Mephisto's speech helper if it has one.
+- **T26-12** `ui9.js` · RENDER.gloss list markup: German text has no lang attribute, so screen readers read "die Blutgasanalyse" with an English voice, and the aria-label mixes English and German ("Say die Blutgasanalyse (BGA)").
+  - Evidence: Rendered: <button class="de" data-say="…" aria-label="Say die Blutgasanalyse (BGA)">.
+  - Fix: Add lang="de" to .de buttons, example <small class="ex"> and the phrase list items; set aria-label to "Anhören: die Blutgasanalyse" with lang="de", or keep the visible text as the name and add a visually hidden "(play)" hint.
+- **T26-13** `ui9.js` · sayDE / phrases and examples: Only the headword can be heard. The example sentences and the "Present a gas" phrases, which are what a learner most needs to hear for intonation and number reading, are not tappable.
+  - Evidence: RENDER.gloss: only [data-say] on .de; .ex and .nx li have no handler.
+  - Fix: Give .ex and each phrase li data-say and the same click handler (with a small speaker icon). Strip „ “ quotes before speaking.
+- **T26-14** `ui9.js` · GLOSS plurals: Plural is missing for countable nouns while present for similar ones, so Yuzu plural drills will treat them as having no plural: die Extubation (Extubationen), die Kompensation (Kompensationen), die arterielle/venöse BGA (BGAs), der Schock (Schocks), die Sepsis (Sepsen), das Bikarbonat (Bikarbonate), der Herzstillstand (Herzstillstände), das Nierenversagen (no plural, fine), das Atemzugvolumen (Atemzugvolumina). There is also no way to tell "no plural" from "not filled in".
+  - Evidence: 76 cards, 32 with plural (t26 pack dump).
+  - Fix: Fill plurals for all countable nouns (Duden). For mass nouns put an explicit marker agreed with Mephisto, e.g. plural "–" or "kein Pl.", so Yuzu can show "no plural" rather than blank.
+- **T26-15** `ui9.js` · glYz pack: The pack carries less metadata than Buffer's other Yuzu pack: no pack-level source and no tags (ui3.js pack() sets tags and source "Buffer Blood Gas Trainer, Oct 2026"). The category "German::Medical::Blood gases" may not match where Yuzu keeps languages: the Yuzu plan was two super decks, Medicine and Language. I could not open the Mephisto/Yuzu source here to confirm the exact category root, so treat this as a doubt.
+  - Evidence: ui9.js:85 pk={yuzu_pack:1,id:"buffer-words",name,category:"German::Medical::Blood gases",lang:"de-DE",cards}; ui3.js:144 pack() includes tags and source.
+  - Fix: Check against Mephisto's export: use the same category root (likely "Language::German::Medizin::Blutgase" or whatever Mephisto emits) and add source:"Buffer Blood Gas Trainer" and tags such as ["auto::Language::German","auto::Specialty::Critical Care","auto::Exam::FSP"]. Other fields (yuzu_pack:1, id, name, lang de-DE, card id/type/word/article/plural/meaning/example/source) are present and the 76 ids are unique.
+- **T26-16** `ui9.js` · glYz card ids: Card ids are slugs of the English meaning ("buf-de-"+slugify(en)). If the English wording is ever corrected (e.g. "lowered" → "low"), Yuzu sees a new card and the old one, with its review history, is orphaned; two senses with the same English gloss would collide.
+  - Evidence: glYz: id:"buf-de-"+slugify(g[0]).
+  - Fix: Give every GLOSS row a stable explicit id (e.g. "de-bga", "de-azidose") that never changes when the text is edited.
+- **T26-17** `ui9.js` · glCp copy list: "Copy list" always copies all 76 terms, ignores the active chip and search, and leaves out the examples. The label does not say which.
+  - Evidence: Repro: tap "ICU" chip, tap Copy list → clipboard has 76 lines (t26/out2.json clip[0]).
+  - Fix: Copy the filtered list and include the example on a second indented line; label it "Copy 16 shown" when filtered. Same choice for the Yuzu pack (offer "Send shown" vs "Send all").
+- **T26-18** `ui9.js` · GLOSS["sample"] example: "Die Probe muss sofort ins Labor." On a German ICU and in most ZNAs the BGA is measured at the point of care on the ward ("am BGA-Gerät"), not sent to the lab, so the sentence teaches the wrong routine. It suits a lab sample, not a BGA.
+  - Evidence: GLOSS row ["sample","die Probe","die Proben","Gas","Die Probe muss sofort ins Labor."].
+  - Fix: Change to „Die Probe muss sofort gemessen werden, sonst verfälschen Luftblasen und Stoffwechsel die Werte.“ or „Bringen Sie die Probe bitte sofort zum BGA-Gerät.“
+- **T26-19** `ui9.js` · GLOSS["base excess"]: "der Basenüberschuss" is correct but almost nobody says it at the bedside. Ward staff say "der BE" (spoken "Be-E") or "Base Excess", and textbooks say "die Basenabweichung" (negative: "das Basendefizit"). There is no example.
+  - Evidence: GLOSS row ["base excess","der Basenüberschuss","","Acid–base",""].
+  - Fix: Headword "der BE (Base Excess)", with "die Basenabweichung / der Basenüberschuss / das Basendefizit" in the example: „Der BE liegt bei minus 14 mmol/l.“
+- **T26-20** `ui9.js` · GLOSS["weaning"]: "die Entwöhnung von der Beatmung" is textbook German. On German ICUs the loanword "das Weaning" is standard ("Er ist im Weaning", "Weaningprotokoll", "prolongiertes Weaning" in the S2k guideline).
+  - Evidence: DGP S2k-Leitlinie "Prolongiertes Weaning" (AWMF 020-015) uses "Weaning" throughout.
+  - Fix: Headword "das Weaning", plus the example „Wir starten heute das Weaning mit einem Spontanatmungsversuch.“ Keep Entwöhnung as a synonym.
+- **T26-21** `ui9.js` · GLOSS["arterial line"]: "der arterielle Zugang" is correct, but ward staff almost always say "die Arterie" („Hat er eine Arterie?“, „eine Arterie legen“) or "die arterielle Kanüle". No example given.
+  - Evidence: GLOSS row ["arterial line","der arterielle Zugang","die arteriellen Zugänge","Gas",""].
+  - Fix: Keep the headword (fixing the article split, see the major finding), and add the example „Wir legen eine Arterie und nehmen die BGA daraus ab.“
+- **T26-22** `ui9.js` · GLOSS["tidal volume"]: "das Atemzugvolumen" is correct, but the ventilator display and handover use "das Tidalvolumen" / "Vt" („Tidalvolumen 6 ml/kg Idealgewicht“). No plural or example.
+  - Evidence: GLOSS row ["tidal volume","das Atemzugvolumen","","ICU",""].
+  - Fix: Add "das Tidalvolumen (Vt)" as headword or synonym, example „Lungenprotektiv beatmen: Tidalvolumen 6 ml pro kg Idealgewicht, Plateaudruck unter 30 mbar.“ Note that German ventilators show pressures in mbar or cmH₂O, not mmHg.
+- **T26-23** `ui9.js` · "Present a gas" phrase 3: „Das Laktat ist erhöht, wir denken an einen septischen Schock.“ The German is fine, but clinically a raised lactate alone does not mean septic shock (Sepsis-3: vasopressors for MAP ≥65 mmHg and lactate >2 mmol/L despite fluids), and an Oberarzt would phrase it with the reasoning.
+  - Evidence: Singer et al., JAMA 2016;315:801 (Sepsis-3).
+  - Fix: „Das Laktat liegt bei 4,8 mmol/l. Bei Hypotonie trotz Volumengabe und Katecholaminbedarf gehen wir von einem septischen Schock aus.“
+- **T26-24** `ui9.js` · "Present a gas" phrase 4: „Der Patient hypoventiliert; das CO₂ ist auf 80 mmHg gestiegen.“ Grammatical, but in a handover you report the partial pressure: "der pCO₂". "Das CO₂" is the gas.
+  - Evidence: Phrase list in RENDER.gloss.
+  - Fix: „Der Patient hypoventiliert, der pCO₂ ist auf 80 mmHg angestiegen, der pH liegt bei 7,18.“
+
+## Polish (13)
+- **T26-25** `ui9.js` · GLOSS["result"]: "der Befund" means finding or report. A lab result is usually "das Ergebnis" or "der Wert / Laborwert". The example „Der Befund ist auffällig.“ is fine for a report but the English gloss "result" is too narrow.
+  - Evidence: GLOSS row ["result","der Befund",…].
+  - Fix: Meaning "finding; report (result)"; add ["result, value","der Wert","die Werte","Gas","Die Werte haben sich gebessert."] and "das Ergebnis".
+- **T26-26** `ui9.js` · GLOSS["lowered"]: English "lowered" implies someone lowered it. For a lab value British English says "low" or "decreased", matching "erniedrigt".
+  - Evidence: GLOSS row ["lowered","erniedrigt",…].
+  - Fix: Use "low, decreased"; and change "raised" to "raised, high" to pair; add "vermindert", "grenzwertig" (borderline) and "im Normbereich".
+- **T26-27** `ui9.js` · GLOSS["oxygen"] example: „Geben Sie Sauerstoff über die Maske.“ is correct but vague; ward German always names the flow and device.
+  - Evidence: GLOSS row oxygen.
+  - Fix: „Geben Sie 2 Liter Sauerstoff über die Nasenbrille.“ and add die Nasenbrille, die Maske mit Reservoir, die High-Flow-Therapie (HFNC).
+- **T26-28** `ui9.js` · GLOSS["vomiting"] example: „Haben Sie erbrochen?“ is correct, but to patients German doctors more often ask „Mussten Sie sich übergeben?“; "erbrechen" is the medical/history word.
+  - Evidence: GLOSS row vomiting.
+  - Fix: Use „Mussten Sie sich übergeben? – Wie oft?“ and note "Erbrechen" for documentation.
+- **T26-29** `ui9.js` · GLOSS["intensive care unit"]: No abbreviation or ward forms: "die ITS", "auf der Intensiv", "die Intensivstation". No example.
+  - Evidence: GLOSS row.
+  - Fix: Example „Der Patient wird auf die Intensivstation (ITS) verlegt.“ (verlegen is a key verb).
+- **T26-30** `ui9.js` · GLOSS["noradrenaline"]: No example; the key ward adjective "katecholaminpflichtig" and dosing in µg/kg/min are missing.
+  - Evidence: GLOSS row.
+  - Fix: Example „Er ist katecholaminpflichtig, Noradrenalin läuft mit 0,2 µg/kg/min.“ (decimal comma).
+- **T26-31** `ui9.js` · category name "Kidney and salts": "salts" is not how British clinicians label electrolytes; the chip text is also the longest.
+  - Evidence: Chips: Kidney and salts (112 px).
+  - Fix: Rename to "Kidney and electrolytes" or "Kidney · Elektrolyte"; consider German chip labels to match the bilingual heading.
+- **T26-32** `ui9.js` · RENDER.gloss footer note: „The same words in the same card format as Mephisto's, so Yuzu treats them alike.“ is developer wording shown to the learner, placed inside the phrase card where it reads as a caption for the phrases.
+  - Evidence: Screenshot /tmp/claude-0/-home-claude/80312b5f-0e45-5589-b131-fcf824f33899/scratchpad/beta/shots/T26-gloss-bottom-390.png.
+  - Fix: Move it under the Yuzu button as helper text: "Arrive in Yuzu as German word cards, like Mephisto's."
+- **T26-33** `shell.html` · .gl .de: German words have no visual cue that they play sound (all:unset; bold text only). "Tap a German word to hear it" in the header is the only hint, and the desktop says "tap".
+  - Evidence: Screenshots /tmp/claude-0/-home-claude/80312b5f-0e45-5589-b131-fcf824f33899/scratchpad/beta/shots/T26-gloss-390.png, /tmp/claude-0/-home-claude/80312b5f-0e45-5589-b131-fcf824f33899/scratchpad/beta/shots/T26-gloss-1280.png.
+  - Fix: Add a small speaker icon after the word (ic("sound") or similar) and a hover underline; change header to "Tap or click".
+- **T26-34** `shell.html` · .gl grid cards: Cards without plural/example vertically centre the word, so in the 4-column desktop grid headwords sit at different heights (e.g. "die Arteria radialis", "das Natrium" are lower than neighbours).
+  - Evidence: Screenshot /tmp/claude-0/-home-claude/80312b5f-0e45-5589-b131-fcf824f33899/scratchpad/beta/shots/T26-gloss-1280.png (Arteria radialis card), /tmp/claude-0/-home-claude/80312b5f-0e45-5589-b131-fcf824f33899/scratchpad/beta/shots/T26-gloss-bottom-1280.png.
+  - Fix: .gl{align-content:start} so rows top-align.
+- **T26-35** `shell.html` · #v-gloss .seg chips: At 1280 px the topic chips are centred while search and buttons are left-aligned; the chips are 29 px tall, below a 44 px touch target on phone.
+  - Evidence: chip-tap sizes in t26/out.json: height 29 px; screenshot /tmp/claude-0/-home-claude/80312b5f-0e45-5589-b131-fcf824f33899/scratchpad/beta/shots/T26-gloss-1280.png.
+  - Fix: Left-align the chip row in .filters and raise chip min-height to 40–44 px on coarse pointers.
+- **T26-36** `ui9.js` · RENDER.learn glossary tile: The German tile sits at the very top of Learn, above the six-step read and the modules, for a feature most English-speaking users of a blood-gas app will not use. Icon "steps" does not suggest language.
+  - Evidence: Screenshot /tmp/claude-0/-home-claude/80312b5f-0e45-5589-b131-fcf824f33899/scratchpad/beta/shots/T26-learn-390.png.
+  - Fix: Move it below the module list (or into a "Extras" row), or show it on top only when a "German learner" setting / Mephisto link is on. Use a speech-bubble or "DE" mark icon.
+- **T26-37** `shell.html` · #v-gloss at 390 px: At 390 px the 76 single-column cards make an 8,400 px page; the "Present a gas" card, the most useful part, is at the very bottom.
+  - Evidence: Full-page screenshot height 8409 px (/tmp/claude-0/-home-claude/80312b5f-0e45-5589-b131-fcf824f33899/scratchpad/beta/shots/T26-gloss-full-390.png).
+  - Fix: Put the "Present a gas" card first or behind its own chip ("Sätze"), and use a compact two-line row layout on phones.
+
+## Ideas (ranked by value)
+- **T26-38** `ui9.js` · GLOSS (new terms): High-value acid–base and ICU words are missing.
+  - Evidence: Gap in GLOSS (76 terms reviewed one by one).
+  - Fix: Add (article, plural): die Laktatazidose (-n); die Kussmaul-Atmung; die Hyperkapnie; die Hypokapnie; die Hypoxämie; die Hyperkaliämie / Hypokaliämie; die Hyperchlorämie; die Kompensation → teilkompensiert, dekompensiert; entgleist („metabolisch entgleist“, „der Zucker ist entgleist“); puffern / das Natriumbikarbonat (Natriumhydrogencarbonat 8,4 %); der Horovitz-Quotient (P/F; often misspelt Horowitz); die zentralvenöse Sättigung (ScvO₂); das CO-Hb / Carboxyhämoglobin; das Methämoglobin; die Bauchlage(rung); der Spontanatmungsversuch; die Beatmungsparameter (Pl.); der PEEP; die FiO₂; der Spitzendruck; das Atemminutenvolumen; die Nasenbrille; die High-Flow-Sauerstofftherapie; der ZVK; der Perfusor; die Volumengabe; die Vollelektrolytlösung; das Nierenersatzverfahren; die Vigilanz → wach / somnolent / soporös / komatös; die Dyspnoe; die Tachypnoe; die Intoxikation.
+- **T26-39** `ui9.js` · RENDER.gloss: Numbers are how gases are presented, and German uses a decimal comma and reads pH as „sieben Komma zwei acht“. Nothing teaches this.
+  - Evidence: Gap in GLOSS (76 terms reviewed one by one).
+  - Fix: Add a "Zahlen" card: pH 7,28 = „sieben Komma zwei acht“; BE −12 = „minus zwölf“ / „ein Basendefizit von zwölf“; units mmHg = „Millimeter Quecksilbersäule“ (spoken just „mmHg“ or „Millimeter“), mmol/l = „Millimol pro Liter“, kPa. Make the numbers tappable via sayDE so the learner hears them.
+- **T26-40** `ui9.js` · RENDER.gloss / interp: Generate the German Übergabe for any gas the learner interprets, from interp() output (pH, pCO₂, pO₂, HCO₃⁻, BE, AG, label), in the FSP order. Best practice possible: links Buffer to Mephisto's FSP goal.
+  - Evidence: Gap in GLOSS (76 terms reviewed one by one).
+  - Fix: Add "Auf Deutsch vorstellen" in the interpreter result: template strings per KINDS label (e.g. "metabolische Azidose mit erhöhter Anionenlücke, respiratorisch adäquat kompensiert"), with decimal comma and sayDE.
+- **T26-41** `ui9.js` · RENDER.gloss: A short FSP drill mode: show a gas, the learner speaks or types a German presentation, then sees the model answer and the key words they missed.
+  - Evidence: Gap in GLOSS (76 terms reviewed one by one).
+  - Fix: Reuse the case library gases; score on presence of key terms (pH-Wert, pCO₂, Azidose/Alkalose, kompensiert, Plan).
+- **T26-42** `ui9.js` · GLOSS rows: Mark register on each row: Fachsprache (doctor–doctor), Patientensprache, and Stationsjargon (BGA, Arterie, Nor, Weaning). The FSP grades switching between them.
+  - Evidence: Gap in GLOSS (76 terms reviewed one by one).
+  - Fix: Add a reg field and a small tag on the card ("Arzt", "Patient", "Jargon").
+- **T26-43** `ui9.js` · GLOSS examples: Use du/Sie deliberately: colleague-to-colleague on German ICUs is mostly du; the FSP Arzt-Arzt-Gespräch is Sie. Show both on key requests („Kannst du eine BGA abnehmen?“ / „Könnten Sie bitte eine BGA abnehmen?“).
+  - Evidence: Gap in GLOSS (76 terms reviewed one by one).
+  - Fix: Add a second example for the 5–10 most common requests.
+- **T26-44** `ui9.js` · glYz pack: Send example audio hints and a cloze card for each example sentence (word blanked) so Yuzu tests use in context, not only translation.
+  - Evidence: Gap in GLOSS (76 terms reviewed one by one).
+  - Fix: Emit an extra type:"cloze" card per example if Yuzu supports it.
+- **T26-45** `ui9.js` · RENDER.gloss: Link out to Mephisto: "Practise these in Mephisto's Klinik track" via deep link, since Mephisto is the user's German app and FSP prep.
+  - Evidence: Gap in GLOSS (76 terms reviewed one by one).
+  - Fix: Add a button using the Citrus/Mephisto URL pattern used for other hand-offs.
+
+## Checked and fine
+- Articles and plurals: all given ones verified (Duden-consistent). Spelling Bikarbonat/Laktat (German medical spelling; Lactat/Bicarbonat appear on analyser printouts, both acceptable).
+- Examples: grammatical; „Der pH-Wert ist erniedrigt, das CO₂ erhöht.“ elliptical form is natural.
+- Deep link `?do=glossary` opens v-gloss; chip choice persists in S.ui.gcat; no horizontal scroll at 390/1280; dark, light, pixel and clinical skins legible.
+- Yuzu pack has yuzu_pack:1, id, name, category, lang "de-DE", and every card has id, type "vocab", word, article, plural, meaning, example, source. Drive path matches the misses pack (My Apps/Yuzu/collection/inbox) and putJSON overwrites rather than duplicating.
+- Note: Mephisto's own source was not available here, so the format check is against the field list in the brief, not against a real Mephisto export.
