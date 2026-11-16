@@ -30,7 +30,7 @@ body:`${tw('<tr><th></th><th>Type 1 (distal)</th><th>Type 2 (proximal)</th><th>T
 keys:[['UAG negative','Gut loss (diarrhoea)'],['UAG positive','Renal (distal or type 4 RTA)'],['Hyperkalaemic RTA','Type 4']],
 hook:'"neGUTive" urine anion gap: the gut is guilty.',
 q:[['NAGMA with plasma K⁺ 6.1 in a diabetic on ramipril. Most likely?',['Type 1 RTA','Type 2 RTA','Type 4 RTA','Diarrhoea'],2,'Hyperkalaemic RTA from hypoaldosteronism, worsened by ACE inhibition.'],
-['NAGMA, urine Na 40, K 30, Cl 110. UAG and meaning?',['+40; renal','−40; appropriate NH₄⁺ excretion, likely GI loss','0; normal','Cannot use UAG'],1,'40 + 30 − 110 = −40.']]});
+['NAGMA, urine Na 40, K 30, Cl 110. UAG and meaning?',['+40; poor NH₄⁺ excretion, likely distal RTA','−40; appropriate NH₄⁺ excretion, likely GI loss','0; no conclusion without the urine pH','Cannot use UAG when urine Na is high'],1,'40 + 30 − 110 = −40.']]});
 
 lesson({id:'alkmaint',m:'kid',t:'Why metabolic alkalosis persists',ex:{pH:7.53,pco2:47,hco3:38,po2:82,fio2:.21,na:136,k:2.9,cl:86,alb:42,lac:1.2,glu:6.1,age:45},
 sum:'Healthy kidneys excrete excess bicarbonate quickly. Metabolic alkalosis lasts only if something maintains it: volume depletion, chloride depletion, low potassium or excess mineralocorticoid.',
@@ -54,8 +54,8 @@ ${tw('<tr><th>Urine Cl⁻</th><th>Blood pressure</th><th>Causes</th></tr><tr><td
 <p>Treatment follows maintenance: give chloride (as NaCl and KCl) to chloride-responsive alkalosis; treat the mineralocorticoid source in chloride-resistant disease.</p>`,
 keys:[['Maintenance factors','Volume, Cl⁻, K⁺, aldosterone'],['Chloride responsive','Urine Cl⁻ < 20 mmol/L'],['Chloride resistant','Urine Cl⁻ > 20 mmol/L']],
 hook:'Something has to stop the kidney peeing out the bicarbonate. Find it.',
-q:[['After a week of vomiting, why is the urine acidic despite pH 7.55?',['Lab error','Kidney prioritises Na⁺ and K⁺ retention, secreting H⁺','Diarrhoea','Type 1 RTA'],1,'Volume, chloride and potassium depletion all push H⁺ secretion: paradoxical aciduria.'],
-['Which fluid corrects a chloride-responsive metabolic alkalosis?',['5% dextrose','0.9% saline with KCl','Sodium bicarbonate','Hartmann\'s alone'],1,'Restoring chloride and volume lets the kidney excrete bicarbonate.']]});
+q:[['After a week of vomiting, why is the urine acidic despite pH 7.55?',['Lab error: urine pH is unreliable after vomiting','Kidney prioritises Na⁺ and K⁺ retention, secreting H⁺','Ongoing urinary bicarbonate loss from an RTA','Respiratory compensation lowering the urine pH'],1,'Volume, chloride and potassium depletion all push H⁺ secretion: paradoxical aciduria.'],
+['Which fluid corrects a chloride-responsive metabolic alkalosis?',['5% dextrose','0.9% saline with KCl','Sodium bicarbonate','Hartmann\'s alone'],1,'Restoring chloride and volume lets the kidney excrete bicarbonate. Hartmann\'s contains lactate (turns into bicarbonate) and less chloride, so it does not fix the maintenance.']]});
 
 lesson({id:'comp',m:'kid',t:'The compensation rules',w:['comp','map'],ex:{pH:7.19,pco2:38,hco3:14,po2:72,fio2:.21,na:140,k:4.8,cl:104,alb:38,lac:6.2,glu:7.0,age:62},
 sum:'Metabolic: Winter\'s formula and 0.7 × HCO₃⁻ + 20. Respiratory: 1, 4, 2, 5. Compensation never overshoots.',
@@ -94,7 +94,7 @@ body:`<ul><li><b>Acidosis → hyperkalaemia (shift)</b>, most in mineral acidosi
 keys:[['DKA K⁺','Normal plasma, low total body'],['DKA K⁺ < 3.5','Senior review, K⁺ before or with insulin'],['Alkalosis','↓ K⁺, ↓ ionised Ca²⁺']],
 hook:'Acid pushes potassium out, alkali pulls it in.',
 q:[['DKA: pH 7.05, K⁺ 3.1. First step?',['Start insulin infusion','Replace potassium before insulin','Give bicarbonate','Give insulin and recheck in 4 h'],1,'Insulin would drive K⁺ dangerously low. ADA: replace to ≥ 3.5 before insulin. UK JBDS: senior review and potassium before or with insulin. Either way, potassium comes first.'],
-['A panicking patient hyperventilating has tingling fingers. Mechanism?',['Hyperkalaemia','Fall in ionised calcium from alkalosis','Hypoglycaemia','Hypoxia'],1,'Alkalosis increases calcium binding to albumin.']]});
+['A panicking patient hyperventilating has tingling fingers. Mechanism?',['Rise in serum potassium from cell shift','Fall in ionised calcium from alkalosis','Low blood glucose from the stress response','Raised serum magnesium from the alkalosis'],1,'Alkalosis increases calcium binding to albumin.']]});
 
 /* ---------- SAMPLE & MACHINE ---------- */
 lesson({id:'sites',m:'samp',t:'Arterial, venous, capillary and central samples',
@@ -109,8 +109,8 @@ body:`${tw('<tr><th>Sample</th><th>Good for</th><th>Not good for</th></tr><tr><t
 <p>Record whether the patient is on room air, or note the FiO₂ and oxygen device. A gas without FiO₂ cannot be interpreted for oxygenation.</p>`,
 keys:[['Oxygenation needs','Arterial sample + FiO₂'],['Pressure after ABG','≥ 5 min'],['Capillary','Fine for pH/PCO₂, not PO₂']],
 hook:'An ABG without the FiO₂ is half a gas.',
-q:[['Which question does a peripheral VBG answer reliably?',['Is the PaO₂ adequate?','Is the patient acidotic and what is the lactate?','What is the A–a gradient?','Is there shunt?'],1,'Venous pH, bicarbonate and lactate agree well with arterial values.'],
-['What must accompany an ABG to interpret oxygenation?',['Patient\'s weight','FiO₂ or oxygen device','Serum albumin','Haemoglobin'],1,'Without it, a PaO₂ of 90 could be normal or terrible.']]});
+q:[['Which question does a peripheral VBG answer reliably?',['Is the PaO₂ adequate for this much oxygen?','Is the patient acidotic and what is the lactate?','How large is the A–a gradient on room air?','Is there a shunt causing the low saturation?'],1,'Venous pH, bicarbonate and lactate agree well with arterial values.'],
+['What must accompany an ABG to interpret oxygenation?',['Patient\'s weight and height','FiO₂ or oxygen device','Serum albumin level','Haemoglobin concentration'],1,'Without it, a PaO₂ of 90 could be normal or terrible.']]});
 
 lesson({id:'preanal',m:'samp',t:'Pre-analytical errors: when the sample lies',ex:{pH:7.38,pco2:47,hco3:27,po2:36,fio2:.21,na:139,k:4.2,cl:102,alb:40,lac:1.4,glu:5.8,age:50},
 sum:'Air bubbles, too much heparin, delay, haemolysis, and a venous sample labelled arterial account for most "impossible" gases.',
@@ -154,8 +154,8 @@ body:`<p>A pulse oximeter compares the pulsatile absorbance of red (≈ 660 nm) 
 <p>SpO₂ (or calculated sO₂) minus co-oximetry SaO₂. A gap above about 5% suggests a dyshaemoglobin.</p>`,
 keys:[['Wavelengths','660 nm and 940 nm'],['MetHb SpO₂','≈ 85%'],['Saturation gap','> 5% → dyshaemoglobin']],
 hook:'A pulse oximeter only knows two colours of haemoglobin. The co-oximeter knows them all.',
-q:[['A patient has blue lips, SpO₂ 85% on any amount of oxygen, normal PaO₂. Likely?',['Shunt','Methaemoglobinaemia','CO poisoning','Venous sample'],1,'Cyanosis with SpO₂ stuck near 85% and a normal PaO₂: methaemoglobin.'],
-['Why is SpO₂ normal in carbon monoxide poisoning?',['CO does not bind Hb','COHb absorbs red light like oxyhaemoglobin','CO raises PaO₂','The probe heats up'],1,'Two-wavelength oximetry cannot separate COHb from O₂Hb.']]});
+q:[['A patient has blue lips, SpO₂ 85% on any amount of oxygen, normal PaO₂. Likely?',['Intracardiac shunt','Methaemoglobinaemia','Carbon monoxide','Venous sample taken'],1,'Cyanosis with SpO₂ stuck near 85% and a normal PaO₂: methaemoglobin.'],
+['Why is SpO₂ normal in carbon monoxide poisoning?',['CO does not bind haemoglobin at all','COHb absorbs red light like oxyhaemoglobin','CO raises the dissolved PaO₂ reading','The probe overheats in CO poisoning'],1,'Two-wavelength oximetry cannot separate COHb from O₂Hb.']]});
 
 /* ---------- EVERY NUMBER ---------- */
 const NUMROWS=`<tr><th>Value</th><th>Normal (arterial)</th><th>SI / kPa</th></tr>
@@ -214,7 +214,7 @@ body:`<ul><li>Normal PaO₂ on room air at sea level: 80–100 mmHg (10.7–13.3
 ${tw('<tr><th>Device</th><th>Approximate FiO₂</th></tr><tr><td>Nasal cannula 1–6 L/min</td><td>0.24–0.44 (≈ +0.03–0.04 per L)</td></tr><tr><td>Simple face mask 5–10 L/min</td><td>0.35–0.55</td></tr><tr><td>Venturi mask</td><td>As labelled (0.24–0.60)</td></tr><tr><td>Non-rebreather 15 L/min</td><td>≈ 0.6–0.9</td></tr><tr><td>High-flow nasal</td><td>As set (0.21–1.0)</td></tr>')}`,
 keys:[['Normal PaO₂','80–100 mmHg · 10.7–13.3 kPa'],['Hypoxaemia severe','< 40 mmHg · 5.3 kPa'],['Cannula','≈ +0.04 per L/min']],
 hook:'A PaO₂ means nothing until you say "on what?"',
-q:[['PaO₂ 85 on a non-rebreather. Is oxygenation normal?',['Yes','No: P/F ≈ 95–140, severely impaired','Cannot say without PaCO₂','Yes, but only for age > 70'],1,'85 ÷ 0.6–0.9 ≈ 95–140. Healthy lungs would give a PaO₂ of several hundred.'],
+q:[['PaO₂ 85 on a non-rebreather. Is oxygenation normal?',['Yes: a PaO₂ above 80 is always normal','No: P/F ≈ 95–140, severely impaired','Cannot say without the PaCO₂','Yes, but only if aged over 70'],1,'85 ÷ 0.6–0.9 ≈ 95–140. Healthy lungs would give a PaO₂ of several hundred.'],
 ['Roughly what FiO₂ does 3 L/min nasal cannula give?',['0.21','0.32','0.50','0.80'],1,'≈ 0.21 + 3 × (0.03–0.04) ≈ 0.30–0.33, depending on breathing pattern.']]});
 
 lesson({id:'nhco3',m:'num',t:'Bicarbonate: actual and standard',
@@ -242,7 +242,7 @@ body:`<ul><li>Normal −2 to +2 mmol/L.</li>
 <li>Base excess does not distinguish causes: lactate, ketones, chloride and albumin all feed into it. The anion gap and Stewart analysis partition it.</li></ul>`,
 keys:[['Normal BE','−2 to +2 mmol/L'],['Shock marker','BE < −6'],['Deficit estimate','0.3 × kg × |BE|']],
 hook:'Base excess is the metabolic part only; the respiratory part has been subtracted out.',
-q:[['PaCO₂ 65, pH 7.36, BE +9. What does the BE tell you?',['Acute respiratory acidosis','Long-standing renal compensation (chronic)','Lactic acidosis','Analyser error'],1,'A raised base excess means the kidney has had days to add bicarbonate.'],
+q:[['PaCO₂ 65, pH 7.36, BE +9. What does the BE tell you?',['Acute respiratory acidosis, no compensation','Long-standing renal compensation (chronic)','Coexisting lactic acidosis lowering the BE','Analyser error: BE should be negative here'],1,'A raised base excess means the kidney has had days to add bicarbonate.'],
 ['A trauma patient\'s base deficit goes from −10 to −4 over 2 hours. Interpretation?',['Worsening shock','Resuscitation is working','Developing alkalosis','No meaning'],1,'Clearance of base deficit tracks restored perfusion.']]});
 
 lesson({id:'nlac',m:'num',t:'Lactate on the gas',
@@ -256,7 +256,7 @@ body:`<ul><li>Venous lactate is good enough for screening and trending; a tourni
 <p>Each mmol/L of lactate adds about 1 mmol/L to the anion gap. If the gap rise is much bigger than the lactate, look for another anion: ketones, toxic alcohols, uraemia, salicylate.</p>`,
 keys:[['Normal','< 2 mmol/L'],['High','> 4 mmol/L'],['Recheck','2 h']],
 hook:'Lactate explains its own share of the gap; anything left over is another acid.',
-q:[['AG 30 (rise of 18), lactate 3. What next?',['Lactic acidosis explains it','Look for another unmeasured anion (ketones, toxic alcohol, renal failure)','Normal','Repeat lactate'],1,'Lactate accounts for only 3 of the 18-point rise.'],
+q:[['AG 30 (rise of 18), lactate 3. What next?',['Lactate of 3 fully explains the anion gap rise, so treat the sepsis','Look for another unmeasured anion (ketones, toxic alcohol, renal failure)','Nothing more: this anion gap is normal once corrected for albumin','Repeat the lactate in six hours before looking for another cause'],1,'Lactate accounts for only 3 of the 18-point rise.'],
 ['Gas lactate 12, lab lactate 1.5, osmolar gap 25. Suspect?',['Septic shock','Ethylene glycol','Metformin','Short bowel'],1,'Glycolate reads as lactate on some gas analysers.']]});
 
 lesson({id:'nlytes',m:'num',t:'Electrolytes, glucose and haemoglobin on the gas',
@@ -268,8 +268,8 @@ body:`<ul><li><b>Na⁺ and Cl⁻</b>: needed for the anion gap. Chloride rising 
 <li><b>Hb</b>: a quick haemoglobin is useful, but a gas Hb from a diluted line sample can be misleading.</li></ul>`,
 keys:[['Na⁺ − Cl⁻','≈ 36–38'],['iCa²⁺','1.12–1.32 mmol/L'],['Haemolysis','False ↑ K⁺']],
 hook:'Na minus Cl under 32: chloride is driving an acidosis.',
-q:[['Na 140, Cl 115, HCO₃⁻ 14. Na − Cl and suggestion?',['25; hyperchloraemic acidosis','38; normal','45; alkalosis','Cannot say'],0,'Na − Cl = 25 and AG = 11: hyperchloraemic (normal AG) metabolic acidosis.'],
-['During massive transfusion, which gas value often falls and needs replacement?',['Glucose','Ionised calcium','Sodium','Lactate'],1,'Citrate in blood products binds calcium.']]});
+q:[['Na 140, Cl 115, HCO₃⁻ 14. Na − Cl and suggestion?',['25; hyperchloraemic acidosis','38; normal, no chloride problem','45; metabolic alkalosis likely','Cannot say without albumin'],0,'Na − Cl = 25 and AG = 11: hyperchloraemic (normal AG) metabolic acidosis.'],
+['During massive transfusion, which gas value often falls and needs replacement?',['Plasma glucose','Ionised calcium','Serum sodium','Blood lactate'],1,'Citrate in blood products binds calcium.']]});
 
 lesson({id:'ncoox',m:'num',t:'Co-oximetry: COHb and MetHb',
 sum:'COHb above 3% (10% in smokers) means CO exposure. MetHb above 1.5% is abnormal; symptoms usually start above 15–20%.',
@@ -309,7 +309,7 @@ ${tw('<tr><th>Δ ratio</th><th>Meaning</th></tr><tr><td>&lt; 0.4</td><td>Hyperch
 keys:[['AG','Na − (Cl + HCO₃⁻)'],['Albumin correction','+2.5 per 10 g/L below 40'],['Osmolar gap normal','< 10']],
 hook:'Gap up by more than the bicarbonate fell → an alkalosis is hiding. Gap up by less → a chloride acidosis is hiding.',
 q:[['Na 138, Cl 100, HCO₃⁻ 12, albumin 20 g/L. Corrected AG?',['26','31','21','36'],1,'AG = 138 − 112 = 26; +0.25 × 20 = +5 → 31.'],
-['AG 32 (Δ 20), HCO₃⁻ 18 (Δ 6). Delta ratio and meaning?',['0.3; NAGMA','1.0; pure HAGMA','3.3; HAGMA + metabolic alkalosis','Cannot calculate'],2,'20 ÷ 6 ≈ 3.3. The bicarbonate fell far less than expected: e.g. DKA with vomiting.']]});
+['AG 32 (Δ 20), HCO₃⁻ 18 (Δ 6). Delta ratio and meaning?',['0.3; HAGMA + NAGMA','1.0; pure HAGMA','3.3; HAGMA + metabolic alkalosis','Cannot calculate without albumin'],2,'20 ÷ 6 ≈ 3.3. The bicarbonate fell far less than expected: e.g. DKA with vomiting.']]});
 
 lesson({id:'nall',m:'num',t:'Reference card: the whole printout',
 sum:'Every line of a blood gas report in one table. Come back to it until it is in your head.',
@@ -335,4 +335,4 @@ keys:[['pH','Venous ≈ arterial − 0.03'],['HCO₃⁻','Venous ≈ arterial + 
 hook:'Venous gas: trust the pH, bicarb and lactate; screen with the CO₂; ignore the oxygen.',
 q:[['DKA monitoring: which sample is adequate?',['Arterial only','Venous','Capillary only','None; use urine'],1,'Venous pH, bicarbonate and ketones are sufficient for DKA.'],
 ['VBG PCO₂ 38 in a drowsy COPD patient. Interpretation?',['Arterial hypercapnia is unlikely','Hypercapnia confirmed','Must be acute respiratory acidosis','Venous PCO₂ is meaningless'],0,'A normal venous PCO₂ largely excludes arterial hypercapnia. Look for other causes of drowsiness.'],
-['VBG PCO₂ 62. Next?',['Assume PaCO₂ 62','Get an ABG if management depends on the exact value','Ignore it','Give bicarbonate'],1,'A high venous PCO₂ cannot be converted reliably; measure arterial.']]});
+['VBG PCO₂ 62. Next?',['Assume the PaCO₂ is 62 and treat as hypercapnic failure','Get an ABG if management depends on the exact value','Ignore it: venous PCO₂ is always unreliable','Give bicarbonate to correct the acidosis'],1,'A high venous PCO₂ cannot be converted reliably; measure arterial.']]});

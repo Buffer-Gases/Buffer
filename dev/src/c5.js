@@ -75,14 +75,14 @@ const SRC={
  kraut12:['Kraut & Madias 2012','Kraut JA, Madias NE. Differential diagnosis of nongap metabolic acidosis: value of a systematic approach. Clin J Am Soc Nephrol 2012;7:671–679.','10.2215/CJN.09450911'],
  juurlink15:['EXTRIP salicylate 2015','Juurlink DN, et al. Extracorporeal treatment for salicylate poisoning: systematic review and recommendations from the EXTRIP workgroup. Ann Emerg Med 2015;66:165–181.','10.1016/j.annemergmed.2015.03.031'],
  proudfoot04:['Proudfoot 2004','Proudfoot AT, Krenzelok EP, Vale JA. Position paper on urine alkalinization. J Toxicol Clin Toxicol 2004;42:1–26.','10.1081/clt-120028740'],
- bts19:['BTS/SIGN 2019','British Thoracic Society, Scottish Intercollegiate Guidelines Network. SIGN 158: British guideline on the management of asthma. Edinburgh: SIGN; 2019 (acute asthma section retained in the 2024 update).'],
+ bts19:['BTS/SIGN (SIGN 158, acute section)','British Thoracic Society, Scottish Intercollegiate Guidelines Network. SIGN 158: British guideline on the management of asthma. Edinburgh: SIGN; 2019 (acute asthma section retained and amended in the 2024 update).'],
  umpierrez24:['ADA/EASD/JBDS 2024','Umpierrez GE, et al. Hyperglycemic crises in adults with diabetes: a consensus report. Diabetes Care 2024;47:1257–1275.','10.2337/dci24-0032'],
  konst20:['ESC PE 2019','Konstantinides SV, et al. 2019 ESC Guidelines for the diagnosis and management of acute pulmonary embolism developed in collaboration with the European Respiratory Society. Eur Heart J 2020;41:543–603.','10.1093/eurheartj/ehz405'],
  stein96:['Stein 1996','Stein PD, Goldhaber SZ, Henry JW, Miller AC. Arterial blood gas analysis in the assessment of suspected acute pulmonary embolism. Chest 1996;109:78–81.','10.1378/chest.109.1.78'],
  soar21:['ERC ALS 2021','Soar J, et al. European Resuscitation Council Guidelines 2021: adult advanced life support. Resuscitation 2021;161:115–151.','10.1016/j.resuscitation.2021.02.010'],
  epstein19:['Epstein & Yanovich 2019','Epstein Y, Yanovich R. Heatstroke. N Engl J Med 2019;380:2449–2459.','10.1056/NEJMra1810762'],
  bouchama22:['Bouchama 2022','Bouchama A, et al. Classic and exertional heatstroke. Nat Rev Dis Primers 2022;8:8.','10.1038/s41572-021-00334-6'],
- roberts21:['ACSM 2021','Roberts WO, Armstrong LE, Sawka MN, Yeargin SW, Heled Y, O\'Connor FG. ACSM expert consensus statement on exertional heat illness: recognition, management, and return to activity. Curr Sports Med Rep 2021;20:470–484.','10.1249/JSR.0000000000000878'],
+ roberts21:['ACSM 2023','Roberts WO, Armstrong LE, Sawka MN, Yeargin SW, Heled Y, O\'Connor FG. ACSM expert consensus statement on exertional heat illness: recognition, management, and return to activity. Curr Sports Med Rep 2023;22:134–149 (first published 2021).','10.1249/JSR.0000000000001058'],
  uribarri98:['Uribarri 1998','Uribarri J, Oh MS, Carroll HJ. D-lactic acidosis: a review of clinical presentation, biochemical features, and pathophysiologic mechanisms. Medicine (Baltimore) 1998;77:73–82.','10.1097/00005792-199803000-00001'],
  mehta08:['Mehta 2008','Mehta AN, Emmett JB, Emmett M. GOLD MARK: an anion gap mnemonic for the 21st century. Lancet 2008;372:892.','10.1016/S0140-6736(08)61398-7'],
  calello15:['EXTRIP metformin 2015','Calello DP, et al. Extracorporeal treatment for metformin poisoning: systematic review and recommendations from the Extracorporeal Treatments in Poisoning Workgroup. Crit Care Med 2015;43:1716–1730.','10.1097/CCM.0000000000001002'],
@@ -109,6 +109,16 @@ const SRC={
  mhra09:['MHRA 2009','Medicines and Healthcare products Regulatory Agency. Methylthioninium chloride (methylene blue): update on central nervous system (CNS) toxicity. Drug Safety Update 2009;2(9):3.'],
  dubin07:['Dubin 2007','Dubin A, Menises MM, Masevicius FD, et al. Comparison of three different methods of evaluation of metabolic acid-base disorders. Crit Care Med 2007;35:1264–1270.','10.1097/01.CCM.0000259536.11943.90'],
  kowlgi15:['Kowlgi 2015','Kowlgi NG, Chhabra L. D-lactic acidosis: an underrecognized complication of short bowel syndrome. Gastroenterol Res Pract 2015;2015:476215.','10.1155/2015/476215'],
+ /* D03: c3 methb, opioid and co bodies now carry these statements */
+ iolascon21:['Iolascon 2021','Iolascon A, et al. Recommendations for diagnosis and treatment of methemoglobinemia. Am J Hematol 2021;96:1666–1678.','10.1002/ajh.26340'],
+ fda11mb:['FDA 2011','US Food and Drug Administration. Drug Safety Communication: serious CNS reactions possible when methylene blue is given to patients taking certain psychiatric medications. 26/07/2011.'],
+ boyer12:['Boyer 2012','Boyer EW. Management of opioid analgesic overdose. N Engl J Med 2012;367:146–155.','10.1056/NEJMra1202561'],
+ bnfnalox:['BNF naloxone','Joint Formulary Committee. British National Formulary: naloxone hydrochloride. London: BMJ and Pharmaceutical Press (current edition).'],
+ buckley11:['Cochrane HBO 2011','Buckley NA, Juurlink DN, Isbister G, Bennett MH, Lavonas EJ. Hyperbaric oxygen for carbon monoxide poisoning. Cochrane Database Syst Rev 2011;(4):CD002041.','10.1002/14651858.CD002041.pub3'],
+ weaver02:['Weaver 2002','Weaver LK, et al. Hyperbaric oxygen for acute carbon monoxide poisoning. N Engl J Med 2002;347:1057–1067.','10.1056/NEJMoa013121'],
+ /* c12.js case ch-pyl (pyloric stenosis) cites these */
+ hernanz03:['Hernanz-Schulman 2003','Hernanz-Schulman M. Infantile hypertrophic pyloric stenosis. Radiology 2003;227:319–331.','10.1148/radiol.2272011329'],
+ nice29:['NICE NG29','National Institute for Health and Care Excellence. Intravenous fluid therapy in children and young people in hospital (NG29). London: NICE; 2015, updated 2020.'],
  west96:['West 1996','West JB. Prediction of barometric pressures at high altitude with the use of model atmospheres. J Appl Physiol 1996;81:1850–1854.','10.1152/jappl.1996.81.4.1850'],
  pitt:['Rose','']
 };
@@ -128,7 +138,7 @@ const LSRC={
  npo2:['odriscoll17'],nlac:['kraut14','singer16'],nlytes:['aronson11'],ncoox:['weaver09','ashbernal04','wright99','mhra09'],nderived:['figge98','kraut07'],nall:['kraut07'],
  vbg:['byrne14'],
  read6:['berend14','narins80'],hagma:['kraut07','kraut10','figge98','mehta08'],nagma:['kraut10','kraut12','batlle88'],malk:['galla00'],racid:['epstein01','brackett65','davidson16'],ralk:['foster01','brackett65'],mixed:['wrenn90','narins80'],oxread:['odriscoll17','berlin12'],
- dka:['umpierrez24','jbds23','kraut10'],sepsis:['singer16','evans21','semler18','kraut14','kraut10'],asa:['juurlink15','proudfoot04','kraut10'],toxalc2:['kraut18','roberts15','ghannoum23','purssell01','kraut10'],copd:['davidson16','odriscoll17','epstein01'],asthma:['bts19','epstein01','foster01'],pe:['konst20','stein96','foster01'],vomit:['galla00'],diarr:['kraut10','batlle88'],renalfail:['kdigo24','kraut10'],arrest:['nolan21','soar21','kraut14'],opioid:['epstein01','brackett65'],heat:['epstein19','bouchama22','roberts21','foster01'],co:['weaver09','baud91'],methb:['ashbernal04','wright99'],preg:['hegewald11','luks17','crapo99'],rhabdo:['bosch09'],etoh:['mcguire06','kraut18','purssell01','nice32','schabelman12','kraut14'],drugacid:['kraut10','fenves06','calello15'],gib:['kraut14','halt20','villanueva13','crash2_11','rossaint23'],kids:['apls','kuppermann18','glaser01']
+ dka:['umpierrez24','jbds23','kraut10'],sepsis:['singer16','evans21','semler18','kraut14','kraut10'],asa:['juurlink15','proudfoot04','kraut10'],toxalc2:['kraut18','roberts15','ghannoum23','purssell01','kraut10'],copd:['davidson16','odriscoll17','epstein01'],asthma:['bts19','epstein01','foster01'],pe:['konst20','stein96','foster01'],vomit:['galla00'],diarr:['kraut10','batlle88'],renalfail:['kdigo24','kraut10'],arrest:['nolan21','soar21','kraut14'],opioid:['boyer12','bnfnalox','epstein01','brackett65'],heat:['epstein19','bouchama22','roberts21','foster01'],co:['weaver09','weaver02','buckley11','baud91'],methb:['iolascon21','ashbernal04','wright99','fda11mb'],preg:['hegewald11','luks17','crapo99'],rhabdo:['bosch09'],etoh:['mcguire06','kraut18','purssell01','nice32','schabelman12','kraut14'],drugacid:['kraut10','fenves06','calello15'],gib:['kraut14','halt20','villanueva13','crash2_11','rossaint23'],kids:['apls','kuppermann18','glaser01']
 };
 /* 5.0: lesson-specific sources first (most relevant on top), then the module textbooks */
 function lessonSources(l){const ids=[...new Set([...(LSRC[l.id]||[]),...(MSRC[l.m]||[])])].filter(i=>SRC[i]);return ids.map(i=>SRC[i]);}

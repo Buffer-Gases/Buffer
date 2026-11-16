@@ -281,7 +281,7 @@ ${tw('<tr><th>Form</th><th>Share of CO₂ in arterial blood</th></tr><tr><td>Bic
 <p>Red cells make 2,3-bisphosphoglycerate through a glycolytic side path (Rapoport–Luebering shunt). It binds deoxy-Hb and shifts the curve right. It rises with chronic hypoxia, anaemia and altitude, and falls in stored blood.</p>`,
 keys:[['Bohr effect','H⁺/CO₂ ↓ O₂ affinity'],['Haldane effect','O₂ ↓ CO₂ carriage'],['Chloride shift','HCO₃⁻ out, Cl⁻ in (band 3)']],
 hook:'Bohr: acid kicks oxygen off. Haldane: oxygen kicks CO₂ off.',
-q:[['Which effect explains part of the rise in PaCO₂ when a COPD patient is given high-flow oxygen?',['Bohr effect','Haldane effect','Chloride shift','Hamburger effect'],1,'Oxygen binding releases CO₂ from haemoglobin. Worsened V/Q matching (loss of hypoxic vasoconstriction) contributes more.'],
+q:[['Which effect explains part of the rise in PaCO₂ when a COPD patient is given high-flow oxygen?',['Bohr effect','Haldane effect','Chloride shift','Hering–Breuer reflex'],1,'Oxygen binding releases CO₂ from haemoglobin. Worsened V/Q matching (loss of hypoxic vasoconstriction) contributes more.'],
 ['Massively transfused blood (low 2,3-BPG) shifts the dissociation curve…',['Right, releasing O₂ more easily','Left, holding O₂ more tightly','Right, because stored blood is acidic','Not at all once it is warmed'],1,'Low 2,3-BPG raises affinity: oxygen loads but unloads poorly in tissues.']]});
 
 lesson({id:'toxalc',m:'micro',t:'Enzymes and poisons: toxic alcohols and 5-oxoproline',

@@ -1,4 +1,4 @@
-# Buffer: Blood Gas Trainer (PWA) · v4.9.0 · 13/11/2026
+# Buffer: Blood Gas Trainer (PWA) · v5.0.0 · 16/11/2026
 
 ABG and VBG from the proton to the bedside. Part of the Citrus app family. It uses the Orange Pixel look and runs offline once installed.
 
@@ -21,4 +21,15 @@ ABG and VBG from the proton to the bedside. Part of the Citrus app family. It us
 - Photo of a printout: the reader (tesseract.js 5.1.1 from jsDelivr) downloads once on first use, is cached by the service worker, and runs on the device. You confirm every number before it is used.
 
 ## Updating
-Replace index.html and bump the `V` constant in sw.js so installed copies refresh.
+1. Run `bash tests/gate.sh` in the source folder: every step must pass.
+2. Run `python3 build.py --pwa`. It writes buffer.html and pwa/index.html (PWA head + the app + the service-worker registration).
+3. Bump the `V` constant in sw.js so installed copies refresh. Open copies show "Buffer updated. Reload when you finish this gas." instead of switching silently.
+
+## Offline behaviour (sw.js)
+- Opening the app tries the network for up to 3 s, then shows the cached copy, so slow hospital Wi-Fi never leaves a blank screen.
+- Only a real copy of the app (status 200, HTML, at the start address) replaces the offline copy. A 404 or a server error never does.
+- The photo reader (tesseract.js 5.1.1: script, worker, wasm core and English data, all from cdn.jsdelivr.net) is kept in the cache `buffer-ocr-5.1.1` after its first use. A new reader version gets a new cache and the old one is deleted.
+- Google Fonts are cached too (stale-while-revalidate).
+
+## Test offline on your computer
+Registration works on https and on http://localhost. For example, run `python3 -m http.server 8811` inside this folder, open http://localhost:8811/, reload once, then switch the browser to offline in DevTools (Application → Service workers → Offline) and reload.

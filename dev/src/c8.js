@@ -76,7 +76,7 @@ XQ.arrest=[
 ['During CPR, which sample better reflects tissue acid–base status?',['Central venous','Arterial','Capillary','Any, they match'],0,'Low flow lets venous CO₂ rise while arterial values can look near normal.'],
 ['Why avoid hyperoxia after ROSC?',['It may add to reperfusion injury','It slows the clearance of lactate','It causes a reflex bradycardia','It lowers the PaCO₂ too far'],0,'Targeting a normal saturation avoids the harms of excess oxygen.']];
 XQ.opioid=[
-['Oxygen in an opioid overdose may…',['Improve SpO₂ while hypoventilation worsens','Reverse the respiratory depression','Lower PaCO₂','Make naloxone unnecessary'],0,'Saturation can look good while CO₂ keeps rising.'],
+['Oxygen in an opioid overdose may…',['Keep SpO₂ normal while CO₂ rises unseen','Reverse the respiratory depression','Lower PaCO₂','Make naloxone unnecessary'],0,'Oxygen hides hypoventilation from the oximeter; watch RR, ETCO₂ or a gas.'],
 ['Acute PaCO₂ of 90 mmHg. Expected pH is about…',['7.00','7.20','7.30','7.40'],0,'Acute rule: pH falls about 0.08 per 10 mmHg rise, so 5 × 0.08 = 0.4 below 7.40.'],
 ['Why monitor after naloxone?',['The opioid may outlast the antidote','Naloxone causes a rebound alkalosis','Naloxone itself raises the PCO₂','Withdrawal lowers the lactate'],0,'Re-sedation is possible with long-acting opioids.']];
 XQ.heat=[
@@ -90,7 +90,7 @@ XQ.co=[
 XQ.methb=[
 ['Blood that stays dark brown in air suggests…',['Methaemoglobin','Carboxyhaemoglobin','Anaemia','Sulphaemoglobin only'],0,'Chocolate-coloured blood does not redden when exposed to oxygen.'],
 ['Which drug classically causes methaemoglobinaemia?',['Dapsone','Metformin','Ramipril','Atenolol'],0,'Oxidant drugs such as dapsone and benzocaine are common triggers.'],
-['Oxygen therapy in methaemoglobinaemia…',['Does not raise SpO₂ much','Normalises SpO₂','Is harmful','Replaces methylene blue'],0,'Methaemoglobin cannot carry oxygen, so the reading stays near 85%.']];
+['Oxygen therapy in methaemoglobinaemia…',['Does not raise SpO₂ much','Normalises SpO₂','Is harmful','Replaces methylene blue'],0,'MetHb absorbs red and infrared light about equally, so the oximeter reads about 85% whatever the true saturation; extra oxygen raises PaO₂ but barely moves the reading.']];
 XQ.preg=[
 ['Why is PaCO₂ lower in pregnancy?',['Progesterone drives ventilation','Lower CO₂ production in pregnancy','Renal bicarbonate loss comes first','Splinting of the diaphragm'],0,'Progesterone raises resting ventilation by about a third. The kidney then lowers HCO₃⁻ to compensate; CO₂ production actually rises.'],
 ['Why aim for maternal SpO₂ of 95% or more?',['To keep fetal oxygen delivery up','To prevent maternal hypocapnia','To raise the maternal bicarbonate','To avoid a maternal alkalosis'],0,'The fetus works on the steep part of its curve and depends on maternal oxygenation.'],

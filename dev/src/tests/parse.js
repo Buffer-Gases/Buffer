@@ -1,0 +1,53 @@
+// D15 regression cases for parseGas (ui3.js). Run: node tests/parse.js (also run by tests/gate.sh)
+const fs=require('fs');const src=fs.readFileSync(require('path').join(__dirname,'..','ui3.js'),'utf8');
+const a=src.indexOf('/* reads values out of pasted'),b=src.indexOf('function renderInterp');
+const KPA=7.50062,r1=x=>Math.round(x*10)/10,hFrom=(pH,p)=>24*p/Math.pow(10,9-pH);
+const parseGas=new Function('KPA','r1','hFrom',src.slice(src.lastIndexOf('/*',a-1)>=0?a:a,b)+';return parseGas;')(KPA,r1,hFrom);
+const C=[
+['T11-4 baro mmHg, gases kPa','pH 7.21\npCO2 3.20 kPa\npO2 14.0 kPa\ncHCO3-(P)c 9.4\nBarometric pressure 760 mmHg',{pH:7.21,pco2:24,po2:105,hco3:9.4}],
+['T12-6 baro inline','pH 7.10 pCO2 3.2 kPa pO2 12 kPa HCO3 7 Baro 755 mmHg',{pco2:24,po2:90}],
+['T11-5 (T) rows','pH(T) 7.30\npH 7.32\npCO2(T) 6.1 kPa\npCO2 5.9 kPa',{pH:7.32,pco2:44.3}],
+['T11-5 only (T)','pH(T) 7.30\npCO2(T) 6.1 kPa',{pH:7.30,pco2:45.8},r=>r.notes.some(n=>/temperature/i.test(n))],
+['T11-6 FO2(I)','pH 7.40\npCO2 40 mmHg\npO2 62 mmHg\nFO2(I) 28.0 %\nFO2Hb 90 %\npO2(a)/FO2(I) 221 mmHg\npO2(A) 150 mmHg',{fio2:0.28,po2:62}],
+['T11-7 slash venous','VBG 7.31/52/24 lac 3',{pH:7.31,pco2:52,hco3:24,lac:3},r=>r.ven&&r.sample==='v'],
+['T11-7 slash with PO2 RA','ABG 7.21/24/9.4/108 on RA',{pH:7.21,pco2:24,hco3:9.4,po2:108,fio2:0.21},r=>r.sample==='a'],
+['T11-7 slash pH/PCO2/PO2/HCO3','7.21/24/108/9.4',{pco2:24,hco3:9.4,po2:108}],
+['slash kPa','7.31/6.9/25',{pco2:51.8,hco3:25}],
+['T11-8 CK','pH 7.30 pCO2 30 HCO3 14 Na 140 Cl 100 CK 3000 K 4.0',{k:4.0,na:140,cl:100}],
+['T11-9 osm calc','pH 7.10 pCO2 20 HCO3 6 Na 140 Cl 100 Osm calc 290 Osm measured 330 Glu 5 Urea 5',{osm:330,glu:5,urea:5}],
+['osm gap','Osmolality 320 mOsm/kg Osmolar gap 25 Glu 5',{osm:320,glu:5}],
+['T11-10 glu mg/dL low','pH 7.20\npCO2 25 mmHg\nHCO3 9.6\nGlu 45 mg/dL',{glu:2.5}],
+['T11-10 glu mmol high','Glu 66 mmol/L pH 7.3 pCO2 30',{glu:66}],
+['glu no unit high','Glu 540 pH 7.1 pCO2 20',{glu:30}],
+['T12-1 lac mg/dL','Glu 50 mg/dL\npH 7.20\npCO2 25 mmHg\nHCO3 9.6\nNa 135\nCl 100\nLac 18 mg/dL',{glu:2.8,lac:2.0}],
+['T11-20 lactate mg/dL','Lactate 36 mg/dL',{lac:4.0}],
+['T12-13 columns','Na+             131 mmol/L\nK+              4.2 mmol/L\nCl-             101 mmol/L\npH     7.31',{na:131,k:4.2,cl:101}],
+['T12-14 (37 C) labels','pH (37.0 C) 7.21\npCO2 (37.0 C) 24 mmHg\nHCO3 9.4',{pH:7.21,pco2:24,hco3:9.4}],
+['T11-16 std first','HCO3std 23.0\nHCO3act 21.5\npH 7.452\npCO2 31.2',{hco3:21.5}],
+['Radiometer st','cHCO3-(P,st)c 23.0 mmol/L\ncHCO3-(P)c 21.5 mmol/L\npH 7.452\npCO2 31.2 mmHg',{hco3:21.5}],
+['T11-17 long names','Sodium 136, potassium 4.1, chloride 101, bicarbonate 9.4, pH 7.21, PaCO2 24',{na:136,k:4.1,cl:101,hco3:9.4,pH:7.21,pco2:24}],
+['T11-18 BHB','pH 7.1 pCO2 20 BHB 5.2',{bhb:5.2}],
+['ketones','pH 7.1 pCO2 20 blood ketones 4.1',{bhb:4.1}],
+['T11-19 BUN','pH 7.30 pCO2 30 HCO3 14 BUN 56 Na 140 Cl 100',{urea:20}],
+['BUN mmol','BUN 7 mmol/L pH 7.3 pCO2 30',{urea:7}],
+['T11-21 ranges','pH  [7.35-7.45]  7.21\npCO2 [35-45] 24',{pH:7.21,pco2:24}],
+['range unbracketed','pH 7.35-7.45 7.21\npCO2 35 - 45 24 mmHg',{pH:7.21,pco2:24}],
+['T11-22 explicit arterial','Sample: Arterial  Comment: taken from arterial line, not venous\npH 7.4 pCO2 40',{},r=>r.sample==='a'&&!r.ven],
+['T11-23 age','Patient age 67\npH 7.4 pCO2 40 pO2 70',{age:67}],
+['T12-7 VEN','Sample type: VEN\npH 7.35 pCO2 48',{},r=>r.ven],
+['T12-7 Venou','Sample Type: Venou\npH 7.35 pCO2 48',{},r=>r.ven],
+['no sample','pH 7.35 pCO2 48',{},r=>r.sample==null],
+['T11-47 capillary','Sample: Capillary\npH 7.35 pCO2 40 pO2 60',{pH:7.35},r=>r.sample==='c'&&r.v.po2==null&&!r.ven],
+['T11-44 2L NC','pH 7.40 pCO2 40 pO2 70 HCO3 24 on 2L NC',{fio2:0.28}],
+['venturi','pH 7.40 pCO2 40 pO2 70 Venturi 35%',{fio2:0.35}],
+['NRB','pH 7.40 pCO2 40 pO2 70 15L NRB',{fio2:0.8}],
+['placeholder','pH 7.21 pCO2 3.2 kPa pO2 14 HCO3 9.4 Na 136 Cl 101 Lac 1.4 Glu 28',{pH:7.21,pco2:24,po2:105,hco3:9.4,na:136,cl:101,lac:1.4,glu:28}],
+['no units fit kPa','pH 7.21 pCO2 3.2 HCO3 9.4',{pco2:24}],
+['albumin g/dL','Albumin 3.2 g/dL',{alb:32}],
+['decimal comma','pH 7,21 pCO2 3,2 kPa',{pH:7.21,pco2:24}],
+['i-STAT mg/dL','i-STAT CG8+\nVEN\npH 7.312\nPCO2 48.1 mmHg\nPO2 38 mmHg\nHCO3 24.3 mmol/L\nNa 138 mmol/L\nK 4.1 mmol/L\nGlu 45 mg/dL',{glu:2.5,pco2:48.1,po2:38,na:138,k:4.1},r=>r.ven],
+['RAPIDPoint kPa','pH 7.21\npCO2 9.07 kPa\npO2 7.73 kPa\nBar Pressure 758 mmHg\nHCO3act 26.4',{pco2:68,po2:58}],
+['ward kPa no unit low po2','pH 7.40 pCO2 5.3 pO2 9.8 HCO3 24',{pco2:39.8,po2:73.5}],
+];
+let pass=0,fail=0;for(const [n,t,want,ok] of C){const r=parseGas(t);const bad=[];for(const k in want){const g=r.v[k];if(g==null||Math.abs(g-want[k])>0.051)bad.push(k+': want '+want[k]+' got '+g);}if(ok&&!ok(r))bad.push('check failed '+JSON.stringify({sample:r.sample,ven:r.ven,notes:r.notes}));if(bad.length){fail++;console.log('FAIL',n,'|',bad.join('; '));}else pass++;}
+console.log('parse cases: '+pass+' passed, '+fail+' failed');process.exitCode=fail?1:0;
