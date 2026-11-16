@@ -24,7 +24,7 @@ Buffer is moving from the "Programs and Apps" Claude project to the Citrus proje
 
 ## Beta round in progress (started 13/11, paused for the move)
 The user asked for 30 beta testers across the app's parts, with their notes handed to 30 developers to make "the ultimate perfect Buffer".
-- **Testers:** all 30 roles are in `dev/beta/ROLES.md` and their brief is `dev/beta/BRIEF-testers.md`. Notes from 29 are in `dev/beta/notes/` (T<NN>-*.md with full context; T<NN>-*.jsonl with one finding per line), 1,202 findings in total. T29 (robustness and performance) was cut off by a container restart and resumed; if its notes are missing, rerun it.
+- **Testers:** all 30 roles are in `dev/beta/ROLES.md` and their brief is `dev/beta/BRIEF-testers.md`. Notes from 29 are in `dev/beta/notes/` (T<NN>-*.md with full context; T<NN>-*.jsonl with one finding per line), 1,202 findings in total. All 30 testers have reported (1,229 findings).
 - **Triage:** `dev/beta/triage.py --split` turns the notes into 30 developer inboxes in `dev/beta/inbox/D<NN>.jsonl`. The ownership map (who owns which files) is `dev/beta/DEVS.md`, and the developers' brief is `dev/beta/BRIEF-devs.md`.
 - **Developers:**
   - Wave 1 (D01–D08: the lesson content in c1–c4, sources in c5/c9, the extra questions in c6–c8, ICU c10, special groups c11) was started in the old project. Their logs are in `dev/beta/devlog/D<NN>.md`.
