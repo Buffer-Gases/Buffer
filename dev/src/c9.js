@@ -12,5 +12,8 @@
  });
 })();
 /* 4.5: put the new visual models into the lessons they explain */
-(function(){const add={'icu-vent1':['vent'],'icu-ards':['vent','vq'],'icu-obst':['vent'],comp:['dav'],odc:['odcplay'],hypox:['vq'],ratios:['vq'],renal:['kidney'],rta:['kidney'],alkmaint:['kidney']};
- L.forEach(l=>{if(add[l.id]){l.w=l.w||[];add[l.id].forEach(w=>{if(!l.w.includes(w))l.w.push(w);});}});})();
+(function(){const add={'icu-vent1':['vent'],'icu-ards':['vent','vq'],'icu-obst':['vent'],comp:['dav'],odc:['odcplay'],hypox:['vq'],ratios:['vq'],renal:['kidney'],rta:['kidney']};
+ /* 5.0: alkmaint no longer gets the kidney model (it has no alkalosis mode yet: T16-7).
+    wopt = start-up options per model, read by mountW/W.*.build when supported (T08-18): open the lab on the lesson's own patient. */
+ const opt={'icu-ards':{vent:{pat:'ards'}},'icu-obst':{vent:{pat:'asthma'}}};
+ L.forEach(l=>{if(add[l.id]){l.w=l.w||[];add[l.id].forEach(w=>{if(!l.w.includes(w))l.w.push(w);});}if(opt[l.id])l.wopt=Object.assign({},l.wopt||{},opt[l.id]);});})();

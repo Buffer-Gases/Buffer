@@ -62,22 +62,73 @@ const SRC={
  west:['West','West JB, Luks AM. West\'s Respiratory Physiology: The Essentials. Wolters Kluwer (current edition).'],
  wrenn90:['Wrenn 1990','Wrenn K. The delta (Δ) gap: an approach to mixed acid-base disorders. Ann Emerg Med 1990;19:1310–1313.'],
  apls:['APLS','Advanced Life Support Group. Advanced Paediatric Life Support: the practical approach to emergencies. Wiley (current edition).'],
+ /* 5.0 (D05): sources testers found missing; each checked against PubMed or the publisher. Third field = DOI where one exists.
+    matthay24 (global ARDS 2024) is defined in c10.js and kdigo24 (KDIGO CKD 2024) in c11.js; LSRC uses them by key (resolved at render time). */
+ hussain24:['Musa Hussain 2024','Musa Hussain EY, et al. Evaluation and improving the quality of arterial blood gas interpretation among junior doctors in Aswan University Hospital: a clinical audit. Cureus 2024;16(12):e74906.','10.7759/cureus.74906'],
+ hatala03:['Hatala 2003','Hatala RM, Brooks LR, Norman GR. Practice makes perfect: the critical role of mixed practice in the acquisition of ECG interpretation skills. Adv Health Sci Educ Theory Pract 2003;8:17–26.','10.1023/a:1022687404380'],
+ ark06:['Ark 2006','Ark TK, Brooks LR, Eva KW. Giving learners the best of both worlds: do clinical teachers need to guard against teaching pattern recognition to novices? Acad Med 2006;81:405–409.','10.1097/00001888-200604000-00017'],
+ kalyuga03:['Kalyuga 2003','Kalyuga S, Ayres P, Chandler P, Sweller J. The expertise reversal effect. Educ Psychol 2003;38:23–31.','10.1207/S15326985EP3801_4'],
+ roediger06:['Roediger & Karpicke 2006','Roediger HL, Karpicke JD. Test-enhanced learning: taking memory tests improves long-term retention. Psychol Sci 2006;17:249–255.','10.1111/j.1467-9280.2006.01693.x'],
+ cepeda06:['Cepeda 2006','Cepeda NJ, Pashler H, Vul E, Wixted JT, Rohrer D. Distributed practice in verbal recall tasks: a review and quantitative synthesis. Psychol Bull 2006;132:354–380.','10.1037/0033-2909.132.3.354'],
+ meyer13:['Meyer 2013','Meyer AND, Payne VL, Meeks DW, Rao R, Singh H. Physicians\' diagnostic accuracy, confidence, and resource requests: a vignette study. JAMA Intern Med 2013;173:1952–1958.','10.1001/jamainternmed.2013.10081'],
+ kim96:['Kim 1996','Kim GH, Han JS, Kim YS, Joo KW, Kim S, Lee JS. Evaluation of urine acidification by urine anion gap and urine osmolal gap in chronic metabolic acidosis. Am J Kidney Dis 1996;27:42–47.','10.1016/s0272-6386(96)90029-3'],
+ kraut12:['Kraut & Madias 2012','Kraut JA, Madias NE. Differential diagnosis of nongap metabolic acidosis: value of a systematic approach. Clin J Am Soc Nephrol 2012;7:671–679.','10.2215/CJN.09450911'],
+ juurlink15:['EXTRIP salicylate 2015','Juurlink DN, et al. Extracorporeal treatment for salicylate poisoning: systematic review and recommendations from the EXTRIP workgroup. Ann Emerg Med 2015;66:165–181.','10.1016/j.annemergmed.2015.03.031'],
+ proudfoot04:['Proudfoot 2004','Proudfoot AT, Krenzelok EP, Vale JA. Position paper on urine alkalinization. J Toxicol Clin Toxicol 2004;42:1–26.','10.1081/clt-120028740'],
+ bts19:['BTS/SIGN 2019','British Thoracic Society, Scottish Intercollegiate Guidelines Network. SIGN 158: British guideline on the management of asthma. Edinburgh: SIGN; 2019 (acute asthma section retained in the 2024 update).'],
+ umpierrez24:['ADA/EASD/JBDS 2024','Umpierrez GE, et al. Hyperglycemic crises in adults with diabetes: a consensus report. Diabetes Care 2024;47:1257–1275.','10.2337/dci24-0032'],
+ konst20:['ESC PE 2019','Konstantinides SV, et al. 2019 ESC Guidelines for the diagnosis and management of acute pulmonary embolism developed in collaboration with the European Respiratory Society. Eur Heart J 2020;41:543–603.','10.1093/eurheartj/ehz405'],
+ stein96:['Stein 1996','Stein PD, Goldhaber SZ, Henry JW, Miller AC. Arterial blood gas analysis in the assessment of suspected acute pulmonary embolism. Chest 1996;109:78–81.','10.1378/chest.109.1.78'],
+ soar21:['ERC ALS 2021','Soar J, et al. European Resuscitation Council Guidelines 2021: adult advanced life support. Resuscitation 2021;161:115–151.','10.1016/j.resuscitation.2021.02.010'],
+ epstein19:['Epstein & Yanovich 2019','Epstein Y, Yanovich R. Heatstroke. N Engl J Med 2019;380:2449–2459.','10.1056/NEJMra1810762'],
+ bouchama22:['Bouchama 2022','Bouchama A, et al. Classic and exertional heatstroke. Nat Rev Dis Primers 2022;8:8.','10.1038/s41572-021-00334-6'],
+ roberts21:['ACSM 2021','Roberts WO, Armstrong LE, Sawka MN, Yeargin SW, Heled Y, O\'Connor FG. ACSM expert consensus statement on exertional heat illness: recognition, management, and return to activity. Curr Sports Med Rep 2021;20:470–484.','10.1249/JSR.0000000000000878'],
+ uribarri98:['Uribarri 1998','Uribarri J, Oh MS, Carroll HJ. D-lactic acidosis: a review of clinical presentation, biochemical features, and pathophysiologic mechanisms. Medicine (Baltimore) 1998;77:73–82.','10.1097/00005792-199803000-00001'],
+ mehta08:['Mehta 2008','Mehta AN, Emmett JB, Emmett M. GOLD MARK: an anion gap mnemonic for the 21st century. Lancet 2008;372:892.','10.1016/S0140-6736(08)61398-7'],
+ calello15:['EXTRIP metformin 2015','Calello DP, et al. Extracorporeal treatment for metformin poisoning: systematic review and recommendations from the Extracorporeal Treatments in Poisoning Workgroup. Crit Care Med 2015;43:1716–1730.','10.1097/CCM.0000000000001002'],
+ singer16:['Sepsis-3 2016','Singer M, et al. The Third International Consensus Definitions for Sepsis and Septic Shock (Sepsis-3). JAMA 2016;315:801–810.','10.1001/jama.2016.0287'],
+ roberts15:['EXTRIP methanol 2015','Roberts DM, et al. Recommendations for the role of extracorporeal treatments in the management of acute methanol poisoning: a systematic review and consensus statement. Crit Care Med 2015;43:461–472.','10.1097/CCM.0000000000000708'],
+ ghannoum23:['EXTRIP ethylene glycol 2023','Ghannoum M, et al. Extracorporeal treatment for ethylene glycol poisoning: systematic review and recommendations from the EXTRIP workgroup. Crit Care 2023;27:56.','10.1186/s13054-022-04227-2'],
+ mcguire06:['McGuire 2006','McGuire LC, Cruickshank AM, Munro PT. Alcoholic ketoacidosis. Emerg Med J 2006;23:417–420.','10.1136/emj.2004.017590'],
+ nice32:['NICE CG32','National Institute for Health and Care Excellence. Nutrition support for adults: oral nutrition support, enteral tube feeding and parenteral nutrition (CG32). London: NICE; 2006, updated 2017.'],
+ luks17:['Luks 2017','Luks AM, Swenson ER, Bärtsch P. Acute high-altitude sickness. Eur Respir Rev 2017;26:160096.','10.1183/16000617.0096-2016'],
+ crapo99:['Crapo 1999','Crapo RO, Jensen RL, Hegewald M, Tashkin DP. Arterial blood gas reference values for sea level and an altitude of 1,400 meters. Am J Respir Crit Care Med 1999;160:1525–1531.','10.1164/ajrccm.160.5.9806006'],
+ crash2_11:['CRASH-2 2011','CRASH-2 collaborators. The importance of early treatment with tranexamic acid in bleeding trauma patients: an exploratory analysis of the CRASH-2 randomised controlled trial. Lancet 2011;377:1096–1101.','10.1016/S0140-6736(11)60278-X'],
+ rossaint23:['European trauma bleeding 2023','Rossaint R, et al. The European guideline on management of major bleeding and coagulopathy following trauma: sixth edition. Crit Care 2023;27:80.','10.1186/s13054-023-04327-7'],
+ kodali13:['Kodali 2013','Kodali BS. Capnography outside the operating rooms. Anesthesiology 2013;118:192–201.','10.1097/ALN.0b013e318278c8b6'],
+ nap4:['NAP4 2011','Cook TM, Woodall N, Harper J, Benger J. Major complications of airway management in the UK: results of the Fourth National Audit Project of the Royal College of Anaesthetists and the Difficult Airway Society. Part 2: intensive care and emergency departments. Br J Anaesth 2011;106:632–642.','10.1093/bja/aer059'],
+ baud91:['Baud 1991','Baud FJ, et al. Elevated blood cyanide concentrations in victims of smoke inhalation. N Engl J Med 1991;325:1761–1766.','10.1056/NEJM199112193252502'],
+ figge92:['Figge 1992','Figge J, Mydosh T, Fencl V. Serum proteins and acid-base equilibria: a follow-up. J Lab Clin Med 1992;120:713–719.'],
+ kellum95:['Kellum 1995','Kellum JA, Kramer DJ, Pinsky MR. Strong ion gap: a methodology for exploring unexplained anions. J Crit Care 1995;10:51–55.','10.1016/0883-9441(95)90016-0'],
+ ahmedzai11:['BTS air travel 2011','Ahmedzai S, et al. Managing passengers with stable respiratory disease planning air travel: British Thoracic Society recommendations. Thorax 2011;66(Suppl 1):i1–i30.','10.1136/thoraxjnl-2011-200295'],
+ /* requested by D04 and D02 (lesson text in c2/c4 now cites these) */
+ schabelman12:['Schabelman 2012','Schabelman E, Kuo D. Glucose before thiamine for Wernicke encephalopathy: a literature review. J Emerg Med 2012;42:488–494.','10.1016/j.jemermed.2011.05.076'],
+ gu16:['Gu 2016','Gu WJ, Wu XD, Wang F, Ma ZL, Gu XP. Ultrasound guidance facilitates radial artery catheterization: a meta-analysis with trial sequential analysis of randomized controlled trials. Chest 2016;149:166–179.','10.1378/chest.15-1784'],
+ villanueva13:['Villanueva 2013','Villanueva C, et al. Transfusion strategies for acute upper gastrointestinal bleeding. N Engl J Med 2013;368:11–21.','10.1056/NEJMoa1211801'],
+ ukka20:['UKKA 2020','UK Kidney Association (Renal Association). Clinical practice guidelines: treatment of acute hyperkalaemia in adults. 2020, updated 2023.'],
+ mhra09:['MHRA 2009','Medicines and Healthcare products Regulatory Agency. Methylthioninium chloride (methylene blue): update on central nervous system (CNS) toxicity. Drug Safety Update 2009;2(9):3.'],
+ dubin07:['Dubin 2007','Dubin A, Menises MM, Masevicius FD, et al. Comparison of three different methods of evaluation of metabolic acid-base disorders. Crit Care Med 2007;35:1264–1270.','10.1097/01.CCM.0000259536.11943.90'],
+ kowlgi15:['Kowlgi 2015','Kowlgi NG, Chhabra L. D-lactic acidosis: an underrecognized complication of short bowel syndrome. Gastroenterol Res Pract 2015;2015:476215.','10.1155/2015/476215'],
+ west96:['West 1996','West JB. Prediction of barometric pressures at high altitude with the use of model atmospheres. J Appl Physiol 1996;81:1850–1854.','10.1152/jappl.1996.81.4.1850'],
  pitt:['Rose','']
 };
 delete SRC.pitt;
 /* lesson -> sources: module defaults plus per-lesson additions */
-const MSRC={start:['berend14'],chem:['siggaard74','rose'],phys:['west','nunn'],micro:['kraut14','rose'],gas:['west','nunn'],kid:['rose','soriano02'],samp:['aarc13'],num:['siggaard74','aarc13'],vbg:['byrne14'],dis:['berend14','narins80'],clin:['berend14','kraut10'],auto:['berend14']};
+/* 5.0: module defaults hold only textbooks or reviews that genuinely cover every lesson in the module; topic papers go per lesson */
+const MSRC={start:[],chem:['siggaard74','rose'],phys:['west','nunn'],micro:['rose'],gas:['west','nunn'],kid:['rose'],samp:['aarc13'],num:['siggaard74','aarc13'],vbg:['byrne14'],dis:['berend14','narins80'],clin:['berend14'],auto:['berend14']};
 const LSRC={
- stewart:['stewart83','kellum00'],stewartx:['stewart83','figge98'],hh:['sev66'],otherbuf:['siggaard74'],
- temp:['ashwood83'],alv:['mellem66'],
- lactate:['kraut14'],ketones:['kraut10','jbds23'],toxalc:['kraut18','fenves06','purssell01'],rbc:['sev66'],microbes:['hess79'],
- odc:['sev66'],hypox:['odriscoll17'],ratios:['berlin12'],respfail:['epstein01','davidson16'],ventchg:['epstein01'],co2vent:['epstein01'],
- renal:['soriano02'],rta:['soriano02','batlle88'],alkmaint:['galla00'],comp:['brackett65','albert67','narins80'],kacid:['aronson11'],uosm:['batlle88','purssell01'],
- sites:['aarc13','brzez09','pitkin94'],preanal:['aarc13','hess79'],analyser:['toff07','aarc13'],oxim:['sjoding20','toff07','weaver09'],traps:['aarc13','toff07'],
- 'tc-radial':['aarc13','brzez09'],'tc-allen':['barbeau04','brzez09'],'tc-venous':['byrne14','pitkin94','aarc13'],'tc-bubbles':['aarc13'],
- nlac:['kraut14'],nlytes:['aronson11'],ncoox:['weaver09','ashbernal04'],nderived:['figge98','kraut07'],nall:['kraut07','wrenn90'],
+ learn:['hussain24','ark06','kalyuga03','roediger06','cepeda06','hatala03','meyer13'],
+ stewart:['stewart83','kellum00','dubin07','berend14'],stewartx:['stewart83','figge92','kellum95','figge98'],hh:['sev66'],otherbuf:['siggaard74'],
+ dalton:['west96','ahmedzai11'],temp:['ashwood83'],alv:['mellem66'],
+ lactate:['kraut14'],ketones:['kraut10','jbds23'],toxalc:['kraut18','fenves06','purssell01'],rbc:['west','nunn'],microbes:['uribarri98','kowlgi15','kraut10','hess79'],
+ odc:['sev66','odriscoll17'],hypox:['odriscoll17'],ratios:['berlin12','matthay24'],respfail:['epstein01','davidson16'],ventchg:['epstein01','brackett65','fan17'],co2vent:['epstein01','odriscoll17'],
+ renal:['soriano02','batlle88'],rta:['soriano02','batlle88'],alkmaint:['galla00'],comp:['brackett65','albert67','narins80'],kacid:['aronson11','jbds23','umpierrez24','ukka20'],uosm:['kim96','kraut12','batlle88','soriano02'],
+ sites:['aarc13','brzez09','pitkin94'],preanal:['aarc13','hess79'],analyser:['toff07','aarc13','kraut07'],oxim:['sjoding20','toff07','weaver09'],traps:['kraut07','aarc13','toff07'],
+ 'tc-radial':['aarc13','brzez09','gu16'],'tc-allen':['barbeau04','brzez09'],'tc-venous':['byrne14','pitkin94','aarc13'],'tc-bubbles':['aarc13','ukka20'],
+ npo2:['odriscoll17'],nlac:['kraut14','singer16'],nlytes:['aronson11'],ncoox:['weaver09','ashbernal04','wright99','mhra09'],nderived:['figge98','kraut07'],nall:['kraut07'],
  vbg:['byrne14'],
- read6:['berend14','narins80'],hagma:['kraut07','kraut10','figge98'],nagma:['kraut10','batlle88'],malk:['galla00'],racid:['epstein01','brackett65'],ralk:['foster01','brackett65'],mixed:['wrenn90','narins80'],oxread:['odriscoll17','berlin12'],
- dka:['jbds23','kuppermann18','glaser01'],sepsis:['evans21','semler18','kraut14'],asa:['kraut10'],toxalc2:['kraut18','purssell01'],copd:['davidson16','odriscoll17','epstein01'],asthma:['epstein01','foster01'],pe:['foster01'],vomit:['galla00'],diarr:['kraut10','batlle88'],renalfail:['kraut10'],arrest:['kraut14'],opioid:['epstein01'],heat:['foster01'],co:['weaver09'],methb:['ashbernal04'],preg:['hegewald11'],rhabdo:['bosch09'],etoh:['kraut18','kraut14'],drugacid:['kraut10','fenves06'],gib:['kraut14','halt20'],kids:['apls','kuppermann18','glaser01']
+ read6:['berend14','narins80'],hagma:['kraut07','kraut10','figge98','mehta08'],nagma:['kraut10','kraut12','batlle88'],malk:['galla00'],racid:['epstein01','brackett65','davidson16'],ralk:['foster01','brackett65'],mixed:['wrenn90','narins80'],oxread:['odriscoll17','berlin12'],
+ dka:['umpierrez24','jbds23','kraut10'],sepsis:['singer16','evans21','semler18','kraut14','kraut10'],asa:['juurlink15','proudfoot04','kraut10'],toxalc2:['kraut18','roberts15','ghannoum23','purssell01','kraut10'],copd:['davidson16','odriscoll17','epstein01'],asthma:['bts19','epstein01','foster01'],pe:['konst20','stein96','foster01'],vomit:['galla00'],diarr:['kraut10','batlle88'],renalfail:['kdigo24','kraut10'],arrest:['nolan21','soar21','kraut14'],opioid:['epstein01','brackett65'],heat:['epstein19','bouchama22','roberts21','foster01'],co:['weaver09','baud91'],methb:['ashbernal04','wright99'],preg:['hegewald11','luks17','crapo99'],rhabdo:['bosch09'],etoh:['mcguire06','kraut18','purssell01','nice32','schabelman12','kraut14'],drugacid:['kraut10','fenves06','calello15'],gib:['kraut14','halt20','villanueva13','crash2_11','rossaint23'],kids:['apls','kuppermann18','glaser01']
 };
-function lessonSources(l){const ids=[...new Set([...(MSRC[l.m]||[]),...(LSRC[l.id]||[])])].filter(i=>SRC[i]);return ids.map(i=>SRC[i]);}
+/* 5.0: lesson-specific sources first (most relevant on top), then the module textbooks */
+function lessonSources(l){const ids=[...new Set([...(LSRC[l.id]||[]),...(MSRC[l.m]||[])])].filter(i=>SRC[i]);return ids.map(i=>SRC[i]);}

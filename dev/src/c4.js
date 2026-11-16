@@ -26,13 +26,14 @@ sum:'Urine osmolal gap = measured − calculated urine osmolality. Ammonium ≈ 
 body:`<p>The urine anion gap (Na + K − Cl) uses chloride as a stand-in for ammonium. That fails when ammonium leaves with another anion: ketoanions in DKA, hippurate in toluene inhalation, D-lactate, penicillins, or when urine Na⁺ is under about 20 mmol/L.</p>
 <div class="eq">Calculated U-osm = 2 × (U-Na + U-K) + U-urea + U-glucose   (all mmol/L)<br>Urine osmolal gap = measured U-osm − calculated U-osm<br>Urine NH₄⁺ ≈ gap ÷ 2</div>
 <h3>Reading it in a normal anion gap acidosis</h3>
-${tw('<tr><th>Urine osmolal gap</th><th>NH₄⁺ estimate</th><th>Meaning</th></tr><tr><td>&ge; 150 mOsm/kg (often 300–400)</td><td>&ge; 75 mmol/L</td><td>Kidney excreting acid well: look outside the kidney (diarrhoea, saline, toluene)</td></tr><tr><td>&lt; 150 mOsm/kg</td><td>&lt; 75 mmol/L</td><td>Kidney failing to excrete ammonium: distal or type 4 RTA, CKD</td></tr>')}
+${tw('<tr><th>Urine osmolal gap</th><th>NH₄⁺ estimate</th><th>Meaning</th></tr><tr><td>Clearly high, usually 300 mOsm/kg or more</td><td>150 mmol/L or more</td><td>Kidney excreting acid well: look outside the kidney (diarrhoea, saline, toluene)</td></tr><tr><td>150–300 mOsm/kg</td><td>75–150 mmol/L</td><td>Grey zone: read it with the urine pH, the potassium and the story</td></tr><tr><td>&lt; 150 mOsm/kg</td><td>&lt; 75 mmol/L</td><td>Kidney failing to excrete ammonium: distal or type 4 RTA, CKD</td></tr>')}
+<p>The cut-offs are approximate (Kim 1996): trust a clearly low or clearly high value more than one near the lines. Work the numbers in the <a href="#tool-urine">urine gaps tool</a>.</p>
 <h3>Example: the glue sniffer</h3>
 <p>Toluene is metabolised to hippuric acid. Hippurate is filtered and excreted quickly with Na⁺ and K⁺, so the gas shows a normal gap acidosis with severe hypokalaemia, and the urine anion gap is positive (looks renal). The urine osmolal gap is high because ammonium excretion is actually brisk: the problem is the hippurate, not the kidney.</p>
 <p>Units: if urea and glucose are reported in mg/dL, divide BUN by 2.8 and glucose by 18.</p>`,
 keys:[['U-osm gap','measured − (2(Na+K) + urea + glucose)'],['NH₄⁺','≈ gap ÷ 2'],['Renal cause','gap < 150']],
 hook:'When the anion gap of the urine is confused by an extra anion, count the osmoles instead.',
-q:[['NAGMA after glue sniffing; urine AG +20, urine osmolal gap 260. Interpretation?',['Distal RTA','Brisk ammonium excretion with hippurate in the urine','Type 4 RTA','Lab error'],1,'NH₄⁺ ≈ 130 mmol/L: the kidney is working. Hippurate makes the urine AG falsely positive.'],
+q:[['NAGMA after glue sniffing; urine AG +20, urine osmolal gap 340. Interpretation?',['Distal RTA','Brisk ammonium excretion with hippurate in the urine','Type 4 RTA','Lab error'],1,'NH₄⁺ ≈ 170 mmol/L: the kidney is working. Hippurate makes the urine AG falsely positive.'],
 ['When is the urine anion gap least reliable?',['Diarrhoea with urine Na 60','Ketoacidosis or urine Na below 20','Saline infusion','Hypokalaemia'],1,'Other anions (ketones) or very low urine sodium break the chloride-for-ammonium assumption.']]});
 
 lesson({id:'traps',m:'samp',t:'Analyser traps: low gaps, odd chloride and mixed sources',
@@ -47,7 +48,7 @@ hook:'A gap near zero is a puzzle about the measurement before it is a puzzle ab
 q:[['AG 1 in a patient with back pain, anaemia and high total protein. Likely?',['Bromide','IgG myeloma','Lactic acidosis','Diarrhoea'],1,'A cationic IgG paraprotein lowers the gap.'],
 ['A patient with myasthenia on high-dose pyridostigmine bromide has Cl 128 and AG −4. Explanation?',['True hyperchloraemia','Bromide read as chloride','Lithium','Air bubble'],1,'Chloride electrodes often count bromide.']]});
 
-lesson({id:'rhabdo',m:'clin',t:'Rhabdomyolysis',ex:{pH:7.30,pco2:30,hco3:14.2,po2:98,fio2:.21,na:139,cl:101,alb:42,lac:3.1,k:6.0,age:28},
+lesson({id:'rhabdo',m:'clin',t:'Rhabdomyolysis',ex:{pH:7.29,pco2:30,hco3:14.2,po2:98,fio2:.21,na:139,cl:101,alb:42,lac:3.1,k:6.0,age:28},
 sum:'Muscle breakdown releases potassium, phosphate, urate and organic acids. Expect hyperkalaemia, a high-gap acidosis and AKI. Fluids early; watch the ECG.',
 body:`<p>Causes in your practice: exertional (labourers in heat, new recruits, gym novices), crush and prolonged lying after a fall, seizures, drugs (statins with interacting drugs, cocaine, amphetamines), hypokalaemia and hypophosphataemia themselves, and severe infection.</p>
 <h3>The gas and chemistry</h3>
@@ -66,59 +67,69 @@ hook:'Broken muscle leaks the inside of the cell: potassium, phosphate and acid.
 q:[['Labourer after a long shift: CK 48,000, K⁺ 6.4, peaked T waves. First step?',['Bicarbonate infusion','IV calcium, then shift K⁺ and give fluids','Mannitol','Wait for the CK to fall'],1,'Stabilise the myocardium first; fluids and potassium shifting follow.'],
 ['Ionised calcium 0.95 in early rhabdomyolysis, no tetany, normal QT. Replace?',['Yes, always','No: treat only if symptomatic or for hyperkalaemia','Only with bicarbonate','Give vitamin D'],1,'Calcium deposits in damaged muscle and rebounds later.']]});
 
-lesson({id:'etoh',m:'clin',t:'Alcohol, withdrawal and refeeding',
+lesson({id:'etoh',m:'clin',t:'Alcohol, withdrawal and refeeding',ex:{pH:7.41,pco2:34,hco3:21.3,po2:92,fio2:.21,na:138,k:3.2,cl:90,alb:40,lac:2.4,glu:4.1,age:46},
 sum:'Alcohol can give three disorders at once: ketoacidosis, alkalosis from vomiting and a respiratory alkalosis from withdrawal. Feeding then drops phosphate, potassium and magnesium.',
 body:`<h3>On arrival</h3>
 <ul><li><b>Alcoholic ketoacidosis</b> after a binge and days of not eating: HAGMA with normal or low glucose; blood BHB high (urine strips under-read it).</li>
 <li><b>Vomiting</b>: metabolic alkalosis that hides the ketoacidosis (Δ ratio above 2).</li>
 <li><b>Withdrawal</b> (6–72 h after the last drink), pain, sepsis or liver disease drive breathing: respiratory alkalosis.</li>
 <li>A triple disorder is common. The pH can look nearly normal while the patient is very unwell.</li>
-<li>Also check the osmolar gap: ethanol raises it (about 1 mOsm per 4.6 mg/dL), and toxic alcohols hide in drinkers.</li></ul>
+<li>Also check the osmolar gap: ethanol raises it (about 1.25 mOsm per mmol/L of ethanol, or 1 per 3.7 mg/dL; Purssell 2001), and toxic alcohols hide in drinkers.</li></ul>
 <h3>Treatment</h3>
-<p>Thiamine before glucose, then dextrose-containing fluids; ketoacidosis settles with glucose and fluid, usually without insulin. Replace potassium and magnesium.</p>
+<p>Give IV thiamine (for example Pabrinex) with or before glucose, then dextrose-containing fluids. Never delay glucose in a hypoglycaemic patient: give it at once and the thiamine straight after. A single glucose load does not trigger Wernicke encephalopathy. Ketoacidosis settles with glucose and fluid, usually without insulin. Replace potassium and magnesium.</p>
 <h3>Refeeding</h3>
 <p>Feeding (oral, enteral or IV glucose) after starvation releases insulin, which drives phosphate, potassium and magnesium into cells. Hypophosphataemia can cause muscle weakness, respiratory failure (including failure to wean), haemolysis, arrhythmia and confusion.</p>
-<ul><li>High risk (NICE CG32): BMI under 16, little or no intake for more than 10 days, unintentional weight loss above 15% in 3–6 months, or low K/PO₄/Mg before feeding; alcohol misuse adds risk.</li>
-<li>Start low (as little as 10 kcal/kg/day in the highest risk), give thiamine and vitamins first, check phosphate, potassium and magnesium daily for the first days.</li></ul>`,
-keys:[['AKA glucose','Normal or low'],['Give first','Thiamine'],['Refeeding falls','PO₄ · K · Mg']],
-hook:'Starve, drink, vomit, breathe fast: four processes, one nearly normal pH.',
+<ul><li>High risk (NICE CG32) is <b>one</b> of: BMI under 16, little or no intake for more than 10 days, unintentional weight loss above 15% in 3–6 months, or low K/PO₄/Mg before feeding.</li>
+<li>Or <b>two or more</b> of: BMI under 18.5, weight loss above 10% in 3–6 months, little or no intake for more than 5 days, or a history of alcohol misuse or drugs such as insulin, chemotherapy, antacids or diuretics.</li>
+<li>Start at no more than 10 kcal/kg/day (5 kcal/kg/day if BMI is under 14 or there has been almost no intake for more than 15 days). Give thiamine and vitamins first, check phosphate, potassium and magnesium daily for the first days.</li></ul>
+<p class="note">Worked gas: a 46-year-old after a week of drinking and three days of vomiting; blood BHB 6. The pH is normal, but the gap is 27: ketoacidosis, a hidden metabolic alkalosis and a low PCO₂.</p>`,
+keys:[['AKA glucose','Normal or low'],['Thiamine','With or before glucose; never delay glucose if hypoglycaemic'],['Refeeding falls','PO₄ · K · Mg']],
+hook:'Starve and drink (ketoacid), vomit (alkali), breathe fast (CO₂ down): three disorders, one nearly normal pH.',
 q:[['Heavy drinker, vomiting for 3 days: pH 7.41, HCO₃⁻ 22, PCO₂ 34, AG 26. Read?',['Normal','HAGMA + metabolic alkalosis (+ respiratory alkalosis)','Pure respiratory alkalosis','NAGMA'],1,'The high gap with an almost normal bicarbonate means an alkalosis is hiding it; the low PCO₂ adds a respiratory alkalosis.'],
 ['Day 3 of feeding a malnourished patient: weakness, phosphate 0.3 mmol/L. Mechanism?',['Renal loss','Insulin-driven intracellular shift (refeeding)','Lab error','Vitamin D excess'],1,'Insulin moves phosphate into cells as metabolism restarts.']]});
 
-lesson({id:'drugacid',m:'clin',t:'Drugs that make acid',
-sum:'Metformin with AKI, propofol, salbutamol, linezolid, paracetamol (5-oxoproline), acetazolamide and topiramate, and toluene: know which gas each gives.',
-body:`${tw('<tr><th>Drug</th><th>Gas</th><th>Key point</th></tr><tr><td>Metformin (with AKI, sepsis, overdose)</td><td>Severe lactic HAGMA</td><td>Metformin-associated lactic acidosis. EXTRIP 2015: dialysis if lactate &gt; 20, pH ≤ 7.0, shock, falling consciousness or failure of standard care.</td></tr><tr><td>Propofol (high dose, &gt; 48 h)</td><td>Lactic HAGMA</td><td>Propofol infusion syndrome: also rhabdomyolysis, hyperkalaemia, high triglycerides, Brugada-like ECG, heart failure. Stop the infusion.</td></tr><tr><td>Salbutamol, adrenaline</td><td>Raised lactate</td><td>β₂-driven aerobic glycolysis; perfusion usually fine.</td></tr><tr><td>Linezolid, older NRTIs</td><td>Lactic HAGMA</td><td>Mitochondrial toxicity, usually after prolonged use.</td></tr><tr><td>Paracetamol (chronic, malnourished)</td><td>HAGMA, normal lactate</td><td>5-oxoproline from glutathione depletion.</td></tr><tr><td>Acetazolamide, topiramate</td><td>NAGMA</td><td>Carbonic anhydrase inhibition; topiramate also causes kidney stones.</td></tr><tr><td>Toluene (glue, paint thinners)</td><td>NAGMA with very low K⁺</td><td>Hippurate excreted in urine; urine AG misleading, use the urine osmolal gap.</td></tr><tr><td>Salicylate</td><td>HAGMA + respiratory alkalosis</td><td>See its own lesson.</td></tr><tr><td>Saline (large volumes)</td><td>NAGMA</td><td>Strong ion difference of zero.</td></tr><tr><td>Loop and thiazide diuretics</td><td>Metabolic alkalosis</td><td>Volume, chloride and potassium loss.</td></tr>')}
-<p>Ask about every drug, including over-the-counter and work exposures (solvents, glues), whenever an acidosis has no obvious cause.</p>`,
-keys:[['MALA dialysis','lactate > 20 or pH ≤ 7.0 (EXTRIP 2015)'],['Toluene','NAGMA + very low K⁺'],['Topiramate','NAGMA']],
+lesson({id:'drugacid',m:'clin',t:'Drugs that make acid',ex:{pH:6.98,pco2:15,hco3:3.5,po2:110,fio2:.21,na:138,k:5.8,cl:98,alb:38,lac:18,glu:6.2,age:72},
+sum:'Metformin with AKI, SGLT2 inhibitors, propofol, salbutamol, linezolid, paracetamol (5-oxoproline), acetazolamide and topiramate, toluene and the drugs that block aldosterone: know which gas each gives.',
+body:`${tw('<tr><th>Drug</th><th>Gas</th><th>Key point</th></tr><tr><td>Metformin (with AKI, sepsis, overdose)</td><td>Severe lactic HAGMA</td><td>Metformin-associated lactic acidosis. EXTRIP 2015: dialysis <b>recommended</b> if lactate &gt; 20, pH ≤ 7.0 or standard care fails; <b>suggested</b> if lactate 15–20, pH 7.0–7.1, shock, reduced consciousness or liver failure.</td></tr><tr><td>SGLT2 inhibitors (the -gliflozins)</td><td>Ketotic HAGMA, glucose may be under 14</td><td>Euglycaemic DKA, worse after surgery, fasting or illness. Check blood ketones; see the DKA lesson.</td></tr><tr><td>Isoniazid, iron</td><td>Lactic HAGMA</td><td>With seizures (isoniazid: give pyridoxine) or shock and GI bleeding (iron).</td></tr><tr><td>Nitroprusside (high dose, long infusion)</td><td>Lactic HAGMA</td><td>Cyanide release blocks cell respiration.</td></tr><tr><td>Propofol (high dose, &gt; 48 h)</td><td>Lactic HAGMA</td><td>Propofol infusion syndrome: also rhabdomyolysis, hyperkalaemia, high triglycerides, Brugada-like ECG, heart failure. Stop the infusion.</td></tr><tr><td>Salbutamol, adrenaline</td><td>Raised lactate</td><td>β₂-driven aerobic glycolysis; perfusion usually fine.</td></tr><tr><td>Linezolid, older NRTIs</td><td>Lactic HAGMA</td><td>Mitochondrial toxicity, usually after prolonged use.</td></tr><tr><td>Paracetamol (chronic, malnourished)</td><td>HAGMA, normal lactate</td><td>5-oxoproline from glutathione depletion.</td></tr><tr><td>Acetazolamide, topiramate</td><td>NAGMA</td><td>Carbonic anhydrase inhibition; topiramate also causes kidney stones.</td></tr><tr><td>Amphotericin, ifosfamide</td><td>NAGMA with low K⁺</td><td>Renal tubular acidosis: distal (amphotericin) or proximal with Fanconi syndrome (ifosfamide).</td></tr><tr><td>Trimethoprim, spironolactone, ACE inhibitors and ARBs, NSAIDs</td><td>NAGMA with high K⁺</td><td>Type 4 RTA picture: aldosterone effect blocked or reduced. Stop or review the drug.</td></tr><tr><td>Toluene (glue, paint thinners)</td><td>NAGMA with very low K⁺</td><td>Hippurate excreted in urine; urine AG misleading, use the urine osmolal gap.</td></tr><tr><td>Salicylate</td><td>HAGMA + respiratory alkalosis</td><td>See its own lesson.</td></tr><tr><td>Saline (large volumes)</td><td>NAGMA</td><td>Strong ion difference of zero.</td></tr><tr><td>Loop and thiazide diuretics</td><td>Metabolic alkalosis</td><td>Volume, chloride and potassium loss.</td></tr>')}
+<p>Ask about every drug, including over-the-counter and work exposures (solvents, glues), whenever an acidosis has no obvious cause.</p>
+<p class="note">Worked gas: a 72-year-old on metformin, three days of diarrhoea, now with AKI. Lactate 18 and pH under 7.0 put her in the EXTRIP "dialysis recommended" group.</p>`,
+keys:[['MALA dialysis','Recommended: lactate > 20, pH ≤ 7.0 or failing care (EXTRIP 2015)'],['SGLT2 inhibitor','Ketoacidosis with near-normal glucose'],['Toluene','NAGMA + very low K⁺'],['Topiramate','NAGMA']],
 hook:'An unexplained acidosis is a drug history you have not taken yet.',
 q:[['ICU patient on propofol 5 mg/kg/h for 4 days: new lactate 8, K⁺ 6.2, triglycerides high. Action?',['Increase propofol','Stop propofol: propofol infusion syndrome','Give bicarbonate only','Start metformin'],1,'Stop the infusion and support; consider ECMO or dialysis if severe.'],
 ['Migraine patient on topiramate: HCO₃⁻ 18, AG 10. Type?',['HAGMA','NAGMA from carbonic anhydrase inhibition','Respiratory acidosis','Lab error'],1,'Topiramate weakly inhibits carbonic anhydrase.']]});
 
-lesson({id:'gib',m:'clin',t:'GI bleeding and massive transfusion',
+lesson({id:'gib',m:'clin',t:'GI bleeding and massive transfusion',ex:{pH:7.49,pco2:44,hco3:33.2,po2:88,fio2:.21,na:141,k:3.6,cl:98,alb:30,lac:1.2,age:61},
 sum:'Shock gives a lactic acidosis; the urea rises from digested blood. Massive transfusion adds citrate: low ionised calcium early and metabolic alkalosis later.',
 body:`<h3>The bleeding patient</h3>
 <ul><li><b>Lactate</b> and base deficit mark hypoperfusion before the haemoglobin falls; the Hb lags for hours.</li>
 <li><b>Urea</b> rises out of proportion to creatinine in upper GI bleeding (digested blood plus hypovolaemia).</li>
-<li>Trend the lactate: clearance follows successful resuscitation.</li></ul>
+<li>Trend the lactate: clearance follows successful resuscitation.</li>
+<li><b>Transfuse restrictively</b> once the bleeding is controlled or slowing: red cells when Hb is under 70 g/L (aim 70–90), or under 80 with heart disease. A restrictive strategy saved lives in upper GI bleeding (Villanueva 2013). Massive ongoing bleeding is different: give blood by the clinical picture, not the number.</li></ul>
 <h3>Massive transfusion</h3>
-<ul><li><b>Ionised calcium</b> falls as citrate binds it, worse with liver failure (slower citrate metabolism). Check iCa²⁺ on the gas and replace (calcium chloride or gluconate) during massive transfusion.</li>
+<ul><li><b>Ionised calcium</b> falls as citrate binds it, worse with liver failure (slower citrate metabolism). Check iCa²⁺ on the gas and replace (calcium chloride or gluconate) during massive transfusion; most protocols aim to keep it above about 1.1 mmol/L.</li>
 <li><b>Potassium</b> can rise from stored red cells.</li>
 <li><b>Metabolic alkalosis</b> appears a day or two later as citrate is metabolised to bicarbonate.</li>
-<li>Acidosis, hypothermia and coagulopathy (the lethal triad, with hypocalcaemia often added as a fourth) feed each other: warm everything, give blood products early in balanced ratios, use tranexamic acid in trauma within 3 hours (not routinely in GI bleeding).</li></ul>`,
-keys:[['Early marker','Lactate / base deficit'],['Citrate','↓ iCa²⁺ early, alkalosis later'],['TXA','Trauma ≤ 3 h; not routine in GI bleed']],
+<li>Acidosis, hypothermia and coagulopathy (the lethal triad, with hypocalcaemia often added as a fourth) feed each other: warm everything, give blood products early in balanced ratios, use tranexamic acid in trauma within 3 hours (not routinely in GI bleeding).</li></ul>
+<p class="note">Worked gas: two days after a 14-unit transfusion for a variceal bleed, no vomiting and no diuretics. HCO₃⁻ 33 is citrate turned into bicarbonate; the iCa²⁺ was 0.9 on day one.</p>`,
+keys:[['Early marker','Lactate / base deficit'],['Citrate','↓ iCa²⁺ early, alkalosis later'],['TXA','Trauma ≤ 3 h; not routine in GI bleed'],['iCa²⁺ target','> 1.1 mmol/L in massive transfusion'],['Hb trigger','70 g/L (80 with heart disease)']],
 hook:'Bleeding shows on the gas before it shows on the haemoglobin.',
 q:[['During massive transfusion iCa²⁺ is 0.82 mmol/L. Mechanism?',['Dilution only','Citrate binding calcium','Hyperkalaemia','Alkalosis from vomiting'],1,'Citrate chelates calcium; liver dysfunction slows its clearance.'],
 ['Two days after a massive transfusion: HCO₃⁻ 33, no vomiting, no diuretics. Likely?',['Laboratory error','Citrate metabolised to bicarbonate','Respiratory acidosis','Type 4 RTA'],1,'Each unit carries citrate that the liver turns into bicarbonate.']]});
 
-lesson({id:'kids',m:'clin',t:'Children: what is different',
+lesson({id:'kids',m:'clin',t:'Children: what is different',ex:{pH:7.52,pco2:42,hco3:33.9,fio2:.21,na:134,k:3.0,cl:88,alb:38,lac:1.1,glu:4.5,age:0},
 sum:'Same rules, different traps: gastroenteritis with ketosis, saline hyperchloraemia, pyloric stenosis, and paediatric DKA with cerebral oedema.',
-body:`<ul><li><b>Normal values</b> are broadly the adult ones beyond infancy; newborns and young infants run a slightly lower bicarbonate (around 20–22). Capillary gases are common: fine for pH and PCO₂, not for PO₂.</li>
+body:`<h3>Normal values</h3>
+${tw('<tr><th>Age</th><th>pH</th><th>PaCO₂ (mmHg)</th><th>HCO₃⁻ (mmol/L)</th><th>PaO₂ on air (mmHg)</th></tr><tr><td>Newborn (first days)</td><td>7.30–7.40 (lower in the first hours)</td><td>30–40</td><td>18–22</td><td>60–90</td></tr><tr><td>Infant</td><td>7.35–7.45</td><td>30–40</td><td>20–24</td><td>80–100</td></tr><tr><td>Child</td><td>7.35–7.45</td><td>35–45</td><td>22–26</td><td>80–100</td></tr><tr><td>Adult</td><td>7.35–7.45</td><td>35–45</td><td>22–26</td><td>80–100 (falls with age)</td></tr>')}
+<p class="note">Approximate: exact ranges vary by laboratory and textbook (APLS). For cord gases and the first days, see <a href="#l-sp-neo">Newborns and cord gases</a>.</p>
+<ul><li><b>Beyond infancy</b> the values are broadly the adult ones; newborns and young infants run a slightly lower bicarbonate and PCO₂. Capillary gases are common: fine for pH and PCO₂, not for PO₂.</li>
+<li><b>Bronchiolitis and asthma</b>: a tachypnoeic infant should have a low PCO₂. A normal or rising PCO₂ means tiring. A capillary PCO₂ above about 50–55 mmHg with acidosis needs escalation (high-flow nasal oxygen or CPAP) and senior review.</li>
 <li><b>Gastroenteritis</b>: stool bicarbonate loss gives NAGMA; poor intake adds starvation ketosis (children become ketotic quickly), so a mixed gap is common. Oral rehydration first.</li>
 <li><b>Big saline resuscitation</b>: hyperchloraemic acidosis can look like ongoing shock. Check the chloride and the lactate before giving more fluid.</li>
-<li><b>Pyloric stenosis</b> (2–8 weeks old, projectile non-bilious vomiting): hypochloraemic, hypokalaemic metabolic alkalosis. The alkalosis and chloride are corrected with fluids and potassium before surgery because alkalosis raises the risk of postoperative apnoea.</li>
-<li><b>Paediatric DKA</b>: cerebral oedema is the main killer. Fluids are calculated carefully, insulin infusion (often 0.05–0.1 units/kg/h) starts after initial fluids, and bicarbonate is avoided. Headache, falling GCS, bradycardia or rising BP during treatment → treat cerebral oedema at once (mannitol or hypertonic saline).</li>
-<li><b>Inborn errors</b>: an unexplained high gap with hypoglycaemia or hyperammonaemia in a sick infant needs specialist input.</li></ul>`,
-keys:[['Infant HCO₃⁻','≈ 20–22'],['Pyloric stenosis','↓Cl ↓K metabolic alkalosis'],['Paediatric DKA killer','Cerebral oedema']],
+<li><b>Pyloric stenosis</b> (2–8 weeks old, projectile non-bilious vomiting): hypochloraemic, hypokalaemic metabolic alkalosis. The alkalosis and chloride are corrected with fluids and potassium before surgery because alkalosis raises the risk of postoperative apnoea. Common pre-operative targets: chloride 100 mmol/L or more, bicarbonate under 28, potassium normal.</li>
+<li><b>Paediatric DKA</b>: cerebral oedema is the main killer. Fluids are calculated carefully, but do not under-resuscitate: in the PECARN FLUID trial, faster rates and either saline strength did not change brain injury (Kuppermann 2018). Insulin infusion (often 0.05–0.1 units/kg/h) starts after initial fluids, and bicarbonate is avoided. Headache, falling GCS, bradycardia or rising BP during treatment → treat cerebral oedema at once (mannitol or hypertonic saline).</li>
+<li><b>Inborn errors</b>: an unexplained high gap with hypoglycaemia or hyperammonaemia in a sick infant needs specialist input.</li></ul>
+<p class="note">Worked gas: a six-week-old with pyloric stenosis (capillary sample, so no PO₂). Low chloride and potassium with a high bicarbonate: correct these before theatre.</p>`,
+keys:[['Infant HCO₃⁻','≈ 20–24 (lower in newborns)'],['Pyloric stenosis','↓Cl ↓K metabolic alkalosis'],['Paediatric DKA killer','Cerebral oedema']],
 hook:'Children run the same chemistry faster: they get ketotic, alkalotic and oedematous sooner.',
 q:[['Six-week-old with projectile vomiting: pH 7.52, HCO₃⁻ 34, Cl 88, K 3.0. Before theatre?',['Operate now','Correct fluids, chloride and potassium first','Give acetazolamide','Give bicarbonate'],1,'Alkalosis increases the risk of postoperative apnoea.'],
 ['Child in DKA treatment develops headache and bradycardia. Next?',['More insulin','Treat cerebral oedema now (mannitol or hypertonic saline)','Bicarbonate','Stop fluids and wait'],1,'Cerebral oedema is the leading cause of death in paediatric DKA.']]});
@@ -174,7 +185,7 @@ ${tw('<tr><th>You want to know</th><th>Sample</th></tr><tr><td>Is the patient ac
 <li>Sample at the time of cannulation when you can, free-flowing, without pulling hard.</li>
 <li>Expel air, cap, label as <b>venous</b>, and note the site. A venous sample labelled arterial is a classic trap.</li></ul>
 <h3>Remember the offsets</h3>
-<p>Compared with arterial: pH about 0.03 lower, PCO₂ about 5 mmHg higher, HCO₃⁻ about 1 mmol/L higher. Use the Labs → venous to arterial tool and keep the scatter in mind. A venous value is a screen, not a substitute, when the number sits near a decision line.</p>
+<p>Compared with arterial: pH about 0.03 lower, PCO₂ about 5 mmHg higher, HCO₃⁻ about 1 mmol/L higher. Use the <a href="#tool-vbg">venous to arterial tool</a> and keep the scatter in mind. A venous value is a screen, not a substitute, when the number sits near a decision line.</p>
 <h3>Earlobe (arterialised capillary)</h3>
 <ul><li>Warm the lobe or apply vasodilator cream for about 10 minutes so that blood is arterialised.</li>
 <li>Free flow into a capillary tube. Squeezing mixes in tissue fluid and distorts the values.</li>
@@ -198,6 +209,7 @@ body:`<h3>The first minute</h3>
 <li>Cells keep working in the syringe: PO₂ falls, PCO₂ and lactate rise, pH and glucose fall. Plastic at room temperature is fine for about 30 minutes. Longer than that, run a fresh sample.</li></ul>
 <h3>Four drills</h3>
 ${tw('<tr><th>You see</th><th>Think</th><th>Do</th></tr><tr><td>PaO₂ 36, SO₂ 68%, SpO₂ 97%</td><td>Venous blood in an arterial syringe</td><td>Repeat from an artery</td></tr><tr><td>PaO₂ 140 on room air, PCO₂ 12 in a well patient</td><td>Air bubble. PAO₂ ≈ 150 − 12 ÷ 0.8 ≈ 135, so a PaO₂ of 140 is impossible</td><td>Repeat, expel air at once</td></tr><tr><td>Lactate 9 in a bright, well patient; sample 2 hours old</td><td>Delay</td><td>Repeat and run it within 30 minutes</td></tr><tr><td>K⁺ 7.4 after a difficult draw</td><td>Could be haemolysis, could be real. Most gas analysers cannot detect haemolysis, and a normal ECG does not exclude dangerous hyperkalaemia</td><td>ECG and monitor now. Repeat urgently (lab sample with a haemolysis index). Treat as real (IV calcium, insulin–glucose) if there is any ECG change or any reason for a high K⁺: kidney failure, ACE inhibitor, DKA, rhabdomyolysis. Never wait for a repeat to treat a K⁺ of 6.5 or more that may be true</td></tr>')}
+<p><b>A high K⁺ is never just haemolysis until proven.</b> Get an ECG now and repeat urgently on a lab sample. If there is any ECG change or any reason for a real high K⁺, give IV calcium and insulin–glucose while you wait.</p>
 <p>The rule behind all four: when the numbers and the patient disagree, believe the patient and repeat the sample, unless the number could kill. Then treat while you repeat.</p>`,
 keys:[['Air','PO₂ → ~150, PCO₂ ↓'],['Delay','PO₂ ↓, PCO₂ ↑, lactate ↑'],['Window','~30 min in plastic at room temperature']],
 hook:'Bubbles out, roll never shake, run it inside half an hour.',
