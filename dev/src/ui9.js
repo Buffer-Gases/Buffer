@@ -94,7 +94,7 @@ async function toYuzu(btn,msgEl){const cards=yuzuMissCards(true),all=yuzuMissCar
  if(!cards.length){msgEl.textContent=all?'All '+all+' missed points are already in Yuzu. New ones collect here.':'Nothing missed yet. Wrong answers in lessons and cases collect here.';return;}
  const wk=isoWeek(new Date()),pid='buffer-misses-'+wk+'-'+Date.now().toString(36),fn=pid+'.yuzu.json';const p=pack(pid,'Buffer: missed points '+wk,cards);let why='';
  const on=typeof signedIn==='function'&&signedIn();
- if(on){try{msgEl.textContent='Sending…';const root=await folder(HUB_ROOT,null);const yz=await folder('Yuzu',root,false);const col=yz&&await folder('collection',yz,false);const inbox=col&&await folder('inbox',col,true);
+ if(on){try{msgEl.textContent='Sending…';const yz=await hubOtherFolder('yuzu-data',[[HUB_ROOT,'Yuzu']]);const col=yz&&await folder('collection',yz,false);const inbox=col&&await folder('inbox',col,true);
    if(!inbox){why='Yuzu\'s Drive folder was not found (open Yuzu once and connect Google there).';throw 0;}await putJSON(pid+'.json',inbox,p);ui9MarkSent(cards);msgEl.textContent='Sent '+pl(cards.length)+' to Yuzu\'s inbox. Review them in Yuzu before they are added.';return;}
   catch(e){if(!why)why='Could not reach Yuzu on Drive'+(e&&e.message?' ('+e.message+')':'')+'.';}}
  const ok=await copyText(JSON.stringify(p),btn);
@@ -103,10 +103,10 @@ async function toYuzu(btn,msgEl){const cards=yuzuMissCards(true),all=yuzuMissCar
  const dl=typeof ui3Download==='function'&&ui3Download(fn,JSON.stringify(p));if(dl)ui9MarkSent(cards);
  msgEl.textContent=(why?why+' ':'')+(dl?'Downloaded '+fn+'. Import it in Yuzu.':'Could not copy or download the pack here.');}
 
-/* reasoning-app hand-off: a structured case file in My Apps/hub/handoff */
+/* reasoning-app hand-off: a structured case file in the handoff folder (tag handoff; old path My Apps/hub/handoff) */
 function handoff(kind,obj){const id='buffer-'+kind+'-'+Date.now().toString(36);return Object.assign({buffer_handoff:1,id,app:'buffer',version:APP_VERSION,kind,at:new Date().toISOString()},obj);}
 async function sendHandoff(h,btn){const txt=JSON.stringify(h);const name=(h.id||'buffer-'+h.kind+'-'+Date.now().toString(36))+'.json';let why='';
- if(typeof signedIn==='function'&&signedIn()){try{const root=await folder(HUB_ROOT,null);const hub=await folder(HUB_DIR,root);const ho=await folder('handoff',hub);await putJSON(name,ho,h);toast('Sent to My Apps/hub/handoff for the reasoning app','good');return;}catch(e){why='Drive failed'+(e&&e.message?' ('+e.message+')':'')+'. ';}}
+ if(typeof signedIn==='function'&&signedIn()){try{const ho=await hubOwnFolder('handoff','handoff');await putJSON(name,ho,h);toast('Sent to the reasoning app\'s inbox on Drive','good');return;}catch(e){why='Drive failed'+(e&&e.message?' ('+e.message+')':'')+'. ';}}
  const ok=await copyText(txt,btn);toast(ok?why+'Hand-off copied. Paste it into the reasoning app.':why+'Clipboard blocked: the hand-off was not sent.',ok&&!why?'good':'bad');}
 /* the same input the on-screen read uses: FiO₂ typed as 40 means 0.40, HCO₃⁻ calculated when not typed */
 function ui9Read(){const inp=Object.assign({},IV);if(inp.fio2!=null&&inp.fio2>1)inp.fio2=inp.fio2/100;if(inp.pH==null||inp.pco2==null)return {err:'Enter at least pH and PCO₂.'};
@@ -345,7 +345,7 @@ RENDER.gloss=function(){const el=$('v-gloss');let f=(S.ui&&S.ui.gcat)||'';if(!GL
  el.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{f=b.dataset.c;S.ui=S.ui||{};S.ui.gcat=f;save();el.querySelectorAll('[data-c]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.c===f)));draw();});
  $('glCp').onclick=e=>copyText(list.map(g=>{const pl=gl9Pl(g);return g.en+' — '+g.de+(g.abbr?' ('+g.abbr+')':'')+(pl?' · '+pl:'')+(g.ex?'\n    '+g.ex:'');}).join('\n'),e.currentTarget);
  $('glYz').onclick=async e=>{const btn=e.currentTarget,msg=$('glMsg'),cards=gl9Cards(list),pk=gl9Pack(cards),n=cards.length+' card'+(cards.length===1?'':'s')+' ('+list.length+' word'+(list.length===1?'':'s')+')';let why='';const on=typeof signedIn==='function'&&signedIn();
-  if(on){try{msg.textContent='Sending…';const root=await folder(HUB_ROOT,null);const yz=await folder('Yuzu',root,false);const col=yz&&await folder('collection',yz,false);const inbox=col&&await folder('inbox',col,true);if(!inbox)throw new Error('Yuzu folder not found');await putJSON('buffer-words.json',inbox,pk);msg.textContent='Sent '+n+' to Yuzu\'s inbox. Review them in Yuzu before they are added.';return;}
+  if(on){try{msg.textContent='Sending…';const yz=await hubOtherFolder('yuzu-data',[[HUB_ROOT,'Yuzu']]);const col=yz&&await folder('collection',yz,false);const inbox=col&&await folder('inbox',col,true);if(!inbox)throw new Error('Yuzu folder not found');await putJSON('buffer-words.json',inbox,pk);msg.textContent='Sent '+n+' to Yuzu\'s inbox. Review them in Yuzu before they are added.';return;}
    catch(err){why=/not found/i.test(err&&err.message||'')?'Yuzu\'s Drive folder was not found (open Yuzu once and connect Google there). ':'Could not reach Drive. ';}}
   const ok=await copyText(JSON.stringify(pk),btn);if(ok){msg.textContent=why+'Copied '+n+(why?' instead':'')+'. Save as buffer-words.yuzu.json and import it in Yuzu'+(on?'.':', or connect Google to send it straight to Yuzu.');return;}
   const dl=typeof ui3Download==='function'&&ui3Download('buffer-words.yuzu.json',JSON.stringify(pk));msg.textContent=why+(dl?'Clipboard blocked, so the pack was saved as a file: buffer-words.yuzu.json. Import it in Yuzu.':'Clipboard blocked and no file could be saved here.');};

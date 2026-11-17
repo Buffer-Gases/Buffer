@@ -1,5 +1,5 @@
 /* Buffer service worker. Bump V for every release. OCR is named after the tesseract.js version, so bumping it prunes the old reader. */
-const V='buffer-5.0.0',OCR='buffer-ocr-5.1.1',FONTS='buffer-fonts-1',NAV_WAIT=3000;
+const V='buffer-5.0.1',OCR='buffer-ocr-5.1.1',FONTS='buffer-fonts-1',NAV_WAIT=3000;
 const CORE=['./','./index.html','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png'];
 const KEEP=[V,OCR,FONTS];
 const SCOPE=new URL(self.registration.scope).pathname;

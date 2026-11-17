@@ -1,5 +1,5 @@
 /* ================= UI CORE ================= */
-const APP_VERSION='5.0.0';
+const APP_VERSION='5.0.1';
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 /* lessons in module order (later files append lessons to earlier modules) */
 (function(){const mi={};MODS.forEach((m,i)=>mi[m.id]=i);const o=L.slice().sort((a,b)=>mi[a.m]-mi[b.m]);L.length=0;o.forEach(x=>L.push(x));})();

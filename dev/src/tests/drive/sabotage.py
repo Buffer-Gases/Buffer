@@ -20,7 +20,7 @@ def mk(name,parents,mime='application/json',content=None,props=None):
     FILES[i]=dict(id=i,name=name,parents=parents,mime=mime,content=content,props=props or {},mod=t,created=t,trashed=False)
     return FILES[i]
 def md5(f):return hashlib.md5((f['content'] or '').encode()).hexdigest()
-def meta(f):return {'id':f['id'],'modifiedTime':'%012d'%f['mod'],'trashed':f['trashed'],'md5Checksum':md5(f),'appProperties':f['props'],'name':f['name']}
+def meta(f):return {'id':f['id'],'modifiedTime':'%012d'%f['mod'],'trashed':f['trashed'],'md5Checksum':md5(f),'appProperties':f['props'],'name':f['name'],'createdTime':'%012d'%f['created'],'parents':f['parents']}
 STUB="""window.__tok=0;window.google={accounts:{oauth2:{initTokenClient:function(c){return {requestAccessToken:function(o){window.__tok++;window.__lastPrompt=o&&o.prompt;setTimeout(function(){c.callback({access_token:'TOK'+window.__tok+'_'+Math.random().toString(36).slice(2,6),expires_in:3600});},10);}}}}}};"""
 def mkdrive(tag):
     async def drive(route,request):
@@ -43,6 +43,8 @@ def mkdrive(tag):
             if name:res=[f for f in res if f['name']==name.group(1).replace("\\'","'")]
             if par:res=[f for f in res if par.group(1) in f['parents']]
             if 'folder' in qq:res=[f for f in res if f['mime']=='application/vnd.google-apps.folder']
+            tg=re.search(r"appProperties has \{ key='([^']+)' and value='([^']+)' \}",qq)
+            if tg:res=[f for f in res if (f['props'] or {}).get(tg.group(1))==tg.group(2)]
             ob=q.get('orderBy',[''])[0]
             res.sort(key=lambda f:-f['mod'] if 'modified' in ob else f['created'])
             return await J({'files':[meta(f) for f in res]})
@@ -57,6 +59,7 @@ def mkdrive(tag):
                 return await J(meta(f))
             if m=='PATCH':
                 b=json.loads(request.post_data or '{}');f['trashed']=b.get('trashed',f['trashed'])
+                if 'appProperties' in b:f['props']=dict(f['props'] or {},**b['appProperties'])
                 if 'name' in b:f['name']=b['name']
                 ap=q.get('addParents',[''])[0];rp=q.get('removeParents',[''])[0]
                 if rp:f['parents']=[x for x in f['parents'] if x not in rp.split(',')]
@@ -68,7 +71,7 @@ def mkdrive(tag):
             parts=body.split('--'+bd);md=json.loads(parts[1].split('\r\n\r\n',1)[1].strip());ct=parts[2].split('\r\n\r\n',1)[1].rsplit('\r\n',1)[0]
             f=FILES[um.group(1)] if um.group(1) else mk(md['name'],md['parents'])
             f['content']=ct;f['mod']=next(ctr)
-            if 'appProperties' in md:f['props']=md['appProperties']
+            if 'appProperties' in md:f['props']=dict(f['props'] or {},**md['appProperties'])
             return await J(meta(f))
         return await route.fulfill(status=404,body='?')
     return drive

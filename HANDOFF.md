@@ -4,7 +4,7 @@ Buffer is moving from the "Programs and Apps" Claude project to the Citrus proje
 
 ## Where things live
 - **Live app:** https://buffer-gases.github.io/Buffer/. The repo root holds the built PWA (index.html, sw.js, manifest, icons).
-- **Source:** `dev/src/`. build.py concatenates the source files and writes buffer.html. Current version: 5.0.0 (16/11/2026).
+- **Source:** `dev/src/`. build.py concatenates the source files and writes buffer.html. Current version: 5.0.1 (17/11/2026). Drive folders are found by tag (citrusApp), per the Citrus doc claude/drive-layout.md; status.json carries drive.byTag.
 - **Notes and contracts:** `docs/` holds copies of the old project's docs:
   - buffer-abg-notes.md (full version history and integrations);
   - buffer-roadmap.md (the user's decisions);
@@ -34,7 +34,7 @@ The release summary, the deferred list and what was not verified are in `docs/bu
 ## How to release
 1. Edit the source in `dev/src/`.
 2. Run `python3 build.py`, then `bash tests/gate.sh`. All 11 steps must pass.
-3. Run the fake-Drive tests, `python3 tests/drive/twophones.py`, `race2.py` and `sabotage.py`, whenever sync changes.
+3. Run the fake-Drive tests, `python3 tests/drive/twophones.py`, `race2.py`, `sabotage.py` and `bytag.py`, whenever sync changes.
 4. Bump `APP_VERSION` in ui1.js and `V` in pwa/sw.js, and set the version and date on line 1 of pwa/README.md.
 5. Run `python3 build.py --pwa`, which writes pwa/index.html. Copy the pwa/ files to the repo root and push.
 6. Publish the artifact https://claude.ai/artifact/2i1ByVL4CEPyZUjSxheczD with buffer.html.

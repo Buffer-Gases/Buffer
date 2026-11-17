@@ -791,7 +791,7 @@ html[data-skin="clinical"] :is(.hook .tag,.mono-mark,.sbar b,.sb b,.stepl li>i,.
 <div id="toasts" aria-live="polite"></div>
 <div id="sr" class="sr-only" role="status" aria-live="polite"></div>
 <script>
-const BUILD_DATE='16/11/2026';
+const BUILD_DATE='17/11/2026';
 /* ================= CONTENT: MODULES ================= */
 const MODS=[
  {id:'start',t:'Start here',d:'How this app gets you from first principles to reading a gas at a glance.'},
@@ -3995,7 +3995,7 @@ W.sid={t:'Stewart: SIDa, SIDe and the strong ion gap',build(el){const u=uid();
  el.querySelectorAll('input').forEach(i=>i.addEventListener('input',run));run();}};
 
 /* ================= UI CORE ================= */
-const APP_VERSION='5.0.0';
+const APP_VERSION='5.0.1';
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 /* lessons in module order (later files append lessons to earlier modules) */
 (function(){const mi={};MODS.forEach((m,i)=>mi[m.id]=i);const o=L.slice().sort((a,b)=>mi[a.m]-mi[b.m]);L.length=0;o.forEach(x=>L.push(x));})();
@@ -6964,7 +6964,7 @@ async function toYuzu(btn,msgEl){const cards=yuzuMissCards(true),all=yuzuMissCar
  if(!cards.length){msgEl.textContent=all?'All '+all+' missed points are already in Yuzu. New ones collect here.':'Nothing missed yet. Wrong answers in lessons and cases collect here.';return;}
  const wk=isoWeek(new Date()),pid='buffer-misses-'+wk+'-'+Date.now().toString(36),fn=pid+'.yuzu.json';const p=pack(pid,'Buffer: missed points '+wk,cards);let why='';
  const on=typeof signedIn==='function'&&signedIn();
- if(on){try{msgEl.textContent='Sending…';const root=await folder(HUB_ROOT,null);const yz=await folder('Yuzu',root,false);const col=yz&&await folder('collection',yz,false);const inbox=col&&await folder('inbox',col,true);
+ if(on){try{msgEl.textContent='Sending…';const yz=await hubOtherFolder('yuzu-data',[[HUB_ROOT,'Yuzu']]);const col=yz&&await folder('collection',yz,false);const inbox=col&&await folder('inbox',col,true);
    if(!inbox){why='Yuzu\'s Drive folder was not found (open Yuzu once and connect Google there).';throw 0;}await putJSON(pid+'.json',inbox,p);ui9MarkSent(cards);msgEl.textContent='Sent '+pl(cards.length)+' to Yuzu\'s inbox. Review them in Yuzu before they are added.';return;}
   catch(e){if(!why)why='Could not reach Yuzu on Drive'+(e&&e.message?' ('+e.message+')':'')+'.';}}
  const ok=await copyText(JSON.stringify(p),btn);
@@ -6973,10 +6973,10 @@ async function toYuzu(btn,msgEl){const cards=yuzuMissCards(true),all=yuzuMissCar
  const dl=typeof ui3Download==='function'&&ui3Download(fn,JSON.stringify(p));if(dl)ui9MarkSent(cards);
  msgEl.textContent=(why?why+' ':'')+(dl?'Downloaded '+fn+'. Import it in Yuzu.':'Could not copy or download the pack here.');}
 
-/* reasoning-app hand-off: a structured case file in My Apps/hub/handoff */
+/* reasoning-app hand-off: a structured case file in the handoff folder (tag handoff; old path My Apps/hub/handoff) */
 function handoff(kind,obj){const id='buffer-'+kind+'-'+Date.now().toString(36);return Object.assign({buffer_handoff:1,id,app:'buffer',version:APP_VERSION,kind,at:new Date().toISOString()},obj);}
 async function sendHandoff(h,btn){const txt=JSON.stringify(h);const name=(h.id||'buffer-'+h.kind+'-'+Date.now().toString(36))+'.json';let why='';
- if(typeof signedIn==='function'&&signedIn()){try{const root=await folder(HUB_ROOT,null);const hub=await folder(HUB_DIR,root);const ho=await folder('handoff',hub);await putJSON(name,ho,h);toast('Sent to My Apps/hub/handoff for the reasoning app','good');return;}catch(e){why='Drive failed'+(e&&e.message?' ('+e.message+')':'')+'. ';}}
+ if(typeof signedIn==='function'&&signedIn()){try{const ho=await hubOwnFolder('handoff','handoff');await putJSON(name,ho,h);toast('Sent to the reasoning app\'s inbox on Drive','good');return;}catch(e){why='Drive failed'+(e&&e.message?' ('+e.message+')':'')+'. ';}}
  const ok=await copyText(txt,btn);toast(ok?why+'Hand-off copied. Paste it into the reasoning app.':why+'Clipboard blocked: the hand-off was not sent.',ok&&!why?'good':'bad');}
 /* the same input the on-screen read uses: FiO₂ typed as 40 means 0.40, HCO₃⁻ calculated when not typed */
 function ui9Read(){const inp=Object.assign({},IV);if(inp.fio2!=null&&inp.fio2>1)inp.fio2=inp.fio2/100;if(inp.pH==null||inp.pco2==null)return {err:'Enter at least pH and PCO₂.'};
@@ -7215,7 +7215,7 @@ RENDER.gloss=function(){const el=$('v-gloss');let f=(S.ui&&S.ui.gcat)||'';if(!GL
  el.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{f=b.dataset.c;S.ui=S.ui||{};S.ui.gcat=f;save();el.querySelectorAll('[data-c]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.c===f)));draw();});
  $('glCp').onclick=e=>copyText(list.map(g=>{const pl=gl9Pl(g);return g.en+' — '+g.de+(g.abbr?' ('+g.abbr+')':'')+(pl?' · '+pl:'')+(g.ex?'\n    '+g.ex:'');}).join('\n'),e.currentTarget);
  $('glYz').onclick=async e=>{const btn=e.currentTarget,msg=$('glMsg'),cards=gl9Cards(list),pk=gl9Pack(cards),n=cards.length+' card'+(cards.length===1?'':'s')+' ('+list.length+' word'+(list.length===1?'':'s')+')';let why='';const on=typeof signedIn==='function'&&signedIn();
-  if(on){try{msg.textContent='Sending…';const root=await folder(HUB_ROOT,null);const yz=await folder('Yuzu',root,false);const col=yz&&await folder('collection',yz,false);const inbox=col&&await folder('inbox',col,true);if(!inbox)throw new Error('Yuzu folder not found');await putJSON('buffer-words.json',inbox,pk);msg.textContent='Sent '+n+' to Yuzu\'s inbox. Review them in Yuzu before they are added.';return;}
+  if(on){try{msg.textContent='Sending…';const yz=await hubOtherFolder('yuzu-data',[[HUB_ROOT,'Yuzu']]);const col=yz&&await folder('collection',yz,false);const inbox=col&&await folder('inbox',col,true);if(!inbox)throw new Error('Yuzu folder not found');await putJSON('buffer-words.json',inbox,pk);msg.textContent='Sent '+n+' to Yuzu\'s inbox. Review them in Yuzu before they are added.';return;}
    catch(err){why=/not found/i.test(err&&err.message||'')?'Yuzu\'s Drive folder was not found (open Yuzu once and connect Google there). ':'Could not reach Drive. ';}}
   const ok=await copyText(JSON.stringify(pk),btn);if(ok){msg.textContent=why+'Copied '+n+(why?' instead':'')+'. Save as buffer-words.yuzu.json and import it in Yuzu'+(on?'.':', or connect Google to send it straight to Yuzu.');return;}
   const dl=typeof ui3Download==='function'&&ui3Download('buffer-words.yuzu.json',JSON.stringify(pk));msg.textContent=why+(dl?'Clipboard blocked, so the pack was saved as a file: buffer-words.yuzu.json. Import it in Yuzu.':'Clipboard blocked and no file could be saved here.');};
@@ -7508,7 +7508,34 @@ async function getJSON(name,parent,merge){const files=await listFiles(name,paren
    if(Array.isArray(d)||!d.v)continue;if(out.bad){out={data:d,file:f,dup:true,bad:false};continue;}
    try{out.data=merge(out.data,d);}catch(x){console.warn('duplicate merge',x);}}catch(e){if(/expired|Sign in/.test(e.message))throw e;}}
  return out;}
-async function hubFolder(){const root=await folder(HUB_ROOT,null);const hub=await folder(HUB_DIR,root);return {root,hub,app:await folder(APP_SLUG,hub)};}
+/* 5.0.1 Drive layout (Citrus claude/drive-layout.md, 17/11/2026): every app folder carries appProperties.citrusApp=<id>
+   and Citrus may move it anywhere under Citrus/. Find folders by that tag (oldest wins, checked once per session);
+   if none is tagged yet, use the old path. A folder Buffer owns (buffer, handoff) found or made on the old path is
+   tagged at once. Never create by path once a tagged folder exists anywhere, and never move or rename one. */
+async function hubByTag(tag){const key='tag:'+tag;if(G.ids[key]&&G.ver[key])return G.ids[key];
+ const q="mimeType='"+HUB_FOLDER+"' and trashed=false and appProperties has { key='citrusApp' and value='"+qesc(tag)+"' }";
+ const j=await gfetch(DRIVE+'/files?spaces=drive&q='+encodeURIComponent(q)+'&orderBy=createdTime&fields=files(id,name,parents,createdTime)');
+ const fs=(j.files||[]).filter(f=>f&&f.id).sort((a,b)=>String(a.createdTime||'').localeCompare(String(b.createdTime||'')));
+ if(!fs.length)return null;G.ids[key]=fs[0].id;G.ver[key]=1;gSave();return fs[0].id;}
+async function hubTag(id,tag){try{await gfetch(DRIVE+'/files/'+id+'?fields=id',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({appProperties:{citrusApp:tag}})});
+  G.ids['tag:'+tag]=id;G.ver['tag:'+tag]=1;gSave();}catch(e){if(/expired|Sign in/.test(e.message))throw e;}}
+/* own folders: tag first, else My Apps/hub/<name> (made if missing) and tagged */
+async function hubOwnFolder(tag,name){const t=await hubByTag(tag);if(t){await hubFoldOldTwins(t,tag,name);return t;}
+ const root=await folder(HUB_ROOT,null);const hub=await folder(HUB_DIR,root);const id=await folder(name,hub);await hubTag(id,tag);return id;}
+/* other apps' folders: tag first, else the first old path that exists; never created or tagged here */
+/* 4.9 left some phones writing to their own twin "buffer" folder in My Apps/hub. Once per session, fold any
+   same-named folder still on the old path (untagged, or a newer twin with the same tag) into the tagged one. */
+async function hubFoldOldTwins(keep,tag,name){const k='twins:'+tag;if(G.ver[k])return;G.ver[k]=1;
+ try{const hub=await hubOldPath([HUB_ROOT,HUB_DIR]);if(!hub)return;
+  const x=(await hubListFolders(name,hub)).map(f=>f.id).filter(id=>id!==keep);if(!x.length)return;
+  const j=await gfetch(DRIVE+'/files?q='+encodeURIComponent("mimeType='"+HUB_FOLDER+"' and trashed=false and '"+hub+"' in parents")+'&fields=files(id,appProperties)');
+  const other=new Set((j.files||[]).filter(f=>f.appProperties&&f.appProperties.citrusApp&&f.appProperties.citrusApp!==tag).map(f=>f.id));
+  const extras=x.filter(id=>!other.has(id));if(extras.length)await hubFoldMerge(keep,extras);}
+ catch(e){if(/expired|Sign in/.test(e.message))throw e;}}
+async function hubOldPath(p){let id=null;for(const nm of p){id=await folder(nm,id,false);if(!id)return null;}return id;}
+async function hubOtherFolder(tag,paths){const t=await hubByTag(tag);if(t)return t;
+ for(const p of paths){const id=await hubOldPath(p);if(id)return id;}return null;}
+async function hubFolder(){return {app:await hubOwnFolder(APP_SLUG,APP_SLUG)};}
 
 /* ---- plan + shifts -> slots ---- */
 const isoD=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
@@ -7533,7 +7560,7 @@ function hubStatus(){const due=dueKinds().length,ms=masteryScore(),t=today(),n=t
  const asks=[];days.forEach(x=>{if(x.date<t)return;const m=SLOT_MIN[x.slot];if(!m)return;if(x.date===t){if(roundDone&&!due)return;asks.push({date:x.date,title:'Buffer: '+nextTitle,minutes:mins,slot:x.slot});}else asks.push({date:x.date,title:'Buffer: the Round',minutes:Math.min(25,m),slot:x.slot});});
  const askToday=asks.filter(a=>a.date===t).reduce((s,a)=>s+a.minutes,0);
  const pending=[];if(due)pending.push(due+' patterns due');if(!roundDone)pending.push('Round not done today');const w=weakestStep();if(w)pending.push('Weak step: '+STEPNAME[w.c]+' ('+Math.round(w.a*100)+'%)');
- return {app:APP_SLUG,title:APP_TITLE,icon:'🧪',color:'#F26A1B',url:location.origin+location.pathname,version:APP_VERSION,device:hubDevName(),updatedAt:new Date().toISOString(),summary,
+ return {app:APP_SLUG,title:APP_TITLE,icon:'🧪',color:'#F26A1B',url:location.origin+location.pathname,version:APP_VERSION,device:hubDevName(),drive:{byTag:true},updatedAt:new Date().toISOString(),summary,
   sync:(()=>{const h=hubHealth();return {ok:h.ok!==false,at:h.at||null,error:h.ok===false?h.err||null:null,state:!!gcfg().syncState};})(),
   due:due+(roundDone?0:1),estimatedMinutes:askToday||mins,streak:streak(),nextDue:asks.some(a=>a.date===t)?'today':'tomorrow',
   today:{date:t,done:roundDone,slot:slotT,items},week:{start:isoD(start),end:isoD(end),done,target:7,need:Math.max(0,7-done),days},
@@ -7673,8 +7700,9 @@ async function pullOrPush(opts={}){if(!signedIn()||!gcfg().syncState)return;cons
    S.savedAt=body.savedAt;_save();try{localStorage.setItem(gk('synced_h'),bh);}catch(e){}done(mh!==lh?G.line:'Progress saved to Drive');return;}
   done(mh!==lh?G.line:'Up to date');return;}
  G.line='Another device is writing; Buffer merges on the next sync';setTimeout(()=>syncAll(false),20000);}
-async function readPlan(){if(!signedIn())return;try{const root=await folder(HUB_ROOT,null,false);if(!root)return;const hub=await folder(HUB_DIR,root,false);if(!hub)return;let p=null;
- for(const nm of ['citrus','scheduler']){const f=await folder(nm,hub,false);if(f){p=await getJSON('plan.json',f);if(p)break;}}if(!p)return;const t=today();const d=p.data;
+async function readPlan(){if(!signedIn())return;try{let p=null;
+ const tagged=await hubByTag('citrus');if(tagged)p=await getJSON('plan.json',tagged);
+ if(!p)for(const nm of ['citrus','scheduler']){const f=await hubOldPath([HUB_ROOT,HUB_DIR,nm]);if(f){p=await getJSON('plan.json',f);if(p)break;}}if(!p)return;const t=today();const d=p.data;
  G.planDays=d&&d.days&&typeof d.days==='object'?d.days:{};
  const arr=Array.isArray(d)?d:(d.blocks||d.items||[]);const mine=arr.filter(b=>b&&String(b.app||b.title||'').toLowerCase().includes('buffer')&&(!b.date||b.date===t));
  const rank=b=>b.status==='done'?0:b.status==='accepted'?1:2;mine.sort((x,y)=>rank(x)-rank(y));G.plan=mine[0]||null;}catch(e){if(/expired|Sign in/.test(e.message))throw e;}}
@@ -7729,10 +7757,10 @@ function renderGoogle(){const r=$('google-root');if(!r)return;const g=gcfg(),ok=
   :'<div class="g-status"><span class="g-dot"></span><div><b>'+(was?'Drive sync paused':'Not connected')+'</b><small>'+(was?'Google sign-in ran out (it lasts an hour). Tap Reconnect. ':'One tap connects the Citrus family. ')+esc(G.line&&!/expired/.test(G.line)?G.line:'')+(was&&last?' '+esc(last)+'.':'')+'</small></div></div>';
  const btn=(id,cls,txt)=>'<button class="btn'+cls+'" id="'+id+'"'+(can&&ready?'':' disabled')+'>'+(can&&!ready?'Loading Google…':txt)+'</button>';
  const main=ok?'<button class="btn primary" id="gSync">Sync now</button><button class="btn" id="gOut">Sign out</button>':btn('gConnect',' primary',was?'Reconnect':'Connect Google');
- const sub=g.syncState?'My Apps/hub/buffer/state.json · devices merge; only Reset everywhere or Replace everywhere overwrites':'Off on this device: progress stays here. Switching it on merges Drive\'s progress back in at the next sync.';
+ const sub=g.syncState?'Buffer\'s Drive folder (state.json) · devices merge; only Reset everywhere or Replace everywhere overwrites':'Off on this device: progress stays here. Switching it on merges Drive\'s progress back in at the next sync.';
  r.innerHTML='<div class="card set" style="display:flex;flex-direction:column;gap:12px"><span class="eyebrow">Google & Citrus</span>'+status+
   '<div class="btnrow">'+main+'</div>'+
-  (can?'<details class="adv"><summary>Advanced</summary><div style="display:grid;gap:8px;margin-top:10px"><label class="srow"><div><b>Keep progress on Drive</b><span>'+sub+'</span></div><input type="checkbox" id="gState"'+(g.syncState?' checked':'')+'></label><label class="srow"><div><b>Publish status for Citrus</b><span>My Apps/hub/buffer/status.json</span></div><input type="checkbox" id="gPub"'+(g.publish?' checked':'')+'></label>'+
+  (can?'<details class="adv"><summary>Advanced</summary><div style="display:grid;gap:8px;margin-top:10px"><label class="srow"><div><b>Keep progress on Drive</b><span>'+sub+'</span></div><input type="checkbox" id="gState"'+(g.syncState?' checked':'')+'></label><label class="srow"><div><b>Publish status for Citrus</b><span>status.json in Buffer\'s Drive folder</span></div><input type="checkbox" id="gPub"'+(g.publish?' checked':'')+'></label>'+
    '<div class="ctrl"><label for="gDev"><span>This device\'s name (in merge messages and for Citrus)</span></label><input id="gDev" maxlength="30" value="'+esc(hubDevName())+'" autocomplete="off"></div>'+
    '<div class="ctrl"><label for="gCid"><span>Citrus web client ID</span></label><input id="gCid" value="'+esc(g.clientId||'')+'" autocomplete="off"></div>'+(ok?'<div class="btnrow">'+btn('gConnect','','Reconnect Google')+'</div>':'')+
    '<p class="note">This app\'s origin: <code>'+esc(location.origin)+'</code> <button class="btn small" id="gOrigin">Copy</button> · it must be in the client\'s authorised JavaScript origins · '+(matchMedia('(display-mode: standalone)').matches?'installed app':'browser tab')+'</p></div></details>':'')+'</div>';

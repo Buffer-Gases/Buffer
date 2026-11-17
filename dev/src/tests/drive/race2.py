@@ -22,7 +22,7 @@ async def main():
         await A.evaluate(f"G.ids['{hub['id']}/buffer']='{twin['id']}';gSave()");await A.reload();await A.wait_for_timeout(800)
         await sync(A);await sync(A)
         check('twin: only the oldest buffer folder left',[f['id'] for f in live('buffer')]==[keep['id']],[f['id'] for f in live('buffer')])
-        check('twin: A now uses the oldest',await A.evaluate(f"G.ids['{hub['id']}/buffer']")==keep['id'])
+        check('twin: A now uses the oldest',await A.evaluate("G.ids['tag:buffer']")==keep['id'],await A.evaluate("G.ids['tag:buffer']"))
         check('twin: state merged (l-twin kept)',await A.evaluate("!!S.done['l-twin']"),await A.evaluate("Object.keys(S.done)"))
         check('twin: one state.json, one status.json',len(live('state.json'))==1 and len(live('status.json'))==1,(len(live('state.json')),len(live('status.json'))))
         await sync(B);check('twin: B gets l-twin',await B.evaluate("!!S.done['l-twin']"))

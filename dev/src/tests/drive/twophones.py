@@ -12,7 +12,7 @@ def mk(name,parents,mime='application/json',content=None,props=None):
     return FILES[i]
 def md5(f):return hashlib.md5((f['content'] or '').encode()).hexdigest()
 def meta(f,fields=''):
-    d={'id':f['id'],'modifiedTime':'%012d'%f['mod'],'trashed':f['trashed'],'md5Checksum':md5(f),'appProperties':f['props'],'name':f['name']}
+    d={'id':f['id'],'modifiedTime':'%012d'%f['mod'],'trashed':f['trashed'],'md5Checksum':md5(f),'appProperties':f['props'],'name':f['name'],'createdTime':'%012d'%f['created'],'parents':f['parents']}
     return d
 STUB="""window.__tok=0;window.google={accounts:{oauth2:{initTokenClient:function(c){return {requestAccessToken:function(o){window.__tok++;window.__lastPrompt=o&&o.prompt;setTimeout(function(){c.callback({access_token:'TOK'+window.__tok,expires_in:3600});},10);}}}}}};"""
 mode={'expire':set()}
@@ -29,6 +29,8 @@ async def drive(route,request):
         if name:res=[f for f in res if f['name']==name.group(1).replace("\\'","'")]
         if par:res=[f for f in res if par.group(1) in f['parents']]
         if 'folder' in qq:res=[f for f in res if f['mime']=='application/vnd.google-apps.folder']
+        tg=re.search(r"appProperties has \{ key='([^']+)' and value='([^']+)' \}",qq)
+        if tg:res=[f for f in res if (f['props'] or {}).get(tg.group(1))==tg.group(2)]
         ob=q.get('orderBy',[''])[0]
         res.sort(key=lambda f:-f['mod'] if 'modified' in ob else f['created'])
         return await J({'files':[meta(f) for f in res]})
@@ -43,6 +45,7 @@ async def drive(route,request):
             return await J(meta(f))
         if m=='PATCH':
             b=json.loads(request.post_data or '{}');f['trashed']=b.get('trashed',f['trashed'])
+            if 'appProperties' in b:f['props']=dict(f['props'] or {},**b['appProperties'])
             ap=q.get('addParents',[''])[0];rp=q.get('removeParents',[''])[0]
             if rp:f['parents']=[x for x in f['parents'] if x not in rp.split(',')]
             if ap:f['parents']=f['parents']+[x for x in ap.split(',') if x not in f['parents']]
@@ -56,7 +59,7 @@ async def drive(route,request):
         else:
             f=mk(md['name'],md['parents'])
         f['content']=ct;f['mod']=next(ctr)
-        if 'appProperties' in md:f['props']=md['appProperties']
+        if 'appProperties' in md:f['props']=dict(f['props'] or {},**md['appProperties'])
         return await J(meta(f))
     return await route.fulfill(status=404,body='?')
 def check(name,ok,info=''):
@@ -151,9 +154,9 @@ async def main():
         mode['expire'].clear()
         # reset epoch
         await B.evaluate("go('settings')");await B.evaluate("ui3Reset('all',false)")
-        await B.wait_for_timeout(300);await B.click('#gConnect');await B.wait_for_timeout(1500);await B.evaluate("ui3Reset('all',false)");await B.wait_for_timeout(1500);await B.evaluate("syncAll(true)");await B.wait_for_timeout(1500)
+        await B.wait_for_timeout(300);await (B.evaluate("syncAll(true)") if await B.evaluate("signedIn()") else B.click('#gConnect'));await B.wait_for_timeout(1500);await B.evaluate("ui3Reset('all',false)");await B.wait_for_timeout(1500);await B.evaluate("syncAll(true)");await B.wait_for_timeout(1500)
         B_EP=await B.evaluate('S.epoch');print('DBG B',await B.evaluate('[S.xp,S.epoch,G.line,G.busy]'),[json.loads(f['content']).get('epoch') for f in state_files()])
-        await A.evaluate("go('settings')");await A.click('#gConnect');await A.wait_for_timeout(1800)
+        await A.evaluate("go('settings')");await (A.evaluate("syncAll(true)") if await A.evaluate("signedIn()") else A.click('#gConnect'));await A.wait_for_timeout(1800)
         print('DBG A',await A.evaluate('[G.line,signedIn(),G.busy,gcfg().syncState]'));xa=await A.evaluate("[S.xp,S.epoch,Object.keys(S.done).length]")
         check('reset on B propagates to A (no resurrection)',xa[1]==B_EP and xa[0]==0 and xa[2]==0,xa)
         # Back button
